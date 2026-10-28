@@ -1,0 +1,6 @@
+Meeting date: 2026-10-28
+Maya: I will send the API specification by Friday.
+Leo: I will review the specification after Maya sends it.
+Sam: We should probably improve onboarding someday.
+Maya: Leo, could you take a look at the error logs?
+Leo: I can investigate those tomorrow.

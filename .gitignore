@@ -1,0 +1,17 @@
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.db
+models/
+node_modules/
+progress/private/
+
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
