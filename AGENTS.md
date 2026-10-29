@@ -1,13 +1,21 @@
-# ActionGraph: local project instructions
+# ActionGraph project instructions
 
-Work exclusively on ActionGraph. Read README.md, docs/WEEK-01.md and docs/DAY-01.md first. This is a meeting transcript to structured action-item application. Output fields: action, owner (nullable), deadline (nullable), exact evidence and review status.
+Work exclusively in this standalone ActionGraph repository. Read README.md, docs/STATUS.md, docs/ROADMAP.md, and docs/VALIDATION.md before making changes. Supporting documentation covers project status, delivery roadmap, and validation design.
 
-Current starter: app/main.py health endpoint, app/schemas.py output contract, tests/test_contract.py, data/synthetic/meeting-01.txt. Extraction is not implemented. Never claim it is.
+## Product and constraints
 
-User is learning. Explain the problem and data flow, then examine the sample transcript together. Ask one question and wait. Teach one concept, give a miniature example and a different independent exercise; offer hints before solutions. Next exercise is validate_transcript(text): reject non-string/blank input and return trimmed text. Do not implement the extraction pipeline until requested.
+Meeting transcripts become structured action items with action, nullable owner, nullable deadline, exact evidence, and review status. Standalone validation, parsing, and evidence helpers exist; extraction is not implemented. Never claim otherwise or invent measurements.
 
-Weekdays are project learning and building; interview preparation is weekends only. First demo target November 3, 2026. Budget $0 added services. Use Python 3.12, FastAPI/Pydantic/pytest and local Ollama llama3.2:3b. No paid API calls. Use synthetic/public data only. Never invent measurements.
+Use Python 3.12, FastAPI, Pydantic, pytest, and local Ollama llama3.2:3b. No paid API calls, new services, large downloads, or unnecessary dependencies. Explain dependencies before adding them. Use synthetic/public data only. Keep secrets, model weights, virtual environments, and private information out of Git.
 
-This is a standalone ActionGraph repository. Use .venv/bin/python -m pytest and .venv/bin/python -m uvicorn app.main:app --reload from this folder. Stage only intended files. GitHub remote setup is being verified; inspect git remote -v for actual state.
+Initial demo target: November 3, 2026. Defer audio, calendar integration, elaborate dashboards, and other projects. Schema validity and exact evidence matching do not prove extraction correctness. Define ambiguity and relative-date rules before implementing them.
 
-End sessions with completed work, checks, independent understanding, remaining gaps and next task. Update docs/STATUS.md when work occurs.
+## Collaboration
+
+Work in small reviewable steps. Explain purpose, data flow, important syntax, and failure behavior. Implement agreed changes, explain the result, and ask one focused understanding question at a time. Offer hints for independent exercises. Do not implement future phases without user authorization. Keep personal learning history in the conversation, not repository documentation.
+
+## Checks and delivery
+
+Run `.venv/bin/python -m pytest` and `.venv/bin/python -m ruff check app tests` from this folder. Run the API with `.venv/bin/python -m uvicorn app.main:app --reload`.
+
+Update docs/STATUS.md with factual capabilities, checks, limitations, and next task when work occurs. Inspect git remote -v for the actual destination. Review changes and stage only intended files. Commit and push completed tested work when requested or at the end of a daily session; never create artificial activity. Do not publish posts automatically.

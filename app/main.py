@@ -1,4 +1,4 @@
-"""Day 1 health-only scaffold; extraction is a future learning task."""
+"""Health endpoint for ActionGraph; extraction is not yet implemented."""
 
 from fastapi import FastAPI
 
