@@ -17,3 +17,7 @@ An exact match establishes quote presence only. It does not establish that an ac
 ## Review boundary
 
 The current schema defaults review_status to needs_review and also permits confirmed. No confirmation workflow, persistence, or automatic unsupported-evidence flagging is implemented.
+
+## Model transport boundary
+
+`generate_text(prompt, client=...)` sends a nonblank prompt to Ollama `/api/generate` with `stream=false`. The caller owns the HTTPX client and configures its base URL and timeout. Connection, timeout, and HTTP status errors propagate unchanged. Invalid JSON, missing or blank response text, error envelopes, and incomplete generations raise `OllamaResponseError`. No retries or silent fallback to an empty action list occur. Generated text is returned unchanged; validating its action-item JSON remains the separate parser’s responsibility.

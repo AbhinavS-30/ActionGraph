@@ -4,7 +4,7 @@ Evidence-backed action items from meeting transcripts, designed for local infere
 
 ActionGraph aims to turn meeting discussion into a structured list of commitments: what needs to happen, who owns it, when it is due, and the exact words supporting it. Unknown owners and deadlines remain explicit rather than being guessed.
 
-**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, and a health endpoint are implemented. These components are tested independently. Model extraction and the connected application flow are not implemented yet.
+**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, a health endpoint, and a standalone Ollama text client are implemented. These components are tested independently. Model extraction and the connected application flow are not implemented yet.
 
 ## Intended application
 
@@ -17,7 +17,7 @@ The diagram describes the target flow. Implemented helpers are labeled explicitl
 ```mermaid
 flowchart TD
     A[Text transcript] --> B[Input validation: implemented]
-    B --> C[Local Ollama model: planned]
+    B --> C[Ollama text client: implemented; extraction prompt planned]
     C --> D[JSON parsing: implemented]
     D --> E[Pydantic output validation: implemented]
     E --> F[Exact evidence check: implemented]
@@ -34,7 +34,7 @@ flowchart TD
 | Step | Purpose and design choice |
 | --- | --- |
 | Input validation | Reject non-string and blank input before further processing. Trim outside whitespace while retaining internal text. |
-| Local inference | Planned use of Ollama with `llama3.2:3b` to propose items without a paid inference API. Model availability and behavior must be verified during integration. |
+| Local inference | A standalone client requests text from local Ollama with `llama3.2:3b`. Extraction instructions and integration remain planned. |
 | JSON parsing | Convert response text into Python data. Reject malformed JSON rather than silently repairing it. |
 | Output validation | Require a consistent structure and field types so downstream code can work with predictable data. |
 | Evidence matching | Check quote presence against the original transcript. Preserve spelling, case, spacing, and punctuation. Reject blank evidence as a match. |
@@ -77,6 +77,7 @@ Unexpected fields within an action item are rejected. Current minimum-length sch
 | Transcript validator | `app/validation.py` | Returns trimmed text; raises `TypeError` for non-string input and `ValueError` for blank input. |
 | Output models | `app/schemas.py` | Defines `ActionItem` and the enclosing `ExtractionResult`. |
 | Response parser | `app/parsing.py` | Parses JSON, then validates the output contract. Malformed text raises `JSONDecodeError`; schema mismatches raise `ValidationError`. |
+| Ollama text client | `app/ollama.py` | Sends nonstreaming generation requests; returns response text and preserves connection, timeout, and HTTP failures. Rejects invalid response envelopes. |
 | Evidence checker | `app/evidence.py` | Returns a boolean for exact quote presence. Invalid input types and invalid transcripts raise errors. |
 
 ## Run locally
@@ -108,7 +109,7 @@ Expected response:
 {"status": "ok", "extraction": "not_implemented"}
 ```
 
-The current helpers and tests do not require Ollama to run. Local model setup will be documented when model integration is implemented. No paid inference API is required by the planned architecture.
+Unit tests use simulated HTTP responses and do not require Ollama. Calling the standalone model client requires a running local Ollama service and the installed `llama3.2:3b` model. The caller supplies an HTTPX client with a base URL and explicit timeout; environment variables are not loaded automatically. Extraction setup will be documented when the flow is connected. No paid inference API is required by the planned architecture.
 
 ## Verification
 
@@ -117,14 +118,14 @@ The current helpers and tests do not require Ollama to run. Local model setup wi
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 41 passing test cases covering the health response, output contract, transcript validation, JSON parsing, and exact evidence matching. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 56 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 ## Delivery phases
 
 | Phase | Status | Deliverable and completion criteria |
 | --- | --- | --- |
 | 1. Validation foundation | Implemented as standalone components | Validated input, structured output contract, response parser, evidence helper, and focused tests. |
-| 2. Local model integration | Planned | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
+| 2. Local model integration | In progress: standalone text client implemented | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
 | 3. Connected extraction service | Planned | Connect the components; define ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
 | 4. Usable MVP | Planned | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
 | 5. Evaluation and demonstration | Planned | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
@@ -155,7 +156,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 ## Scope and limitations
 
 - Use synthetic or public transcripts only. The supplied example is in `data/synthetic/meeting-01.txt`.
-- No model calls, end-to-end extraction, evidence flag integration, or review persistence exist yet.
+- A standalone model text client exists; end-to-end extraction, evidence flag integration, and review persistence do not exist yet.
 - No extraction precision, recall, or latency results are available.
 - Exact evidence matching proves quote presence, not interpretation, attribution, or completeness.
 - Relative date conversion and ambiguous commitment policies remain to be defined.
