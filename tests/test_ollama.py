@@ -2,8 +2,42 @@ import json
 
 import httpx
 import pytest
+from pydantic import ValidationError
 
 from app.ollama import OllamaResponseError, generate_text
+from app.parsing import parse_extraction_result
+from app.prompts import build_extraction_prompt
+from app.schemas import ExtractionResult
+
+
+@pytest.mark.parametrize(
+    "model_text, expected_error",
+    [
+        ('{"items": []}', None),
+        ("Hello!", json.JSONDecodeError),
+        ('{"items": "Hello!"}', ValidationError),
+    ],
+)
+def test_schema_request_still_requires_local_parsing(model_text, expected_error):
+    schema = ExtractionResult.model_json_schema()
+    prompt = build_extraction_prompt("Maya: Good morning.")
+
+    def handler(request):
+        payload = json.loads(request.content)
+        assert payload["format"] == schema
+        assert payload["prompt"] == prompt
+        return httpx.Response(200, json={"done": True, "response": model_text})
+
+    with httpx.Client(
+        base_url="http://ollama.test", transport=httpx.MockTransport(handler)
+    ) as client:
+        text = generate_text(prompt, client=client, response_schema=schema)
+
+    if expected_error is None:
+        assert parse_extraction_result(text).items == []
+    else:
+        with pytest.raises(expected_error):
+            parse_extraction_result(text)
 
 
 def test_returns_generated_text_without_parsing_it():
