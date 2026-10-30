@@ -2,7 +2,21 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from app.validation import validate_transcript
+
+
+class ExtractionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    transcript: str
+
+    @field_validator("transcript")
+    @classmethod
+    def reject_blank_transcript(cls, value: str) -> str:
+        validate_transcript(value)
+        return value
 
 
 class ActionItem(BaseModel):

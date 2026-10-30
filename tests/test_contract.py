@@ -8,7 +8,7 @@ from app.main import app
 from app.schemas import ActionItem
 
 
-def test_health_does_not_claim_extraction_exists():
+def test_health_distinguishes_function_from_api():
     async def request_health():
         async with AsyncClient(
             transport=ASGITransport(app=app), base_url="http://test"
@@ -17,7 +17,8 @@ def test_health_does_not_claim_extraction_exists():
 
     response = asyncio.run(request_health())
     assert response.status_code == 200
-    assert response.json()["extraction"] == "not_implemented"
+    assert response.json()["extraction"] == "function_available"
+    assert response.json()["extraction_api"] == "available"
 
 
 def test_missing_owner_can_be_explicitly_unknown():

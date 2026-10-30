@@ -4,7 +4,7 @@ Updated October 30, 2026.
 
 ## Implemented
 
-- FastAPI health endpoint reporting extraction as not implemented.
+- FastAPI health endpoint reporting the extraction function and API as available, without probing model readiness.
 - Pydantic action-item and extraction-result contracts.
 - Transcript validation with explicit type and blank-input failures.
 - JSON parsing followed by output schema validation.
@@ -13,11 +13,18 @@ Updated October 30, 2026.
 - Optional JSON schema forwarding through Ollama’s `format` field; parser-boundary tests preserve malformed-JSON and schema-error behavior.
 - Extraction policy and standalone prompt builder covering accepted commitments, unknown values, relative deadlines, exact evidence, and review status.
 
-These components are standalone; a reusable extraction pipeline and extraction endpoint are not implemented.
+`extract_actions` connects input validation, prompt construction, schema-constrained generation, parsing, and exact evidence checks. Any unsupported evidence fails the entire call; generated items always return as `needs_review`. `POST /extract` exposes the flow with strict request fields, blank-input rejection, and actionable 422/502/503/504 responses.
 
 ## Verification
 
-62 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+86 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+
+A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
+transport with real local Ollama generation. The synthetic sentence “Maya: I will
+send the report tomorrow.” returned HTTP 200 with one item, owner Maya, deadline
+“tomorrow”, exact sentence evidence, and `needs_review`. This verified the route
+through model, parser, and evidence checks; Uvicorn/browser interaction and broader
+extraction quality were not evaluated by this check.
 
 Read-only connectivity checks on October 30 confirmed that GitHub remote `main`
 matches local commit `4e40ba6` at `https://github.com/AbhinavS-30/ActionGraph.git`.
@@ -32,10 +39,10 @@ README now describes the architecture, contract, setup, terminology, design rati
 
 ## Remaining work
 
-Connected extraction flow and enforcement of agreed policies, extraction API, labeled evaluation, and reproducible demonstration. Broader prompt compliance and extraction quality are unverified.
+Labeled evaluation of the agreed semantic policies and reproducible demonstration. Broader prompt compliance and extraction quality are unverified.
 
 ## Next task
 
-Connect prompt construction, schema-constrained generation, parsing, and evidence checks in a reusable extraction function. Reject unsupported evidence and ensure generated items remain needs_review.
+Review the API request/error flow, then define a labeled synthetic evaluation dataset and item-matching rubric before measuring quality.
 
 A manual structured-output smoke check combined the prompt builder, client, and parser on the synthetic sentence “Maya: I will send the report tomorrow.” The result contained one item with owner Maya, deadline “tomorrow”, exact sentence evidence, and `needs_review`. This is one smoke example, not extraction-quality evaluation or an integrated service.
