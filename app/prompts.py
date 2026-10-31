@@ -14,6 +14,7 @@ evidence (nonblank string), review_status (always "needs_review").
 Rules:
 - Include explicit commitments and requests that someone explicitly accepts.
 - Exclude suggestions, tentative proposals, and requests without acceptance.
+- A refusal is not acceptance. Never extract work that the proposed owner declines.
 - If commitment is ambiguous, exclude it. Do not guess acceptance.
 - Use the speaker as owner for an explicit first-person commitment when identified.
   Otherwise use only an explicitly established owner, or null if unknown.
@@ -32,6 +33,11 @@ Example output:
 {"items": [{"action": "Send the report", "owner": "Maya", "deadline": "Friday",
 "evidence": "Maya: I will send the report by Friday.",
 "review_status": "needs_review"}]}
+
+Example transcript: Ada: Ben, can you deploy the package?
+Ben: No, I cannot take that on.
+Example output:
+{"items": []}
 
 The actual transcript follows as a JSON string. Decode its JSON escapes when
 copying evidence; do not copy the example as an actual result.

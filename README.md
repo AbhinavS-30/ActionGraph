@@ -4,7 +4,7 @@ Evidence-backed action items from meeting transcripts, designed for local infere
 
 ActionGraph aims to turn meeting discussion into a structured list of commitments: what needs to happen, who owns it, when it is due, and the exact words supporting it. Unknown owners and deadlines remain explicit rather than being guessed.
 
-**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, a health endpoint, a standalone Ollama text client, and an extraction prompt builder are implemented. A reusable Python extraction function connects these components. The local extraction API is implemented; quality evaluation remains pending.
+**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, a health endpoint, a standalone Ollama text client, and an extraction prompt builder are implemented. A reusable Python extraction function connects these components. The local extraction API is implemented; a first synthetic development comparison is available; human adjudication and broader evaluation remain pending.
 
 ## Intended application
 
@@ -34,7 +34,7 @@ flowchart TD
 | Step | Purpose and design choice |
 | --- | --- |
 | Input validation | Reject non-string and blank input before further processing. Trim outside whitespace while retaining internal text. |
-| Local inference | A standalone client requests text from local Ollama with `llama3.2:3b`. Extraction rules and a prompt builder exist; one structured-output smoke example passed; broader adherence remains unevaluated. |
+| Local inference | A standalone client requests text from local Ollama with `llama3.2:3b`. Extraction rules and a prompt builder exist; one structured-output smoke example passed; a first development comparison found semantic errors; see the evaluation report. |
 | JSON parsing | Convert response text into Python data. Reject malformed JSON rather than silently repairing it. |
 | Output validation | Require a consistent structure and field types so downstream code can work with predictable data. |
 | Evidence matching | Check quote presence against the original transcript. Preserve spelling, case, spacing, and punctuation. Reject blank evidence as a match. |
@@ -127,9 +127,9 @@ The current suite contains 89 passing test cases covering the health response, o
 | --- | --- | --- |
 | 1. Validation foundation | Implemented as standalone components | Validated input, structured output contract, response parser, evidence helper, and focused tests. |
 | 2. Local model integration | In progress: standalone text client implemented | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
-| 3. Connected extraction service | Python function implemented; semantics unevaluated | Connect the components; enforce the agreed ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
+| 3. Connected extraction service | Python function implemented; first development comparison available | Connect the components; enforce the agreed ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
 | 4. Usable MVP | Endpoint and failure responses implemented; demo verification in progress | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
-| 5. Evaluation and demonstration | Ten labeled cases and rubric prepared; measurements pending | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
+| 5. Evaluation and demonstration | First development comparison recorded; human adjudication pending | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
 
 The initial demo target is November 3, 2026. It is a delivery target, not a claim of completion.
 
@@ -152,13 +152,13 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 | pytest / Ruff | Tools for automated tests / Python code checks and formatting. |
 | Ollama | The planned local model runtime; `llama3.2:3b` is the selected model. |
 | Precision / recall | Planned evaluation measures: how many proposed items are correct / how many labeled items were found. Both require a defined matching rubric. |
-| Latency | Measured time to produce a result; no extraction latency has been measured yet. |
+| Latency | Measured time to produce a result; first-run timings are in the evaluation report. |
 
 ## Scope and limitations
 
 - Use synthetic or public transcripts only. The supplied example is in `data/synthetic/meeting-01.txt`.
 - A reusable extraction function connects model generation, parsing, and evidence checks; the local extraction endpoint is available; review persistence is not implemented.
-- No extraction precision, recall, or latency results are available.
+- A [first development comparison](evals/results/REPORT-8dc8253.md) records provisional task scores and measured durations. It is one ten-case synthetic run reviewed by Codex, not a real-world accuracy claim.
 - Exact evidence matching proves quote presence, not interpretation, attribution, or completeness.
 - The initial policy excludes ambiguous commitments and unanswered requests and preserves relative deadline wording; date conversion is deferred. See [validation design](docs/VALIDATION.md).
 - Audio transcription, calendar integrations, cross-meeting memory, and elaborate dashboards are deferred.
@@ -169,7 +169,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 - `app/`: API and processing components.
 - `tests/`: automated behavior checks.
 - `data/synthetic/`: example input transcripts.
-- `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); collector and deterministic baseline available; full comparison and semantic scores pending.
+- `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); collector and deterministic baseline available; first raw comparison and provisional semantic review available in `evals/results/`.
 - [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
 - [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.
 - [Validation design](docs/VALIDATION.md): component responsibilities and failure behavior.

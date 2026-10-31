@@ -34,7 +34,7 @@ The optional `response_schema` argument forwards a JSON schema as Ollama’s `fo
 
 ## Connected extraction boundary
 
-`extract_actions(transcript, client=...)` builds the prompt, calls the model with the output schema, parses its response, and checks every evidence excerpt against the original transcript. Input, transport, and parser exceptions propagate. One unsupported excerpt fails the entire result. Review status is controlled by the application rather than the model. These checks do not verify commitment meaning, owner attribution, deadline interpretation, or completeness. Unit tests use simulated model responses; the reusable function has not yet been evaluated against a labeled dataset.
+`extract_actions(transcript, client=...)` builds the prompt, calls the model with the output schema, parses its response, and checks every evidence excerpt against the original transcript. Input, transport, and parser exceptions propagate. One unsupported excerpt fails the entire result. Review status is controlled by the application rather than the model. These checks do not verify commitment meaning, owner attribution, deadline interpretation, or completeness. Unit tests use simulated model responses; the first ten-case development comparison is retained in `evals/results/`, with provisional Codex review and human adjudication pending.
 
 ## HTTP boundary
 

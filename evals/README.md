@@ -66,7 +66,7 @@ Report individual durations, successful-call median and maximum, and failed-call
 durations separately. Record model name/digest, Ollama version, machine details,
 generation settings, repository commit, and whether the model was warm or cold.
 Do not hide loading time or retry silently. Default generation settings currently
-apply; repeated runs may vary. No results have been measured on this dataset yet.
+apply; repeated runs may vary. The first measured run and provisional Codex semantic review are in [results/REPORT-8dc8253.md](results/REPORT-8dc8253.md); human adjudication is pending.
 
 ## Running collection
 
@@ -104,4 +104,4 @@ source runs are exploratory; use a clean committed source tree for a reportable
 comparison. The runner does not calculate semantic scores. Review saved outputs
 and record one-to-one task pairings under the rubric above before reporting
 precision, recall, or fully correct items. A baseline-only CLI smoke run has been
-verified; a full model comparison has not yet been collected.
+verified; the first full model comparison is retained under `results/`, with provisional Codex semantic decisions pending human adjudication.

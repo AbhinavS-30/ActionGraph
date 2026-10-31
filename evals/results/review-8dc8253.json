@@ -1,0 +1,220 @@
+{
+  "review_method": "Codex semantic review against evals/README.md; no independent human adjudication yet; indices are zero-based.",
+  "reviews": [
+    {
+      "case_id": "eval-01",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-02",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed accepted request or ownerless commitment."
+    },
+    {
+      "case_id": "eval-03",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-04",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-05",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-06",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed accepted request or ownerless commitment."
+    },
+    {
+      "case_id": "eval-07",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-08",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-09",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task meaning retained with tomorrow in action, but deadline incorrectly null."
+    },
+    {
+      "case_id": "eval-10",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Both tasks found; second deadline incorrectly null, with tomorrow left in action."
+    },
+    {
+      "case_id": "eval-01",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Exact task and fields."
+    },
+    {
+      "case_id": "eval-02",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": false
+        }
+      ],
+      "note": "Task equivalent; evidence contains acceptance only, omitting the request that identifies them."
+    },
+    {
+      "case_id": "eval-03",
+      "system": "ollama",
+      "pairs": [],
+      "note": "False positive: explicit refusal. Deadline is also string null, not JSON null."
+    },
+    {
+      "case_id": "eval-04",
+      "system": "ollama",
+      "pairs": [],
+      "note": "False positive: unanswered request; unrelated comment is not acceptance."
+    },
+    {
+      "case_id": "eval-05",
+      "system": "ollama",
+      "pairs": [],
+      "note": "False positive: tentative suggestion without commitment."
+    },
+    {
+      "case_id": "eval-06",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": false,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task equivalent; owner is string null rather than JSON null. Evidence supports agreement but omits explicit owner-unknown sentence."
+    },
+    {
+      "case_id": "eval-07",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task equivalent; deadline is string null rather than JSON null."
+    },
+    {
+      "case_id": "eval-08",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Dependency omitted from action. Under the predefined rubric this prediction cannot match: one FP and one FN. Deadline is also string null."
+    },
+    {
+      "case_id": "eval-09",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task; original tomorrow deadline preserved."
+    },
+    {
+      "case_id": "eval-10",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "First task equivalent; broad contiguous evidence supports it. Second commitment missed. No credit for its presence only inside evidence."
+    }
+  ]
+}
