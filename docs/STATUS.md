@@ -79,4 +79,11 @@ Local runtime hardening: validated cached exported settings for loopback URL, mo
 
 Concurrency hardening: one active API extraction per process; overlapping valid requests receive 503 with `Retry-After: 1` without invoking the model. A `finally` block releases the slot on success or failure. Tests verify real request overlap, responsive health, reuse after success, and reuse after timeout. Use one Uvicorn worker; standalone calls and other processes are outside this guard. Current checks: 122 tests, Ruff, and diff checks pass. No new extraction-quality claim.
 
-Continuous integration: `.github/workflows/tests.yml` already ran Python 3.12 pytest and Ruff on pushes/pull requests. Extended its Ruff target to include `evals/` and added a ten-minute job timeout. GitHub run for source `ae8de66` completed successfully; concurrency source `d555b6f` also completed successfully, including clean Ubuntu installation from the lockfile. Local verification remains 122 passing tests and passing Ruff. CI runs no model downloads or inference. The workflow update still requires its own remote run verification.
+Continuous integration: `.github/workflows/tests.yml` runs Python 3.12 pytest and
+Ruff on pushes/pull requests, including `evals/`, with a ten-minute job timeout.
+GitHub runs for `ae8de66`, `d555b6f`, and `bc49c70` passed, including clean Ubuntu
+installation from the lockfile. Local verification remains 122 passing tests and
+passing Ruff. CI runs no model downloads or inference. The `bc49c70` run reported
+deprecated action runtimes; checkout and setup-python were updated to official
+releases v7.0.1/v7.1.0, pinned to immutable commit hashes. Verification of that
+action-version update is pending.
