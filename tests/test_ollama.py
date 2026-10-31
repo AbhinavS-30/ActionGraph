@@ -48,6 +48,7 @@ def test_returns_generated_text_without_parsing_it():
             "model": "llama3.2:3b",
             "prompt": "Say hello",
             "stream": False,
+            "options": {"num_predict": 1024},
         }
         assert request.extensions["timeout"]["read"] == 60.0
         return httpx.Response(200, json={"response": " Hello! ", "done": True})
@@ -124,3 +125,33 @@ def test_rejects_invalid_prompt_before_request(prompt, error):
         pytest.raises(error),
     ):
         generate_text(prompt, client=client)
+
+
+def test_generation_limit_is_forwarded_and_truncation_is_rejected():
+    def handler(request):
+        assert json.loads(request.content)["options"]["num_predict"] == 12
+        # Even apparently valid JSON is rejected when generation hit its limit.
+        return httpx.Response(
+            200,
+            json={"done": True, "done_reason": "length", "response": '{"items": []}'},
+        )
+
+    with (
+        httpx.Client(
+            base_url="http://ollama.test", transport=httpx.MockTransport(handler)
+        ) as client,
+        pytest.raises(OllamaResponseError),
+    ):
+        generate_text("Hello", client=client, num_predict=12)
+
+
+@pytest.mark.parametrize("limit", [0, 4097, True])
+def test_invalid_generation_limit_never_calls_ollama(limit):
+    def handler(request):
+        pytest.fail("Invalid generation limit must not reach Ollama")
+
+    with (
+        httpx.Client(transport=httpx.MockTransport(handler)) as client,
+        pytest.raises(ValueError, match="num_predict"),
+    ):
+        generate_text("Hello", client=client, num_predict=limit)

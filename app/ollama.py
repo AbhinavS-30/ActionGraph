@@ -15,6 +15,7 @@ def generate_text(
     client: httpx.Client,
     model: str = "llama3.2:3b",
     response_schema: dict[str, Any] | None = None,
+    num_predict: int = 1024,
 ) -> str:
     """Return generated text using a caller-owned client with a base URL/timeout.
 
@@ -29,7 +30,18 @@ def generate_text(
     if not prompt.strip():
         raise ValueError("Prompt must not be blank.")
 
-    payload = {"model": model, "prompt": prompt, "stream": False}
+    if (
+        not isinstance(num_predict, int)
+        or isinstance(num_predict, bool)
+        or not 1 <= num_predict <= 4096
+    ):
+        raise ValueError("num_predict must be an integer between 1 and 4096.")
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "options": {"num_predict": num_predict},
+    }
     if response_schema is not None:
         payload["format"] = response_schema
     response = client.post("/api/generate", json=payload)
@@ -45,6 +57,7 @@ def generate_text(
         or not isinstance(data.get("response"), str)
         or not data["response"].strip()
         or "error" in data
+        or data.get("done_reason") == "length"
     ):
         raise OllamaResponseError("Ollama returned an invalid generation envelope.")
 

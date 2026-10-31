@@ -2,6 +2,7 @@
 
 import httpx
 
+from app.config import Settings, get_settings
 from app.evidence import evidence_matches
 from app.ollama import generate_text
 from app.parsing import parse_extraction_result
@@ -13,7 +14,9 @@ class UnsupportedEvidenceError(ValueError):
     """A proposed item's evidence is absent from the original transcript."""
 
 
-def extract_actions(transcript: str, *, client: httpx.Client) -> ExtractionResult:
+def extract_actions(
+    transcript: str, *, client: httpx.Client, settings: Settings | None = None
+) -> ExtractionResult:
     """Return reviewable items, or fail without returning a partial result.
 
     Prompt construction validates input before any model request. Transport and
@@ -21,8 +24,13 @@ def extract_actions(transcript: str, *, client: httpx.Client) -> ExtractionResul
     correctness, attribution, or completeness.
     """
     prompt = build_extraction_prompt(transcript)
+    settings = settings if settings is not None else get_settings()
     text = generate_text(
-        prompt, client=client, response_schema=ExtractionResult.model_json_schema()
+        prompt,
+        client=client,
+        response_schema=ExtractionResult.model_json_schema(),
+        model=settings.ollama_model,
+        num_predict=settings.ollama_num_predict,
     )
     result = parse_extraction_result(text)
     for index, item in enumerate(result.items):

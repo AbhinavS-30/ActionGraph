@@ -110,7 +110,7 @@ Expected response:
 {"status": "ok", "extraction": "function_available", "extraction_api": "available"}
 ```
 
-Unit tests use simulated HTTP responses and do not require Ollama. Calling the standalone model client requires a running local Ollama service and the installed `llama3.2:3b` model. The caller supplies an HTTPX client with a base URL and explicit timeout; environment variables are not loaded automatically. The API uses the local address and a 60-second HTTPX timeout for network operations. This is not a total generation deadline. No paid inference API is required by the planned architecture.
+Unit tests use simulated HTTP responses and do not require Ollama. Calling the standalone model client requires a running local Ollama service and the installed `llama3.2:3b` model. The caller supplies an HTTPX client. The API loads validated exported settings at startup, defaults to local Ollama, and uses a 60-second HTTPX timeout for network operations. This is not a total generation deadline. No paid inference API is required by the planned architecture.
 
 ## Verification
 
@@ -119,7 +119,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 98 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 120 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 ## Delivery phases
 
@@ -176,7 +176,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 
 ## Extraction request and failures
 
-Ensure the Ollama service is running with `llama3.2:3b` installed, then start Uvicorn using the command above. No model downloads are performed by this application. The API currently uses `http://127.0.0.1:11434` and `llama3.2:3b`; `.env.example` documents the intended configuration, but environment overrides are not yet implemented.
+Ensure the Ollama service is running with `llama3.2:3b` installed, then start Uvicorn using the command above. No model downloads are performed by this application. Defaults are `http://127.0.0.1:11434` and `llama3.2:3b`. Exported environment overrides are supported; `.env` files are not read automatically. Restart the API after changing settings.
 
 ```bash
 curl -X POST http://127.0.0.1:8000/extract \
@@ -189,9 +189,31 @@ The response uses the `items` contract above; model output can vary, and every i
 | HTTP status | Meaning and next action |
 | --- | --- |
 | 200 | Proposed items returned; inspect them for correctness and omissions. |
-| 422 | Missing, non-string, or blank transcript, malformed request JSON, or extra request fields; correct the request. |
+| 422 | Missing, non-string, blank, or over-12,000-character transcript, malformed request JSON, or extra request fields; correct the request. |
 | 503 | Ollama unreachable or model unavailable; start the service or check the installed model. |
 | 504 | Ollama timed out; retry with a shorter transcript. |
 | 502 | Upstream HTTP failure, invalid output, or unsupported evidence; inspect input and Ollama, then retry and review. |
 
 There are no automatic retries, saved results, authentication, or human confirmation endpoint. Run this initial API locally.
+
+## Local runtime configuration
+
+| Exported variable | Default | Validation |
+| --- | --- | --- |
+| `OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | HTTP loopback origin only; no credentials, path, query, or fragment |
+| `OLLAMA_MODEL` | `llama3.2:3b` | Nonblank installed model name; no automatic downloads |
+| `OLLAMA_TIMEOUT_SECONDS` | `60` | Greater than zero, at most 120 seconds per network operation |
+| `OLLAMA_NUM_PREDICT` | `1024` | Integer from 1 through 4096; maximum generated tokens |
+
+Example: `export OLLAMA_TIMEOUT_SECONDS=30` before launching Uvicorn. Invalid
+settings prevent application startup. Settings are cached until restart; proxy
+environment variables are ignored for local Ollama requests. No new dependencies
+were added.
+
+Transcripts are limited to 12,000 Python characters before trimming; the original
+text is preserved for evidence checks. This is not a raw HTTP body-size limit or
+a concurrency limit. Generation requests include `options.num_predict`. A response
+with `done_reason=length` is rejected as incomplete even if its text happens to
+parse. Raising a token limit does not guarantee complete or correct extraction.
+The new generation limit changes runtime settings; earlier reports retain the
+settings actually used in their recorded source revisions.

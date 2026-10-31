@@ -140,3 +140,31 @@ def test_string_null_model_field_fails_without_returning_items(field):
     )
     assert response.status_code == 502
     assert "items" not in response.json()
+
+
+def test_oversized_transcript_is_rejected_before_model_call():
+    from app.config import MAX_TRANSCRIPT_CHARS
+
+    def handler(request):
+        pytest.fail("Oversized transcripts must not reach the model")
+
+    response = post_extract({"transcript": "x" * (MAX_TRANSCRIPT_CHARS + 1)}, handler)
+    assert response.status_code == 422
+
+
+def test_configured_model_and_generation_limit_reach_ollama():
+    from app.config import Settings, get_settings
+
+    def handler(request):
+        payload = json.loads(request.content)
+        assert payload["model"] == "installed-test-model"
+        assert payload["options"] == {"num_predict": 256}
+        return httpx.Response(200, json={"done": True, "response": '{"items": []}'})
+
+    app.dependency_overrides[get_settings] = lambda: Settings(
+        ollama_model="installed-test-model", ollama_num_predict=256
+    )
+    try:
+        assert post_extract({"transcript": "Maya: Hello."}, handler).status_code == 200
+    finally:
+        app.dependency_overrides.pop(get_settings)

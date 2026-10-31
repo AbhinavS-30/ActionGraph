@@ -11,6 +11,7 @@ from time import perf_counter
 
 import httpx
 
+from app.config import get_settings
 from app.extraction import extract_actions
 from app.prompts import EXTRACTION_INSTRUCTIONS
 from evals.baseline import extract_baseline
@@ -38,6 +39,7 @@ def main():
     root = Path(__file__).resolve().parents[1]
     dataset = (root / "evals/cases.json").read_bytes()
     cases = json.loads(dataset)
+    settings = get_settings()
 
     def git(*arguments):
         return subprocess.check_output(["git", *arguments], cwd=root, text=True).strip()
@@ -54,10 +56,14 @@ def main():
         "machine": platform.machine(),
         "processor": platform.processor(),
         "python": platform.python_version(),
-        "model": "llama3.2:3b",
-        "generation_settings": "Ollama defaults; JSON schema format; stream=false",
+        "model": settings.ollama_model,
+        "generation_settings": {
+            "num_predict": settings.ollama_num_predict,
+            "other_options": "Ollama defaults; schema format; stream=false",
+        },
+        "runtime_settings": settings.model_dump(),
         "model_initial_state": "unknown; no warmup request performed",
-        "timeout_seconds_per_operation": 60,
+        "timeout_seconds_per_operation": settings.ollama_timeout_seconds,
     }
 
     # Exclusive creation prevents accidentally replacing an earlier run.
@@ -67,7 +73,11 @@ def main():
             output.write(json.dumps(record, ensure_ascii=False) + "\n")
             output.flush()
 
-        with httpx.Client(base_url="http://127.0.0.1:11434", timeout=60.0) as client:
+        with httpx.Client(
+            base_url=settings.ollama_base_url,
+            timeout=settings.ollama_timeout_seconds,
+            trust_env=False,
+        ) as client:
             if not args.baseline_only:
                 for endpoint, key in [
                     ("/api/version", "ollama_version"),
@@ -101,7 +111,9 @@ def main():
                 record = collect_attempt(
                     case,
                     "ollama",
-                    lambda transcript: extract_actions(transcript, client=client),
+                    lambda transcript: extract_actions(
+                        transcript, client=client, settings=settings
+                    ),
                 )
                 record["raw_responses"] = list(raw_responses)
                 write(record)

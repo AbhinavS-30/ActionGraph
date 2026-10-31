@@ -65,8 +65,9 @@ Measure wall-clock duration around the full extraction call for every attempt.
 Report individual durations, successful-call median and maximum, and failed-call
 durations separately. Record model name/digest, Ollama version, machine details,
 generation settings, repository commit, and whether the model was warm or cold.
-Do not hide loading time or retry silently. Default generation settings currently
-apply; repeated runs may vary. The first measured run and provisional Codex semantic review are in [results/REPORT-8dc8253.md](results/REPORT-8dc8253.md); human adjudication is pending.
+Do not hide loading time or retry silently. Current runs use the configured `num_predict` cap (default 1024) with other
+Ollama defaults; repeated runs may vary. Historical runs retain their original
+settings. The first measured run and provisional Codex semantic review are in [results/REPORT-8dc8253.md](results/REPORT-8dc8253.md); human adjudication is pending.
 
 ## Running collection
 
@@ -99,7 +100,7 @@ limitations must be scored rather than repaired using expected labels.
 
 The runner calls the existing extraction function directly, not the API. It
 records source commit, dirty-tree flag, dataset/instruction hashes, platform,
-model inventory/digest, Ollama version, and default generation settings. Dirty
+model inventory/digest, Ollama version, and effective runtime/generation settings. Dirty
 source runs are exploratory; use a clean committed source tree for a reportable
 comparison. The runner does not calculate semantic scores. Review saved outputs
 and record one-to-one task pairings under the rubric above before reporting

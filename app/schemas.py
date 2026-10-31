@@ -4,13 +4,14 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from app.config import MAX_TRANSCRIPT_CHARS
 from app.validation import validate_transcript
 
 
 class ExtractionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    transcript: str
+    transcript: str = Field(max_length=MAX_TRANSCRIPT_CHARS)
 
     @field_validator("transcript")
     @classmethod

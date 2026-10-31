@@ -2,7 +2,7 @@
 
 ## Input boundary
 
-`validate_transcript(text)` requires a string. Non-string input raises TypeError. Leading and trailing whitespace is removed; blank results raise ValueError. Internal whitespace is preserved. This check does not decide whether the transcript contains a commitment.
+`validate_transcript(text)` requires a string. Non-string input raises TypeError. More than 12,000 original characters raises ValueError before trimming. Leading and trailing whitespace is removed; blank results raise ValueError. Internal whitespace is preserved. This check does not decide whether the transcript contains a commitment.
 
 ## Structured response boundary
 
@@ -38,7 +38,7 @@ The optional `response_schema` argument forwards a JSON schema as Ollama’s `fo
 
 ## HTTP boundary
 
-`ExtractionRequest` requires a string transcript, rejects blank text and unexpected fields, and preserves the original transcript for evidence checking. FastAPI returns 422 on invalid requests before model invocation. `POST /extract` uses a synchronous route and a request-scoped HTTPX client, closed through a yielding dependency. Its fixed local URL is `http://127.0.0.1:11434`; the timeout is 60 seconds per HTTPX network operation, not a total request deadline.
+`ExtractionRequest` requires a string transcript, rejects blank text and unexpected fields, and preserves the original transcript for evidence checking. FastAPI returns 422 on invalid requests before model invocation. `POST /extract` uses a synchronous route and a request-scoped HTTPX client, closed through a yielding dependency. Its default local URL is `http://127.0.0.1:11434`; validated exported settings can override loopback origin, model, timeout, and generated-token cap. The default timeout is 60 seconds per HTTPX network operation, not a total request deadline.
 
 Timeout errors map to 504; connection/request failures and upstream 404 map to 503; other upstream status errors, invalid envelopes, malformed model JSON, output schema failures, and unsupported evidence map to 502. Error responses omit raw model text and internal exception details. Invalid model output is never returned as a successful empty list. `/health` reports implemented capabilities, not Ollama readiness. Tests replace the client dependency with simulated responses, exercising the API through evidence checking.
 
@@ -53,3 +53,7 @@ remains necessary even for schema-constrained requests. The change prevents
 invalid placeholder delivery; it does not establish better model extraction.
 Historical evaluation reports describe the source revisions recorded in them
 and must not be reinterpreted as results from the current stricter contract.
+
+## Runtime limits
+
+Settings are validated once at startup and cached until restart, using existing Pydantic without a new settings dependency. Only HTTP loopback Ollama origins are allowed; HTTPX ignores proxy environment variables for local requests. The extraction function and evaluation collector receive the effective model and generated-token cap. Requests include `options.num_predict` (default 1024, permitted 1–4096); `done_reason=length` raises `OllamaResponseError` instead of returning a potentially partial result. The 12,000-character transcript cap is shared by the schema and standalone transcript validator and preserves original evidence boundaries. Raw HTTP body bytes, upstream response bytes, total duration, and concurrency are not bounded by this change.
