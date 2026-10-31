@@ -68,9 +68,40 @@ generation settings, repository commit, and whether the model was warm or cold.
 Do not hide loading time or retry silently. Default generation settings currently
 apply; repeated runs may vary. No results have been measured on this dataset yet.
 
-## Next implementation
+## Running collection
 
-Build a small reproducible runner and a simple deterministic baseline under this
-same rubric. Preserve per-case outputs and failures, then manually review task
-pairings and evidence support. The runner, baseline, scoring implementation, and
-measurements are not implemented in this step.
+Run from the repository root. Output is JSON Lines: one metadata record followed
+by one baseline and one model attempt per case. Each attempt has status and
+wall-clock duration; success includes a result, while failure includes an error
+type/message and no result. Model attempts also retain raw HTTP responses so
+invalid generated text and rejected evidence remain inspectable. Only the fixed
+synthetic dataset is loaded.
+
+```bash
+.venv/bin/python -m evals.run --baseline-only --output /tmp/actiongraph-baseline.jsonl
+.venv/bin/python -m evals.run --output /tmp/actiongraph-comparison.jsonl
+```
+
+Output files must not already exist; choose a new name for each run. Writes are
+flushed after each attempt so completed records survive a later interruption.
+No automatic retries or warmup calls occur. Ctrl-C stops the run; incomplete runs
+must be described as incomplete. Model inventory and Ollama version are collected
+when available; metadata errors are recorded without discarding attempts. Initial
+model warmth is explicitly unknown. Raw Ollama envelopes include load durations
+when supplied by Ollama. No new dependencies are needed.
+
+The baseline matches only entire `Name: I will ... .` lines (with a final period,
+no space required before it) and splits the work on the first ` by ` to obtain a
+deadline. It does not understand acceptance, negation, ambiguity, or semantics.
+It leaves `tomorrow` in the action with a null deadline when no `by` occurs, and
+misses ownerless commitments and requests accepted using other wording. These
+limitations must be scored rather than repaired using expected labels.
+
+The runner calls the existing extraction function directly, not the API. It
+records source commit, dirty-tree flag, dataset/instruction hashes, platform,
+model inventory/digest, Ollama version, and default generation settings. Dirty
+source runs are exploratory; use a clean committed source tree for a reportable
+comparison. The runner does not calculate semantic scores. Review saved outputs
+and record one-to-one task pairings under the rubric above before reporting
+precision, recall, or fully correct items. A baseline-only CLI smoke run has been
+verified; a full model comparison has not yet been collected.

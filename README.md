@@ -119,7 +119,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 86 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 89 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 ## Delivery phases
 
@@ -169,7 +169,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 - `app/`: API and processing components.
 - `tests/`: automated behavior checks.
 - `data/synthetic/`: example input transcripts.
-- `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); runner, baseline, and measurements remain pending.
+- `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); collector and deterministic baseline available; full comparison and semantic scores pending.
 - [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
 - [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.
 - [Validation design](docs/VALIDATION.md): component responsibilities and failure behavior.
