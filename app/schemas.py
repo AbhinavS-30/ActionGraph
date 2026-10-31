@@ -28,6 +28,14 @@ class ActionItem(BaseModel):
     evidence: str = Field(min_length=1)
     review_status: Literal["needs_review", "confirmed"] = "needs_review"
 
+    @field_validator("owner", "deadline")
+    @classmethod
+    def reject_string_null(cls, value: str | None) -> str | None:
+        """Unknown values must be JSON null, never a string placeholder."""
+        if isinstance(value, str) and value.strip().casefold() == "null":
+            raise ValueError("Use JSON null for unknown values, not the string 'null'.")
+        return value
+
 
 class ExtractionResult(BaseModel):
     items: list[ActionItem]

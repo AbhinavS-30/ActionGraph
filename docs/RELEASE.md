@@ -20,10 +20,12 @@ production deployment date.
 - Prepare a versioned release with setup instructions, a synthetic demonstration,
   reproducible evaluation artifacts, architecture, and disclosed limitations.
 
-## Public deployment decision
+## Approved presentation scope
 
-A project page or recorded demonstration can describe a local application without
-making local Ollama reachable by visitors. A live extraction service needs an
+The user selected a public project page plus a recorded local demonstration.
+Extraction stays local. The presentation should show a clear transcript-to-action
+story, traceable evidence, architecture, measured results, and disclosed limitations.
+The project page and recording are not built or published yet. A live extraction service needs an
 approved host for both FastAPI and model compute; a hosted API cannot reach a
 developer's `127.0.0.1`. Hosting, hardware, operating cost, and availability have
 not been selected or validated.

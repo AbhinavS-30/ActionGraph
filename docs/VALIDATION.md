@@ -41,3 +41,15 @@ The optional `response_schema` argument forwards a JSON schema as Ollama’s `fo
 `ExtractionRequest` requires a string transcript, rejects blank text and unexpected fields, and preserves the original transcript for evidence checking. FastAPI returns 422 on invalid requests before model invocation. `POST /extract` uses a synchronous route and a request-scoped HTTPX client, closed through a yielding dependency. Its fixed local URL is `http://127.0.0.1:11434`; the timeout is 60 seconds per HTTPX network operation, not a total request deadline.
 
 Timeout errors map to 504; connection/request failures and upstream 404 map to 503; other upstream status errors, invalid envelopes, malformed model JSON, output schema failures, and unsupported evidence map to 502. Error responses omit raw model text and internal exception details. Invalid model output is never returned as a successful empty list. `/health` reports implemented capabilities, not Ollama readiness. Tests replace the client dependency with simulated responses, exercising the API through evidence checking.
+
+## Unknown-value contract
+
+`ActionItem` rejects owner or deadline strings whose stripped, case-folded value
+is `null`. JSON null remains Python None and is allowed. Other strings are
+returned unchanged; no inference or silent repair occurs. Violations raise
+Pydantic ValidationError and map to HTTP 502 for model output. This custom Python
+validator is not expressed by the generated JSON schema, so local validation
+remains necessary even for schema-constrained requests. The change prevents
+invalid placeholder delivery; it does not establish better model extraction.
+Historical evaluation reports describe the source revisions recorded in them
+and must not be reinterpreted as results from the current stricter contract.

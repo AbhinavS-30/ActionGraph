@@ -12,3 +12,7 @@ Completion requires reproducible setup, a working local demonstration, measured 
 
 Local-release and public-service requirements are separate in
 `docs/RELEASE.md`. Public hosting and production readiness are not implemented.
+
+Approved public presentation: a polished project page and recorded local demo,
+with extraction staying local. Build the presentation after local reliability
+and release checks; do not describe it as a hosted inference service.

@@ -20,7 +20,7 @@ Updated October 31, 2026.
 
 ## Verification
 
-89 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+98 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -45,9 +45,11 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Review the failed refusal-prompt experiment and select a focused reliability
-change; add untouched cases before making broader quality claims. Public
-deployment mode remains undecided; release requirements are in `docs/RELEASE.md`.
+Add bounded local runtime configuration and request/generation limits, then
+re-evaluate the stricter contract with explicit failure counts. Add untouched
+cases before making broader quality claims. The approved presentation scope is a
+public project page plus recorded local demo; extraction remains local. See
+`docs/RELEASE.md`.
 
 A manual structured-output smoke check combined the prompt builder, client, and parser on the synthetic sentence “Maya: I will send the report tomorrow.” The result contained one item with owner Maya, deadline “tomorrow”, exact sentence evidence, and `needs_review`. This is one smoke example, not extraction-quality evaluation or an integrated service.
 
@@ -70,3 +72,5 @@ incorrectly used as a task deadline. No causal improvement claim is justified by
 one stochastic rerun. Original artifacts remain unchanged; see
 `evals/results/REPORT-99f2cf6.md`. This application is not production ready or
 publicly hosted.
+
+Unknown-value hardening: owner/deadline string-null placeholders are rejected with `ValidationError`, including case and surrounding-whitespace variants. Genuine JSON null and other strings are preserved. API regression tests verify HTTP 502 with no returned items. Current checks: 98 tests and Ruff pass. No new live quality results are claimed for this contract change.

@@ -121,3 +121,22 @@ def test_invalid_ollama_envelope_returns_502():
         {"transcript": "Maya: Hello."}, lambda request: httpx.Response(200, json={})
     )
     assert response.status_code == 502
+
+
+@pytest.mark.parametrize("field", ["owner", "deadline"])
+def test_string_null_model_field_fails_without_returning_items(field):
+    transcript = "Maya: I will send the report."
+    item = {
+        "action": "Send the report",
+        "owner": "Maya",
+        "deadline": None,
+        "evidence": transcript,
+    }
+    item[field] = "null"
+    text = json.dumps({"items": [item]})
+    response = post_extract(
+        {"transcript": transcript},
+        lambda request: httpx.Response(200, json={"done": True, "response": text}),
+    )
+    assert response.status_code == 502
+    assert "items" not in response.json()
