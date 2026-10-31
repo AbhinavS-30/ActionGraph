@@ -45,9 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Run and review the isolated refusal-prompt experiment, then agree on the next
-quality or application-hardening change. Public deployment mode remains undecided;
-release requirements are listed in `docs/RELEASE.md`.
+Review the failed refusal-prompt experiment and select a focused reliability
+change; add untouched cases before making broader quality claims. Public
+deployment mode remains undecided; release requirements are in `docs/RELEASE.md`.
 
 A manual structured-output smoke check combined the prompt builder, client, and parser on the synthetic sentence “Maya: I will send the report tomorrow.” The result contained one item with owner Maya, deadline “tomorrow”, exact sentence evidence, and `needs_review`. This is one smoke example, not extraction-quality evaluation or an integrated service.
 
@@ -58,7 +58,15 @@ Collector checks: baseline-only CLI smoke produced metadata plus ten successful 
 First comparison: clean source `8dc8253`, ten successful attempts per system. Provisional Codex review: baseline task TP/FP/FN = 6/0/2; Ollama = 6/4/2. Fully correct matched items: baseline 4/8 labels, model 3/8. Model median/max extraction durations: 1.139/2.585 seconds, including loading. All model responses passed schema and quote-presence checks despite semantic errors. See `evals/results/REPORT-8dc8253.md` for per-case decisions, denominators, runtime, raw outputs, and limitations. Human adjudication is pending.
 
 Added an explicit refusal instruction and a synthetic refusal example to the
-prompt. Unit checks remain 89 passing tests and passing Ruff; model behavior after
-this change is not yet measured. This is development-set prompt tuning, not an
+prompt. Unit checks remain 89 passing tests and passing Ruff. This is development-set prompt tuning, not an
 independent validation. No model settings, schema, labels, or parser behavior were
 changed for this experiment.
+
+Refusal-example rerun from clean source `99f2cf6`: all ten model attempts
+completed, but the refused request was still extracted. Provisional task TP/FP/FN
+= 6/3/2 (precision 66.7%, recall 75%); fully correct matched items 4/8 labels.
+Model median/max duration 1.022/2.098 seconds. An unrelated meeting-end time was
+incorrectly used as a task deadline. No causal improvement claim is justified by
+one stochastic rerun. Original artifacts remain unchanged; see
+`evals/results/REPORT-99f2cf6.md`. This application is not production ready or
+publicly hosted.
