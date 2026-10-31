@@ -20,7 +20,7 @@ Updated October 31, 2026.
 
 ## Verification
 
-120 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+122 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -46,7 +46,7 @@ Human review of provisional evaluation decisions, an agreed response to observed
 ## Next task
 
 Re-evaluate the stricter contract and bounded generation with explicit failure
-counts; next add local concurrency handling and CI before release verification. Add untouched
+counts; add CI before release verification. Add untouched
 cases before making broader quality claims. The approved presentation scope is a
 public project page plus recorded local demo; extraction remains local. See
 `docs/RELEASE.md`.
@@ -76,3 +76,5 @@ publicly hosted.
 Unknown-value hardening: owner/deadline string-null placeholders are rejected with `ValidationError`, including case and surrounding-whitespace variants. Genuine JSON null and other strings are preserved. API regression tests verify HTTP 502 with no returned items. Current checks: 98 tests and Ruff pass. No new live quality results are claimed for this contract change.
 
 Local runtime hardening: validated cached exported settings for loopback URL, model, per-operation timeout (0–120 seconds, exclusive of zero), and generation tokens (1–4096, default 1024). Invalid settings fail startup; local clients ignore proxy environment variables. Input is capped at 12,000 original characters with API 422; generation stopped for length fails with API 502. These are not raw body-size, total-duration, concurrency, or upstream response-byte limits. Collector now records effective settings. Baseline-only CLI smoke passed; 120 tests and Ruff pass. No new model quality measurements claimed.
+
+Concurrency hardening: one active API extraction per process; overlapping valid requests receive 503 with `Retry-After: 1` without invoking the model. A `finally` block releases the slot on success or failure. Tests verify real request overlap, responsive health, reuse after success, and reuse after timeout. Use one Uvicorn worker; standalone calls and other processes are outside this guard. Current checks: 122 tests, Ruff, and diff checks pass. No new extraction-quality claim.

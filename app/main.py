@@ -3,6 +3,7 @@
 import json
 from collections.abc import Iterator
 from contextlib import asynccontextmanager
+from threading import BoundedSemaphore
 from typing import Annotated
 
 import httpx
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="ActionGraph", version="0.1.0", lifespan=lifespan)
+extraction_slot = BoundedSemaphore(1)
 
 
 @app.get("/health")
@@ -51,6 +53,12 @@ def extract(
     client: Annotated[httpx.Client, Depends(get_ollama_client)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> ExtractionResult:
+    if not extraction_slot.acquire(blocking=False):
+        raise HTTPException(
+            503,
+            "Another extraction is running. Retry after it finishes.",
+            headers={"Retry-After": "1"},
+        )
     try:
         return extract_actions(request.transcript, client=client, settings=settings)
     except httpx.TimeoutException as exc:
@@ -77,3 +85,5 @@ def extract(
         raise HTTPException(
             502, "Ollama returned invalid output. Retry and review the result."
         ) from exc
+    finally:
+        extraction_slot.release()

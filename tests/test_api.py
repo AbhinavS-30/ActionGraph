@@ -1,5 +1,6 @@
 import asyncio
 import json
+from threading import Event
 
 import httpx
 import pytest
@@ -168,3 +169,63 @@ def test_configured_model_and_generation_limit_reach_ollama():
         assert post_extract({"transcript": "Maya: Hello."}, handler).status_code == 200
     finally:
         app.dependency_overrides.pop(get_settings)
+
+
+def test_overlapping_extraction_is_rejected_without_second_model_call():
+    entered = Event()
+    release = Event()
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        entered.set()
+        if not release.wait(timeout=5):
+            raise RuntimeError("Test did not release the model response")
+        return httpx.Response(200, json={"done": True, "response": '{"items": []}'})
+
+    def override():
+        with httpx.Client(
+            base_url="http://ollama.test", transport=httpx.MockTransport(handler)
+        ) as client:
+            yield client
+
+    async def scenario():
+        async with httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            body = {"transcript": "Maya: Hello."}
+            first = asyncio.create_task(client.post("/extract", json=body))
+            try:
+                assert await asyncio.to_thread(entered.wait, 2)
+                second = await client.post("/extract", json=body)
+                assert second.status_code == 503
+                assert second.headers["Retry-After"] == "1"
+                assert len(calls) == 1
+                assert (await client.get("/health")).status_code == 200
+            finally:
+                release.set()
+                first_response = await first
+            assert first_response.status_code == 200
+            assert (await client.post("/extract", json=body)).status_code == 200
+            assert len(calls) == 2
+
+    app.dependency_overrides[get_ollama_client] = override
+    try:
+        asyncio.run(scenario())
+    finally:
+        release.set()
+        app.dependency_overrides.pop(get_ollama_client)
+
+
+def test_failure_releases_slot_for_next_request():
+    def fail(request):
+        raise httpx.ReadTimeout("Simulated timeout", request=request)
+
+    assert post_extract({"transcript": "Maya: Hello."}, fail).status_code == 504
+    response = post_extract(
+        {"transcript": "Maya: Hello."},
+        lambda request: httpx.Response(
+            200, json={"done": True, "response": '{"items": []}'}
+        ),
+    )
+    assert response.status_code == 200

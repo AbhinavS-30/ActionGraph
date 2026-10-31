@@ -57,3 +57,14 @@ and must not be reinterpreted as results from the current stricter contract.
 ## Runtime limits
 
 Settings are validated once at startup and cached until restart, using existing Pydantic without a new settings dependency. Only HTTP loopback Ollama origins are allowed; HTTPX ignores proxy environment variables for local requests. The extraction function and evaluation collector receive the effective model and generated-token cap. Requests include `options.num_predict` (default 1024, permitted 1–4096); `done_reason=length` raises `OllamaResponseError` instead of returning a potentially partial result. The 12,000-character transcript cap is shared by the schema and standalone transcript validator and preserves original evidence boundaries. Raw HTTP body bytes, upstream response bytes, total duration, and concurrency are not bounded by this change.
+
+## API concurrency boundary
+
+A process-local `BoundedSemaphore(1)` admits one extraction. Nonblocking acquisition
+returns HTTP 503 and `Retry-After: 1` when busy, before model invocation. The route
+always releases an acquired slot in `finally`, including transport and validation
+failures. Invalid input still fails request validation before entering the route.
+Health does not acquire the slot. Tests overlap two requests using events rather
+than timing sleeps and verify slot reuse after success and failure. This protects
+one API process only: multiple workers, standalone extraction, and other clients
+of Ollama are not coordinated.

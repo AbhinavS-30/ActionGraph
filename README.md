@@ -119,7 +119,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 120 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 122 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 ## Delivery phases
 
@@ -190,7 +190,7 @@ The response uses the `items` contract above; model output can vary, and every i
 | --- | --- |
 | 200 | Proposed items returned; inspect them for correctness and omissions. |
 | 422 | Missing, non-string, blank, or over-12,000-character transcript, malformed request JSON, or extra request fields; correct the request. |
-| 503 | Ollama unreachable or model unavailable; start the service or check the installed model. |
+| 503 | Ollama unreachable, model unavailable, or another extraction running; inspect the detail and retry as directed. |
 | 504 | Ollama timed out; retry with a shorter transcript. |
 | 502 | Upstream HTTP failure, invalid output, or unsupported evidence; inspect input and Ollama, then retry and review. |
 
@@ -217,3 +217,14 @@ with `done_reason=length` is rejected as incomplete even if its text happens to
 parse. Raising a token limit does not guarantee complete or correct extraction.
 The new generation limit changes runtime settings; earlier reports retain the
 settings actually used in their recorded source revisions.
+
+## Local concurrency behavior
+
+Run one Uvicorn worker for the demo (the documented command does this). Each API
+process admits one extraction at a time. An overlapping valid request receives
+HTTP 503 with `Retry-After: 1` and no model invocation; the client should retry
+after the active extraction finishes. No request queue or automatic retry exists.
+The slot is released on success and failure; health requests remain available.
+This process-local guard does not coordinate multiple workers, the evaluation
+runner, or other applications using Ollama. It is not a distributed rate limiter
+or a complete public-service overload control.
