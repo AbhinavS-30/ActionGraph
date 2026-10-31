@@ -1,0 +1,155 @@
+[
+  {
+    "id": "eval-01",
+    "category": "explicit_commitment",
+    "transcript": "Nina: I will send the budget by Monday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Send the budget",
+          "owner": "Nina",
+          "deadline": "Monday",
+          "evidence": "Nina: I will send the budget by Monday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Explicit first-person commitment with a stated deadline."
+  },
+  {
+    "id": "eval-02",
+    "category": "accepted_request",
+    "transcript": "Omar: Priya, could you review the release notes?\nPriya: Yes, I will review them.",
+    "expected": {
+      "items": [
+        {
+          "action": "Review the release notes",
+          "owner": "Priya",
+          "deadline": null,
+          "evidence": "Omar: Priya, could you review the release notes?\nPriya: Yes, I will review them.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Acceptance establishes commitment; the request identifies what them refers to."
+  },
+  {
+    "id": "eval-03",
+    "category": "refused_request",
+    "transcript": "Nina: Omar, can you update the checklist?\nOmar: No, I cannot take that on.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Explicit refusal; no accepted commitment."
+  },
+  {
+    "id": "eval-04",
+    "category": "unanswered_request",
+    "transcript": "Priya: Nina, could you check the deployment logs?\nOmar: The meeting ends at noon.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "An unrelated response does not accept the request; noon is not a task deadline."
+  },
+  {
+    "id": "eval-05",
+    "category": "suggestion",
+    "transcript": "Omar: We should probably improve onboarding someday.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Tentative suggestion without acceptance."
+  },
+  {
+    "id": "eval-06",
+    "category": "unknown_owner",
+    "transcript": "The team agreed: The release checklist will be updated by Tuesday. No owner was assigned.",
+    "expected": {
+      "items": [
+        {
+          "action": "Update the release checklist",
+          "owner": null,
+          "deadline": "Tuesday",
+          "evidence": "The team agreed: The release checklist will be updated by Tuesday. No owner was assigned.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "The work is agreed, but an individual owner is explicitly unknown."
+  },
+  {
+    "id": "eval-07",
+    "category": "unspecified_deadline",
+    "transcript": "Priya: I will investigate the login failure.",
+    "expected": {
+      "items": [
+        {
+          "action": "Investigate the login failure",
+          "owner": "Priya",
+          "deadline": null,
+          "evidence": "Priya: I will investigate the login failure.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Explicit commitment without a stated deadline."
+  },
+  {
+    "id": "eval-08",
+    "category": "dependency",
+    "transcript": "Omar: I will test the patch after Nina sends the build.",
+    "expected": {
+      "items": [
+        {
+          "action": "Test the patch after Nina sends the build",
+          "owner": "Omar",
+          "deadline": null,
+          "evidence": "Omar: I will test the patch after Nina sends the build.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "The dependency belongs in the action; it supplies neither a deadline nor an independent commitment by Nina."
+  },
+  {
+    "id": "eval-09",
+    "category": "relative_deadline",
+    "transcript": "Meeting date: 2026-10-31\nNina: I will publish the test summary tomorrow.",
+    "expected": {
+      "items": [
+        {
+          "action": "Publish the test summary",
+          "owner": "Nina",
+          "deadline": "tomorrow",
+          "evidence": "Nina: I will publish the test summary tomorrow.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Preserve tomorrow even when the meeting date is available."
+  },
+  {
+    "id": "eval-10",
+    "category": "mixed_and_ambiguous",
+    "transcript": "Nina: I will upload the revised diagram by Friday.\nOmar: I will check the revised diagram tomorrow.\nPriya: Maybe I could write a migration guide.\nNina: Priya, can you also update the FAQ?",
+    "expected": {
+      "items": [
+        {
+          "action": "Upload the revised diagram",
+          "owner": "Nina",
+          "deadline": "Friday",
+          "evidence": "Nina: I will upload the revised diagram by Friday.",
+          "review_status": "needs_review"
+        },
+        {
+          "action": "Check the revised diagram",
+          "owner": "Omar",
+          "deadline": "tomorrow",
+          "evidence": "Omar: I will check the revised diagram tomorrow.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Two explicit commitments; exclude the tentative offer and unanswered request."
+  }
+]

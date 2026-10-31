@@ -1,6 +1,6 @@
 # Project status
 
-Updated October 30, 2026.
+Updated October 31, 2026.
 
 ## Implemented
 
@@ -14,6 +14,8 @@ Updated October 30, 2026.
 - Extraction policy and standalone prompt builder covering accepted commitments, unknown values, relative deadlines, exact evidence, and review status.
 
 `extract_actions` connects input validation, prompt construction, schema-constrained generation, parsing, and exact evidence checks. Any unsupported evidence fails the entire call; generated items always return as `needs_review`. `POST /extract` exposes the flow with strict request fields, blank-input rejection, and actionable 422/502/503/504 responses.
+
+- Ten labeled synthetic development cases and an evaluation rubric in `evals/`; no model results on this dataset yet.
 
 ## Verification
 
@@ -39,10 +41,12 @@ README now describes the architecture, contract, setup, terminology, design rati
 
 ## Remaining work
 
-Labeled evaluation of the agreed semantic policies and reproducible demonstration. Broader prompt compliance and extraction quality are unverified.
+Evaluation runner, deterministic baseline, measured comparison under the agreed semantic rubric, and reproducible demonstration. Broader prompt compliance and extraction quality are unverified.
 
 ## Next task
 
-Review the API request/error flow, then define a labeled synthetic evaluation dataset and item-matching rubric before measuring quality.
+Implement the evaluation runner and simple baseline, retain every attempted case and failure, then review outputs under `evals/README.md` before reporting scores.
 
 A manual structured-output smoke check combined the prompt builder, client, and parser on the synthetic sentence “Maya: I will send the report tomorrow.” The result contained one item with owner Maya, deadline “tomorrow”, exact sentence evidence, and `needs_review`. This is one smoke example, not extraction-quality evaluation or an integrated service.
+
+Dataset integrity check: ten unique case IDs, eight labeled items validated against `ExtractionResult`, all labeled evidence present exactly, and all labeled items marked `needs_review`. These checks validate fixture integrity, not model quality.

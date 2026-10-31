@@ -129,7 +129,7 @@ The current suite contains 86 passing test cases covering the health response, o
 | 2. Local model integration | In progress: standalone text client implemented | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
 | 3. Connected extraction service | Python function implemented; semantics unevaluated | Connect the components; enforce the agreed ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
 | 4. Usable MVP | Endpoint and failure responses implemented; demo verification in progress | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
-| 5. Evaluation and demonstration | Planned | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
+| 5. Evaluation and demonstration | Ten labeled cases and rubric prepared; measurements pending | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
 
 The initial demo target is November 3, 2026. It is a delivery target, not a claim of completion.
 
@@ -169,7 +169,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 - `app/`: API and processing components.
 - `tests/`: automated behavior checks.
 - `data/synthetic/`: example input transcripts.
-- `evals/`: reserved for evaluation artifacts; evaluation is not implemented.
+- `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); runner, baseline, and measurements remain pending.
 - [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
 - [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.
 - [Validation design](docs/VALIDATION.md): component responsibilities and failure behavior.
