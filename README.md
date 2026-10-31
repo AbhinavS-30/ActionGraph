@@ -121,6 +121,10 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 
 The current suite contains 122 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
+GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
+The workflow also lints `evals/` and has a ten-minute job timeout. These automated
+checks use simulated model responses; they do not download or run Ollama.
+
 ## Delivery phases
 
 | Phase | Status | Deliverable and completion criteria |
