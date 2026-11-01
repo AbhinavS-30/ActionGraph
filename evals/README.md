@@ -115,3 +115,22 @@ The [JSON-null candidate](results/REPORT-fcc91ec.md) was evaluated and rejected;
 its raw outputs and semantic review are preserved while the previous prompt is
 restored in application code. More completed calls did not mean better task
 extraction.
+
+## Experimental list contract
+
+`--contract lists` selects an evaluation-only adapter. Owner and deadline are
+required lists of at most one string: `[]` explicitly means unknown; `["Maya"]`
+means a known value. The adapter maps those representations to the unchanged
+public string-or-null contract, validates it, and checks evidence. `["null"]`,
+multiple values, scalar strings, and JSON null at this model boundary are errors,
+not silently repaired. Review status is assigned by the application.
+
+```bash
+.venv/bin/python -m evals.run --contract lists --output /tmp/actiongraph-lists.jsonl
+```
+
+The experiment changes model schema, matching prompt representation, and removes
+model control of review status; this is a contract experiment, not a claim that
+only prompt wording changed. It is not enabled in `POST /extract`. Metadata
+records the variant and its actual instruction hash. Results require separate
+semantic review under the same rubric. No quality benefit has been measured yet.

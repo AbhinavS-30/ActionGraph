@@ -20,7 +20,7 @@ Updated November 1, 2026.
 
 ## Verification
 
-122 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+128 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -100,3 +100,5 @@ unknown owner and deadline. Validator, schema, dataset, and generation settings
 were unchanged for the experiment; results are now recorded below.
 
 JSON-null candidate `fcc91ec` is not adopted: 6/10 calls completed (three string-null validation failures and one evidence rejection), but delivered task TP/FP/FN fell to 3/3/5; precision 50%, recall 37.5%, fully correct 3/8 labels. One raw result copied a prompt example into an unrelated transcript and was rejected. The previous prompt is restored; no schema or validator weakening. See `evals/results/REPORT-fcc91ec.md` and immutable raw run/review artifacts. This remains one stochastic development comparison, not independent validation.
+
+List-contract experiment implemented only under `evals/`: model owner/deadline use required zero-or-one-string lists, deterministically mapped to public strings/null and checked by existing validation and evidence helpers. The production endpoint is unchanged. Tests cover conversion, invalid/multiple values, string-null rejection, and evidence enforcement. 128 tests and Ruff pass; live experiment pending.

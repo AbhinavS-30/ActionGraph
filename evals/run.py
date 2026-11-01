@@ -15,6 +15,7 @@ from app.config import get_settings
 from app.extraction import extract_actions
 from app.prompts import EXTRACTION_INSTRUCTIONS
 from evals.baseline import extract_baseline
+from evals.list_contract import LIST_INSTRUCTIONS, extract_list_actions
 
 
 def collect_attempt(case, system, operation):
@@ -35,11 +36,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--baseline-only", action="store_true")
+    parser.add_argument("--contract", choices=["public", "lists"], default="public")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     dataset = (root / "evals/cases.json").read_bytes()
     cases = json.loads(dataset)
     settings = get_settings()
+    instructions = (
+        LIST_INSTRUCTIONS if args.contract == "lists" else EXTRACTION_INSTRUCTIONS
+    )
+    extractor = extract_list_actions if args.contract == "lists" else extract_actions
 
     def git(*arguments):
         return subprocess.check_output(["git", *arguments], cwd=root, text=True).strip()
@@ -49,9 +55,8 @@ def main():
         "commit": git("rev-parse", "HEAD"),
         "working_tree_dirty": bool(git("status", "--porcelain")),
         "dataset_sha256": hashlib.sha256(dataset).hexdigest(),
-        "instructions_sha256": hashlib.sha256(
-            EXTRACTION_INSTRUCTIONS.encode()
-        ).hexdigest(),
+        "instructions_sha256": hashlib.sha256(instructions.encode()).hexdigest(),
+        "generation_contract": args.contract,
         "platform": platform.platform(),
         "machine": platform.machine(),
         "processor": platform.processor(),
@@ -110,8 +115,8 @@ def main():
                 raw_responses.clear()
                 record = collect_attempt(
                     case,
-                    "ollama",
-                    lambda transcript: extract_actions(
+                    "ollama_lists" if args.contract == "lists" else "ollama",
+                    lambda transcript: extractor(
                         transcript, client=client, settings=settings
                     ),
                 )
