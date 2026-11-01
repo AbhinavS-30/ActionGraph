@@ -20,7 +20,7 @@ Updated November 1, 2026.
 
 ## Verification
 
-128 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+136 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -104,3 +104,5 @@ JSON-null candidate `fcc91ec` is not adopted: 6/10 calls completed (three string
 List-contract experiment implemented only under `evals/`: model owner/deadline use required zero-or-one-string lists, deterministically mapped to public strings/null and checked by existing validation and evidence helpers. The production endpoint is unchanged. Tests cover conversion, invalid/multiple values, string-null rejection, and evidence enforcement. 128 tests and Ruff pass; the live experiment is recorded below.
 
 List-contract run from clean `2ccb473`: 9/10 calls completed; one prompt-example quote failed evidence validation. Provisional delivered TP/FP/FN = 6/4/2 (precision 60%, recall 75%); five fully correct matched items out of eight labels. No string-null failures, but refusals, suggestions, unanswered requests, invented deadlines and wrong ownership persisted. The adapter remains evaluation-only; public API behavior is unchanged. Model successful-call median/max 1.083/1.707 seconds; failed call 0.868 seconds. See `evals/results/REPORT-2ccb473.md`.
+
+Evaluation-only two-stage commitment adapter implemented: classify candidates with exact evidence, then generate fields only for committed candidates. No selected candidates skips the second call. Final evidence references and item counts must match selected candidates; failures propagate. Public API unchanged. 136 tests and Ruff pass; live quality measurement pending.

@@ -15,6 +15,11 @@ from app.config import get_settings
 from app.extraction import extract_actions
 from app.prompts import EXTRACTION_INSTRUCTIONS
 from evals.baseline import extract_baseline
+from evals.decisions import (
+    DECISION_INSTRUCTIONS,
+    FIELD_INSTRUCTIONS,
+    extract_decided_actions,
+)
 from evals.list_contract import LIST_INSTRUCTIONS, extract_list_actions
 
 
@@ -36,16 +41,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--baseline-only", action="store_true")
-    parser.add_argument("--contract", choices=["public", "lists"], default="public")
+    parser.add_argument(
+        "--contract", choices=["public", "lists", "decisions"], default="public"
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     dataset = (root / "evals/cases.json").read_bytes()
     cases = json.loads(dataset)
     settings = get_settings()
-    instructions = (
-        LIST_INSTRUCTIONS if args.contract == "lists" else EXTRACTION_INSTRUCTIONS
-    )
-    extractor = extract_list_actions if args.contract == "lists" else extract_actions
+    variants = {
+        "public": (EXTRACTION_INSTRUCTIONS, extract_actions, "ollama"),
+        "lists": (LIST_INSTRUCTIONS, extract_list_actions, "ollama_lists"),
+        "decisions": (
+            DECISION_INSTRUCTIONS + FIELD_INSTRUCTIONS,
+            extract_decided_actions,
+            "ollama_decisions",
+        ),
+    }
+    instructions, extractor, system = variants[args.contract]
 
     def git(*arguments):
         return subprocess.check_output(["git", *arguments], cwd=root, text=True).strip()
@@ -115,7 +128,7 @@ def main():
                 raw_responses.clear()
                 record = collect_attempt(
                     case,
-                    "ollama_lists" if args.contract == "lists" else "ollama",
+                    system,
                     lambda transcript: extractor(
                         transcript, client=client, settings=settings
                     ),

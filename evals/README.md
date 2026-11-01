@@ -134,3 +134,22 @@ model control of review status; this is a contract experiment, not a claim that
 only prompt wording changed. It is not enabled in `POST /extract`. Metadata
 records the variant and its actual instruction hash. Results require separate
 semantic review under the same rubric. The [first measured list experiment](results/REPORT-2ccb473.md) completed 9/10 calls but still delivered four false-positive tasks. It is not adopted in the API.
+
+## Experimental commitment decisions
+
+`--contract decisions` uses a first model call to return action/evidence candidates
+and a decision enum: committed, declined, suggested, unanswered, or ambiguous.
+Every candidate quote must match the transcript exactly. Only committed candidates
+enter a second call, which generates fields using the list contract. If there are
+no committed candidates, the adapter returns an empty list without a second call.
+Final quotes must equal selected candidate quotes, with one output per selected
+candidate; missing or extra references fail the attempt. The public parser and
+evidence rules remain enforced. This is not a semantic proof: classification,
+coverage, field attribution, and unsupported interpretations can still be wrong.
+
+The collector retains both raw envelopes in call order and measures combined
+wall-clock duration; failures at either stage remain failures. Metadata records
+the decisions variant and the hash of both instruction strings concatenated.
+The API is unchanged. Command: `.venv/bin/python -m evals.run --contract decisions
+--output /tmp/actiongraph-decisions.jsonl` (enter as one shell line). Live quality
+is not yet measured. No new dependency, model, service, or paid API is used.
