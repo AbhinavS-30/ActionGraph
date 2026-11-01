@@ -16,3 +16,7 @@ Local-release and public-service requirements are separate in
 Approved public presentation: a polished project page and recorded local demo,
 with extraction staying local. Build the presentation after local reliability
 and release checks; do not describe it as a hosted inference service.
+
+November 1 strict-contract run: six of ten model calls failed string-null
+validation. Next quality work targets generation-contract alignment before
+untouched evaluation; see `evals/results/REPORT-b7bf4c4.md`.

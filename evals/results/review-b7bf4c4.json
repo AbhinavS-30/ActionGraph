@@ -1,0 +1,211 @@
+{
+  "review_method": "Codex provisional semantic review of clean b7bf4c4, using existing rubric. Human adjudication pending; prediction/label indices are zero-based.",
+  "reviews": [
+    {
+      "case_id": "eval-01",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-02",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed accepted request or ownerless commitment."
+    },
+    {
+      "case_id": "eval-03",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-04",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-05",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-06",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed accepted request or ownerless commitment."
+    },
+    {
+      "case_id": "eval-07",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-08",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-09",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task meaning retained with tomorrow in action, but deadline incorrectly null."
+    },
+    {
+      "case_id": "eval-10",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Both tasks found; second deadline incorrectly null, with tomorrow left in action."
+    },
+    {
+      "case_id": "eval-01",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Correct task, owner, deadline, evidence and review status."
+    },
+    {
+      "case_id": "eval-02",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Validation failure: string-null deadline; no delivered items, one FN."
+    },
+    {
+      "case_id": "eval-03",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Validation failure: string-null deadline. Refused task was still proposed; failure is not a correct negative."
+    },
+    {
+      "case_id": "eval-04",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Validation failure: string-null deadline. Raw evidence also reorders transcript lines and is not an exact substring; not a correct negative."
+    },
+    {
+      "case_id": "eval-05",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Validation failure: string-null deadline. Suggestion was still proposed; not a correct negative."
+    },
+    {
+      "case_id": "eval-06",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Validation failure: string-null owner; no delivered items, one FN."
+    },
+    {
+      "case_id": "eval-07",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task wording and correct fields, with JSON null deadline."
+    },
+    {
+      "case_id": "eval-08",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Validation failure: string-null deadline. Raw task omits required dependency; no delivered items, one FN."
+    },
+    {
+      "case_id": "eval-09",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task wording, correct original relative deadline and evidence."
+    },
+    {
+      "case_id": "eval-10",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Both commitments returned with correct owners, deadlines, exact individual evidence, and review states."
+    }
+  ]
+}

@@ -106,3 +106,7 @@ comparison. The runner does not calculate semantic scores. Review saved outputs
 and record one-to-one task pairings under the rubric above before reporting
 precision, recall, or fully correct items. A baseline-only CLI smoke run has been
 verified; the first full model comparison is retained under `results/`, with provisional Codex semantic decisions pending human adjudication.
+
+The [November 1 strict-contract run](results/REPORT-b7bf4c4.md) includes six
+validation failures. It demonstrates why successful-call rates and delivered
+precision must be reported together. Rejected raw outputs remain available.

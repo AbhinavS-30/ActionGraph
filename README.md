@@ -4,7 +4,7 @@ Evidence-backed action items from meeting transcripts, designed for local infere
 
 ActionGraph aims to turn meeting discussion into a structured list of commitments: what needs to happen, who owns it, when it is due, and the exact words supporting it. Unknown owners and deadlines remain explicit rather than being guessed.
 
-**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, a health endpoint, a standalone Ollama text client, and an extraction prompt builder are implemented. A reusable Python extraction function connects these components. The local extraction API is implemented; a first synthetic development comparison is available; human adjudication and broader evaluation remain pending.
+**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, a health endpoint, a standalone Ollama text client, and an extraction prompt builder are implemented. A reusable Python extraction function connects these components. The local extraction API is implemented; synthetic development comparisons are available; human adjudication and broader evaluation remain pending.
 
 ## Intended application
 
@@ -232,3 +232,9 @@ The slot is released on success and failure; health requests remain available.
 This process-local guard does not coordinate multiple workers, the evaluation
 runner, or other applications using Ollama. It is not a distributed rate limiter
 or a complete public-service overload control.
+
+The [strict-contract comparison](evals/results/REPORT-b7bf4c4.md) completed only
+4/10 model calls successfully: six outputs were rejected for string-null fields.
+Its 100% delivered task precision must be read alongside 62.5% task recall and
+that failure rate. Validation prevents invalid delivery; it does not establish
+reliable extraction. These remain provisional Codex-reviewed development results.

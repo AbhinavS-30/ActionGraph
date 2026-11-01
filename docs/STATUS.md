@@ -1,6 +1,6 @@
 # Project status
 
-Updated October 31, 2026.
+Updated November 1, 2026.
 
 ## Implemented
 
@@ -45,8 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Re-evaluate the stricter contract and bounded generation with explicit failure
-counts; verify Uvicorn/browser behavior before release verification. Add untouched
+Address generation of string-null fields with a focused, explicit JSON-null
+prompt example; retain strict rejection and compare a new development run.
+Verify Uvicorn/browser behavior before release verification. Add untouched
 cases before making broader quality claims. The approved presentation scope is a
 public project page plus recorded local demo; extraction remains local. See
 `docs/RELEASE.md`.
@@ -85,5 +86,9 @@ GitHub runs for `ae8de66`, `d555b6f`, and `bc49c70` passed, including clean Ubun
 installation from the lockfile. Local verification remains 122 passing tests and
 passing Ruff. CI runs no model downloads or inference. The `bc49c70` run reported
 deprecated action runtimes; checkout and setup-python were updated to official
-releases v7.0.1/v7.1.0, pinned to immutable commit hashes. Verification of that
-action-version update is pending.
+releases v7.0.1/v7.1.0, pinned to immutable commit hashes. GitHub run
+41241775468 passed for source `b7bf4c4`, verifying that action-version update.
+
+Strict-contract evaluation on November 1 from clean `b7bf4c4`: ten model attempts, four successful and six ValidationError failures for string-null fields. Provisional delivered task TP/FP/FN = 5/0/3; precision 5/5 (100%) must be read with 4/10 call success and 5/8 (62.5%) recall. Five fully correct matched items; no correct empty-label cases. Model successful-call median/max 1.481/2.995 seconds; failed-call times are reported separately. No token-limit stop occurred. Raw refusal/suggestion errors remain in rejected responses. See `evals/results/REPORT-b7bf4c4.md`; human adjudication and untouched evaluation remain pending. No prompt or application behavior was changed during this measurement.
+
+Repository visibility was changed to public at the user’s request on November 1. The extraction service remains local; no hosted inference or project page has been deployed.
