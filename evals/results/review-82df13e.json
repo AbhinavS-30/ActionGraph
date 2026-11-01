@@ -1,0 +1,204 @@
+{
+  "review_method": "Codex provisional review of two-stage decision experiment, using unchanged rubric and zero-based indices. Independent human adjudication pending; not adopted.",
+  "reviews": [
+    {
+      "case_id": "eval-01",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-02",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed accepted request or ownerless commitment."
+    },
+    {
+      "case_id": "eval-03",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-04",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-05",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative case."
+    },
+    {
+      "case_id": "eval-06",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed accepted request or ownerless commitment."
+    },
+    {
+      "case_id": "eval-07",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-08",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and all fields correct; dependency retained where applicable."
+    },
+    {
+      "case_id": "eval-09",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task meaning retained with tomorrow in action, but deadline incorrectly null."
+    },
+    {
+      "case_id": "eval-10",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Both tasks found; second deadline incorrectly null, with tomorrow left in action."
+    },
+    {
+      "case_id": "eval-01",
+      "system": "ollama_decisions",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": false,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task but wrong owner Maya instead of Nina."
+    },
+    {
+      "case_id": "eval-02",
+      "system": "ollama_decisions",
+      "pairs": [],
+      "note": "First-stage fabricated candidate evidence; attempt failed before field generation, one FN."
+    },
+    {
+      "case_id": "eval-03",
+      "system": "ollama_decisions",
+      "pairs": [],
+      "note": "Successful empty result; declined/unanswered classifications, though redundant candidate labels are not fully correct."
+    },
+    {
+      "case_id": "eval-04",
+      "system": "ollama_decisions",
+      "pairs": [],
+      "note": "Successful empty result; unanswered task excluded, but meeting logistics incorrectly classified as work candidates."
+    },
+    {
+      "case_id": "eval-05",
+      "system": "ollama_decisions",
+      "pairs": [],
+      "note": "Successful empty result; tentative suggestion excluded."
+    },
+    {
+      "case_id": "eval-06",
+      "system": "ollama_decisions",
+      "pairs": [],
+      "note": "False negative: committed ownerless task misclassified as declined/suggested and omitted."
+    },
+    {
+      "case_id": "eval-07",
+      "system": "ollama_decisions",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": false,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task, but owner and deadline are both Maya rather than Priya and null."
+    },
+    {
+      "case_id": "eval-08",
+      "system": "ollama_decisions",
+      "pairs": [],
+      "note": "First-stage fabricated candidates alongside real commitment; entire attempt rejected, one FN."
+    },
+    {
+      "case_id": "eval-09",
+      "system": "ollama_decisions",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": false,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task, but owner/deadline both Maya instead of Nina/tomorrow."
+    },
+    {
+      "case_id": "eval-10",
+      "system": "ollama_decisions",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": false,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "First task matched with wrong owner; second real task missed. Unanswered FAQ request became extra task with invented fields."
+    }
+  ]
+}

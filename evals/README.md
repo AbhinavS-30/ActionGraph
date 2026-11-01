@@ -151,5 +151,6 @@ The collector retains both raw envelopes in call order and measures combined
 wall-clock duration; failures at either stage remain failures. Metadata records
 the decisions variant and the hash of both instruction strings concatenated.
 The API is unchanged. Command: `.venv/bin/python -m evals.run --contract decisions
---output /tmp/actiongraph-decisions.jsonl` (enter as one shell line). Live quality
-is not yet measured. No new dependency, model, service, or paid API is used.
+--output /tmp/actiongraph-decisions.jsonl` (enter as one shell line). The [first measured run](results/REPORT-82df13e.md) excluded the three negative
+cases but produced zero fully correct items because of field errors. This adapter
+is not adopted in the public API. No new dependency, model, service, or paid API is used.

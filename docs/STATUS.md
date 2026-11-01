@@ -45,8 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Investigate an isolated commitment-decision stage before final item generation;
-keep strict validation. The list-contract experiment improved formatting success
+Constrain and validate field provenance against source evidence before adding
+further inference stages; keep strict validation. The two-stage decision
+experiment was not adopted after field correctness regressed. The list-contract experiment improved formatting success
 but still delivered false commitments, so it is not adopted in the API. The explicit JSON-null prompt candidate was rejected after evaluation.
 Verify Uvicorn/browser behavior before release verification. Add untouched
 cases before making broader quality claims. The approved presentation scope is a
@@ -105,4 +106,6 @@ List-contract experiment implemented only under `evals/`: model owner/deadline u
 
 List-contract run from clean `2ccb473`: 9/10 calls completed; one prompt-example quote failed evidence validation. Provisional delivered TP/FP/FN = 6/4/2 (precision 60%, recall 75%); five fully correct matched items out of eight labels. No string-null failures, but refusals, suggestions, unanswered requests, invented deadlines and wrong ownership persisted. The adapter remains evaluation-only; public API behavior is unchanged. Model successful-call median/max 1.083/1.707 seconds; failed call 0.868 seconds. See `evals/results/REPORT-2ccb473.md`.
 
-Evaluation-only two-stage commitment adapter implemented: classify candidates with exact evidence, then generate fields only for committed candidates. No selected candidates skips the second call. Final evidence references and item counts must match selected candidates; failures propagate. Public API unchanged. 136 tests and Ruff pass; live quality measurement pending.
+Evaluation-only two-stage commitment adapter implemented: classify candidates with exact evidence, then generate fields only for committed candidates. No selected candidates skips the second call. Final evidence references and item counts must match selected candidates; failures propagate. Public API unchanged. 136 tests and Ruff pass; live results are recorded below.
+
+Two-stage decision run `82df13e`: 8/10 attempts completed, with 14 total generation calls. Provisional TP/FP/FN = 4/1/4 (80% precision, 50% recall); all three negative cases correctly excluded, but zero fully correct items out of eight labels. All five returned owners were Maya despite no Maya in the dataset; three returned deadlines were also Maya. Two attempts failed on fabricated first-stage evidence. Paired owner errors 4/4 and deadline errors 2/4. Successful-attempt median/max duration 1.877/4.406 seconds. Public API unchanged; experiment not adopted. See `evals/results/REPORT-82df13e.md`.
