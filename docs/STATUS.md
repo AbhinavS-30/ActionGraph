@@ -45,8 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Address generation of string-null fields with a focused, explicit JSON-null
-prompt example; retain strict rejection and compare a new development run.
+Investigate a structured generation-contract alternative for unknown values;
+keep strict validation and compare one isolated change before adding more prompt
+examples. The explicit JSON-null prompt candidate was rejected after evaluation.
 Verify Uvicorn/browser behavior before release verification. Add untouched
 cases before making broader quality claims. The approved presentation scope is a
 public project page plus recorded local demo; extraction remains local. See
@@ -96,4 +97,6 @@ Repository visibility was changed to public at the user’s request on November 
 JSON-null prompt experiment: explicitly distinguishes unquoted JSON null from
 the invalid string placeholder and adds one synthetic accepted-work example with
 unknown owner and deadline. Validator, schema, dataset, and generation settings
-are unchanged; effects on model output remain to be measured.
+were unchanged for the experiment; results are now recorded below.
+
+JSON-null candidate `fcc91ec` is not adopted: 6/10 calls completed (three string-null validation failures and one evidence rejection), but delivered task TP/FP/FN fell to 3/3/5; precision 50%, recall 37.5%, fully correct 3/8 labels. One raw result copied a prompt example into an unrelated transcript and was rejected. The previous prompt is restored; no schema or validator weakening. See `evals/results/REPORT-fcc91ec.md` and immutable raw run/review artifacts. This remains one stochastic development comparison, not independent validation.

@@ -238,3 +238,8 @@ The [strict-contract comparison](evals/results/REPORT-b7bf4c4.md) completed only
 Its 100% delivered task precision must be read alongside 62.5% task recall and
 that failure rate. Validation prevents invalid delivery; it does not establish
 reliable extraction. These remain provisional Codex-reviewed development results.
+
+A [JSON-null prompt experiment](evals/results/REPORT-fcc91ec.md) reduced some
+validation failures in one run but worsened delivered task scores and leaked a
+prompt example. That prompt candidate was not adopted; the preceding prompt was
+restored. Failed experiments remain available for inspection.

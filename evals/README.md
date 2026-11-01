@@ -110,3 +110,8 @@ verified; the first full model comparison is retained under `results/`, with pro
 The [November 1 strict-contract run](results/REPORT-b7bf4c4.md) includes six
 validation failures. It demonstrates why successful-call rates and delivered
 precision must be reported together. Rejected raw outputs remain available.
+
+The [JSON-null candidate](results/REPORT-fcc91ec.md) was evaluated and rejected;
+its raw outputs and semantic review are preserved while the previous prompt is
+restored in application code. More completed calls did not mean better task
+extraction.
