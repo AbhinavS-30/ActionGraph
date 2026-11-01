@@ -45,9 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Investigate a structured generation-contract alternative for unknown values;
-keep strict validation and compare one isolated change before adding more prompt
-examples. The explicit JSON-null prompt candidate was rejected after evaluation.
+Investigate an isolated commitment-decision stage before final item generation;
+keep strict validation. The list-contract experiment improved formatting success
+but still delivered false commitments, so it is not adopted in the API. The explicit JSON-null prompt candidate was rejected after evaluation.
 Verify Uvicorn/browser behavior before release verification. Add untouched
 cases before making broader quality claims. The approved presentation scope is a
 public project page plus recorded local demo; extraction remains local. See
@@ -101,4 +101,6 @@ were unchanged for the experiment; results are now recorded below.
 
 JSON-null candidate `fcc91ec` is not adopted: 6/10 calls completed (three string-null validation failures and one evidence rejection), but delivered task TP/FP/FN fell to 3/3/5; precision 50%, recall 37.5%, fully correct 3/8 labels. One raw result copied a prompt example into an unrelated transcript and was rejected. The previous prompt is restored; no schema or validator weakening. See `evals/results/REPORT-fcc91ec.md` and immutable raw run/review artifacts. This remains one stochastic development comparison, not independent validation.
 
-List-contract experiment implemented only under `evals/`: model owner/deadline use required zero-or-one-string lists, deterministically mapped to public strings/null and checked by existing validation and evidence helpers. The production endpoint is unchanged. Tests cover conversion, invalid/multiple values, string-null rejection, and evidence enforcement. 128 tests and Ruff pass; live experiment pending.
+List-contract experiment implemented only under `evals/`: model owner/deadline use required zero-or-one-string lists, deterministically mapped to public strings/null and checked by existing validation and evidence helpers. The production endpoint is unchanged. Tests cover conversion, invalid/multiple values, string-null rejection, and evidence enforcement. 128 tests and Ruff pass; the live experiment is recorded below.
+
+List-contract run from clean `2ccb473`: 9/10 calls completed; one prompt-example quote failed evidence validation. Provisional delivered TP/FP/FN = 6/4/2 (precision 60%, recall 75%); five fully correct matched items out of eight labels. No string-null failures, but refusals, suggestions, unanswered requests, invented deadlines and wrong ownership persisted. The adapter remains evaluation-only; public API behavior is unchanged. Model successful-call median/max 1.083/1.707 seconds; failed call 0.868 seconds. See `evals/results/REPORT-2ccb473.md`.

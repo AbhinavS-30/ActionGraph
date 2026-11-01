@@ -133,4 +133,4 @@ The experiment changes model schema, matching prompt representation, and removes
 model control of review status; this is a contract experiment, not a claim that
 only prompt wording changed. It is not enabled in `POST /extract`. Metadata
 records the variant and its actual instruction hash. Results require separate
-semantic review under the same rubric. No quality benefit has been measured yet.
+semantic review under the same rubric. The [first measured list experiment](results/REPORT-2ccb473.md) completed 9/10 calls but still delivered four false-positive tasks. It is not adopted in the API.
