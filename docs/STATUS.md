@@ -92,3 +92,8 @@ releases v7.0.1/v7.1.0, pinned to immutable commit hashes. GitHub run
 Strict-contract evaluation on November 1 from clean `b7bf4c4`: ten model attempts, four successful and six ValidationError failures for string-null fields. Provisional delivered task TP/FP/FN = 5/0/3; precision 5/5 (100%) must be read with 4/10 call success and 5/8 (62.5%) recall. Five fully correct matched items; no correct empty-label cases. Model successful-call median/max 1.481/2.995 seconds; failed-call times are reported separately. No token-limit stop occurred. Raw refusal/suggestion errors remain in rejected responses. See `evals/results/REPORT-b7bf4c4.md`; human adjudication and untouched evaluation remain pending. No prompt or application behavior was changed during this measurement.
 
 Repository visibility was changed to public at the user’s request on November 1. The extraction service remains local; no hosted inference or project page has been deployed.
+
+JSON-null prompt experiment: explicitly distinguishes unquoted JSON null from
+the invalid string placeholder and adds one synthetic accepted-work example with
+unknown owner and deadline. Validator, schema, dataset, and generation settings
+are unchanged; effects on model output remain to be measured.

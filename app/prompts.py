@@ -10,6 +10,9 @@ Return only one JSON object with an outer "items" list, without Markdown.
 Each item must contain exactly these fields:
 action (nonblank string), owner (string or null), deadline (string or null),
 evidence (nonblank string), review_status (always "needs_review").
+For unknown owner or deadline values, write JSON null WITHOUT quotation marks.
+Correct: "owner": null, "deadline": null.
+Incorrect: "owner": "null", "deadline": "null". Never use the string "null".
 
 Rules:
 - Include explicit commitments and requests that someone explicitly accepts.
@@ -38,6 +41,12 @@ Example transcript: Ada: Ben, can you deploy the package?
 Ben: No, I cannot take that on.
 Example output:
 {"items": []}
+
+Example transcript: The group agreed: The incident guide will be revised. Nobody was assigned.
+Example output:
+{"items": [{"action": "Revise the incident guide", "owner": null, "deadline": null,
+"evidence": "The group agreed: The incident guide will be revised. Nobody was assigned.",
+"review_status": "needs_review"}]}
 
 The actual transcript follows as a JSON string. Decode its JSON escapes when
 copying evidence; do not copy the example as an actual result.
