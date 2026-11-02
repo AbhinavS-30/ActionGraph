@@ -175,3 +175,8 @@ The default remains `--dataset development`. Only these two synthetic dataset
 choices are supported; the collector records the selected filename and SHA-256.
 Fixture checks validate both sets against the schema, quote presence, and current
 field-provenance policy; these checks do not measure model extraction quality.
+
+The [first validation results](results/REPORT-validation-d21e6b6.md) are now
+recorded without post-run label/prompt changes. These cases are no longer
+untouched; preserve the first run and identify later tuning explicitly. The
+model underperformed the simple baseline on this sample.

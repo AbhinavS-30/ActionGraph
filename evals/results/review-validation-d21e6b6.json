@@ -1,0 +1,180 @@
+{
+  "review_method": "Provisional Codex semantic review under unchanged rubric; human adjudication pending; zero-based indices. No label or model changes after inspection.",
+  "reviews": [
+    {
+      "case_id": "validation-01",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed contraction, acceptance, or ownerless commitment."
+    },
+    {
+      "case_id": "validation-02",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed contraction, acceptance, or ownerless commitment."
+    },
+    {
+      "case_id": "validation-03",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct negative."
+    },
+    {
+      "case_id": "validation-04",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct negative."
+    },
+    {
+      "case_id": "validation-05",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct negative."
+    },
+    {
+      "case_id": "validation-06",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Missed contraction, acceptance, or ownerless commitment."
+    },
+    {
+      "case_id": "validation-07",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task(s) found; tomorrow/next Wednesday left in action rather than deadline where applicable."
+    },
+    {
+      "case_id": "validation-08",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task(s) found; tomorrow/next Wednesday left in action rather than deadline where applicable."
+    },
+    {
+      "case_id": "validation-09",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task(s) found; tomorrow/next Wednesday left in action rather than deadline where applicable."
+    },
+    {
+      "case_id": "validation-10",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task(s) found; tomorrow/next Wednesday left in action rather than deadline where applicable."
+    },
+    {
+      "case_id": "validation-01",
+      "system": "ollama",
+      "pairs": [],
+      "note": "UnsupportedEvidenceError: quote changed apostrophe/escape representation. Raw owner Jules is also wrong (recipient, not Nora)."
+    },
+    {
+      "case_id": "validation-02",
+      "system": "ollama",
+      "pairs": [],
+      "note": "ValidationError: string-null deadline; one FN."
+    },
+    {
+      "case_id": "validation-03",
+      "system": "ollama",
+      "pairs": [],
+      "note": "False positive: explicitly negated refusal extracted as accepted commitment."
+    },
+    {
+      "case_id": "validation-04",
+      "system": "ollama",
+      "pairs": [],
+      "note": "False positive: unanswered request extracted."
+    },
+    {
+      "case_id": "validation-05",
+      "system": "ollama",
+      "pairs": [],
+      "note": "Correct empty result for tentative suggestion."
+    },
+    {
+      "case_id": "validation-06",
+      "system": "ollama",
+      "pairs": [],
+      "note": "UnsupportedEvidenceError: Maya report prompt example copied; one FN."
+    },
+    {
+      "case_id": "validation-07",
+      "system": "ollama",
+      "pairs": [],
+      "note": "ValidationError: string-null deadline; raw action also omits dependency; one delivered FN."
+    },
+    {
+      "case_id": "validation-08",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task and all fields correct, including next Wednesday."
+    },
+    {
+      "case_id": "validation-09",
+      "system": "ollama",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "First commitment correct with broad contiguous supporting quote; second commitment missed."
+    },
+    {
+      "case_id": "validation-10",
+      "system": "ollama",
+      "pairs": [],
+      "note": "ValidationError: string-null deadline; one FN."
+    }
+  ]
+}

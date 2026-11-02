@@ -31,3 +31,8 @@ OpenAPI, blank-input rejection, and one real-model extraction. The user then
 verified Swagger Try it out via screenshots showing actual 200 and 422 responses.
 Automated browser access remained unavailable. Reproducible
 steps and presentation limits are in `docs/DEMO.md`; no recording is complete.
+
+First fresh validation completed November 2: model task precision 50% (2/4),
+recall 25% (2/8), and 5/10 call success. Baseline exceeded those results. Current
+quality is a blocker for production-ready claims; see the preserved validation
+report before deciding release messaging or further tuning.

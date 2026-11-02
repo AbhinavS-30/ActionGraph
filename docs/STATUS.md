@@ -45,8 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Add a separate, frozen synthetic validation set and measure the current extractor
-with explicit failure and rejection rates, without tuning on its outputs.
+Address the observed false commitments and prompt-example leakage with one
+controlled generation/policy change on development data; retain the first fresh
+validation run unchanged. Current reliability blocks production-quality claims.
 Experimental list/two-stage paths remain outside the API.
 Add untouched
 cases before making broader quality claims. The approved presentation scope is a
@@ -126,4 +127,6 @@ expected Maya report item and HTTP 422 for blank input. Screenshots were reviewe
 in the conversation; no automated browser success is claimed. `docs/DEMO.md`
 records this distinction. Recording and public project page remain pending.
 
-Fresh validation set prepared: `evals/validation-cases.json`, ten synthetic cases with eight labeled commitments, fixed before model execution. Collector supports explicit development/validation selection and records filename/hash. Labels pass input, schema, evidence, and field-provenance checks. The set was authored with knowledge of prior failure modes, so it is not an independent external benchmark. 149 tests and Ruff pass; the first validation run is pending.
+Fresh validation set prepared: `evals/validation-cases.json`, ten synthetic cases with eight labeled commitments, fixed before model execution. Collector supports explicit development/validation selection and records filename/hash. Labels pass input, schema, evidence, and field-provenance checks. The set was authored with knowledge of prior failure modes, so it is not an independent external benchmark. 149 tests and Ruff pass; the first validation run is recorded below.
+
+First fresh validation run from clean `d21e6b6`: model 5/10 successful attempts, TP/FP/FN = 2/2/6 (precision 50%, recall 25%), two fully correct matched items out of eight labels. Baseline 10/10 successful, 5/0/3 (100% precision, 62.5% recall), three fully correct items. Three string-null deadline failures and two evidence failures occurred; quote/provenance checks did not prevent refusal/unanswered-request false positives. Successful model-call median/max 1.239/1.272 seconds; failed times are separate in `evals/results/REPORT-validation-d21e6b6.md`. Labels and implementation were frozen before running; these cases are now observed and cannot be described as untouched after further tuning. Provisional Codex review, not an independent benchmark. Public page and recording remain unbuilt.

@@ -244,3 +244,9 @@ A [JSON-null prompt experiment](evals/results/REPORT-fcc91ec.md) reduced some
 validation failures in one run but worsened delivered task scores and leaked a
 prompt example. That prompt candidate was not adopted; the preceding prompt was
 restored. Failed experiments remain available for inspection.
+
+The [first fresh-set validation](evals/results/REPORT-validation-d21e6b6.md)
+completed 5/10 model calls and delivered two correct task matches, two extra tasks,
+and six missed labels. The baseline outperformed the model in that run. This
+project currently demonstrates a local extraction system and transparent
+evaluation; it is not a production-ready commitment extractor.
