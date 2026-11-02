@@ -20,7 +20,7 @@ Updated November 2, 2026.
 
 ## Verification
 
-147 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+149 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -125,3 +125,5 @@ Swagger rendering and actual Try it out server responses, HTTP 200 with the
 expected Maya report item and HTTP 422 for blank input. Screenshots were reviewed
 in the conversation; no automated browser success is claimed. `docs/DEMO.md`
 records this distinction. Recording and public project page remain pending.
+
+Fresh validation set prepared: `evals/validation-cases.json`, ten synthetic cases with eight labeled commitments, fixed before model execution. Collector supports explicit development/validation selection and records filename/hash. Labels pass input, schema, evidence, and field-provenance checks. The set was authored with knowledge of prior failure modes, so it is not an independent external benchmark. 149 tests and Ruff pass; the first validation run is pending.

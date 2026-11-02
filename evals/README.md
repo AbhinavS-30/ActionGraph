@@ -154,3 +154,24 @@ The API is unchanged. Command: `.venv/bin/python -m evals.run --contract decisio
 --output /tmp/actiongraph-decisions.jsonl` (enter as one shell line). The [first measured run](results/REPORT-82df13e.md) excluded the three negative
 cases but produced zero fully correct items because of field errors. This adapter
 is not adopted in the public API. No new dependency, model, service, or paid API is used.
+
+## Fresh validation set
+
+`validation-cases.json` contains ten synthetic cases and eight expected items,
+written after development but before running this set through the model. They
+cover contractions, recipients versus owners, accepted/refused/unanswered requests,
+suggestions, unknown values, dependencies, relative deadlines, and multiple items.
+This is a fresh set under the existing rubric, authored with knowledge of prior
+failures; it is not an independent external benchmark. Labels and the current
+production extractor must be committed before the first run. Preserve the first
+run, including failures. Do not tune on these outputs and continue calling the
+set untouched; later changes require a separately identified evaluation.
+
+```bash
+.venv/bin/python -m evals.run --dataset validation --output /tmp/actiongraph-validation.jsonl
+```
+
+The default remains `--dataset development`. Only these two synthetic dataset
+choices are supported; the collector records the selected filename and SHA-256.
+Fixture checks validate both sets against the schema, quote presence, and current
+field-provenance policy; these checks do not measure model extraction quality.

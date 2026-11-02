@@ -42,11 +42,17 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--baseline-only", action="store_true")
     parser.add_argument(
+        "--dataset", choices=["development", "validation"], default="development"
+    )
+    parser.add_argument(
         "--contract", choices=["public", "lists", "decisions"], default="public"
     )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    dataset = (root / "evals/cases.json").read_bytes()
+    dataset_name = (
+        "validation-cases.json" if args.dataset == "validation" else "cases.json"
+    )
+    dataset = (root / "evals" / dataset_name).read_bytes()
     cases = json.loads(dataset)
     settings = get_settings()
     variants = {
@@ -68,6 +74,7 @@ def main():
         "commit": git("rev-parse", "HEAD"),
         "working_tree_dirty": bool(git("status", "--porcelain")),
         "dataset_sha256": hashlib.sha256(dataset).hexdigest(),
+        "dataset_name": dataset_name,
         "instructions_sha256": hashlib.sha256(instructions.encode()).hexdigest(),
         "generation_contract": args.contract,
         "platform": platform.platform(),

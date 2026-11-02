@@ -1,0 +1,155 @@
+[
+  {
+    "id": "validation-01",
+    "category": "contraction_and_recipient",
+    "transcript": "Nora: I'll email Jules the revised agenda by Thursday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Email Jules the revised agenda",
+          "owner": "Nora",
+          "deadline": "Thursday",
+          "evidence": "Nora: I'll email Jules the revised agenda by Thursday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Contraction is an explicit commitment; Jules is the recipient, not the owner."
+  },
+  {
+    "id": "validation-02",
+    "category": "accepted_request",
+    "transcript": "Jules: Nora, could you export the attendance list?\nNora: Yes, I'll export it.",
+    "expected": {
+      "items": [
+        {
+          "action": "Export the attendance list",
+          "owner": "Nora",
+          "deadline": null,
+          "evidence": "Jules: Nora, could you export the attendance list?\nNora: Yes, I'll export it.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Explicit acceptance; evidence includes the identifying request and acceptance."
+  },
+  {
+    "id": "validation-03",
+    "category": "refusal",
+    "transcript": "Nora: Eli, can you migrate the archive?\nEli: No, I will not migrate the archive.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Explicit refusal despite the words I will appearing inside a negated commitment."
+  },
+  {
+    "id": "validation-04",
+    "category": "unanswered_request",
+    "transcript": "Eli: Jules, would you check the audit export?\nNora: We need to leave at 4 pm.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Unrelated meeting logistics do not establish acceptance or a task deadline."
+  },
+  {
+    "id": "validation-05",
+    "category": "tentative_suggestion",
+    "transcript": "Jules: Maybe we should reorganize the support queue.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Suggestion without an accepted commitment."
+  },
+  {
+    "id": "validation-06",
+    "category": "unknown_owner_and_deadline",
+    "transcript": "Decision: The status page will be refreshed. Owner and date were not assigned.",
+    "expected": {
+      "items": [
+        {
+          "action": "Refresh the status page",
+          "owner": null,
+          "deadline": null,
+          "evidence": "Decision: The status page will be refreshed. Owner and date were not assigned.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Agreed work with explicitly unspecified owner and date."
+  },
+  {
+    "id": "validation-07",
+    "category": "dependency_and_recipient",
+    "transcript": "Eli: I will notify Nora after Jules approves the release.",
+    "expected": {
+      "items": [
+        {
+          "action": "Notify Nora after Jules approves the release",
+          "owner": "Eli",
+          "deadline": null,
+          "evidence": "Eli: I will notify Nora after Jules approves the release.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Eli commits to notifying Nora; preserve dependency without creating a deadline or Jules commitment."
+  },
+  {
+    "id": "validation-08",
+    "category": "relative_deadline",
+    "transcript": "Meeting date: 2026-11-02\nNora: I will archive the old invoices next Wednesday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Archive the old invoices",
+          "owner": "Nora",
+          "deadline": "next Wednesday",
+          "evidence": "Nora: I will archive the old invoices next Wednesday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Preserve stated relative wording despite available meeting date."
+  },
+  {
+    "id": "validation-09",
+    "category": "multiple_commitments",
+    "transcript": "Eli: I will prepare the migration notes by Tuesday.\nJules: I will validate the backup tomorrow.",
+    "expected": {
+      "items": [
+        {
+          "action": "Prepare the migration notes",
+          "owner": "Eli",
+          "deadline": "Tuesday",
+          "evidence": "Eli: I will prepare the migration notes by Tuesday.",
+          "review_status": "needs_review"
+        },
+        {
+          "action": "Validate the backup",
+          "owner": "Jules",
+          "deadline": "tomorrow",
+          "evidence": "Jules: I will validate the backup tomorrow.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Two separate explicit commitments with their own owners and deadlines."
+  },
+  {
+    "id": "validation-10",
+    "category": "recipient_not_owner",
+    "transcript": "Jules: I will send Nora the signed checklist.",
+    "expected": {
+      "items": [
+        {
+          "action": "Send Nora the signed checklist",
+          "owner": "Jules",
+          "deadline": null,
+          "evidence": "Jules: I will send Nora the signed checklist.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Jules makes the commitment; Nora receives the checklist and no deadline is specified."
+  }
+]
