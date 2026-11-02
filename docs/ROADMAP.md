@@ -25,3 +25,8 @@ November 2: production field-text provenance checks now reject non-null owners
 and deadlines absent from item evidence. This is textual enforcement, not a
 semantic correctness claim. Actual browser verification and untouched evaluation
 remain pending.
+
+November 2 demo smoke verified the running Uvicorn TCP path, Swagger markup,
+OpenAPI, blank-input rejection, and one real-model extraction. Browser interaction
+remains unverified because automated browser access was unavailable. Reproducible
+steps and presentation limits are in `docs/DEMO.md`; no recording is complete.

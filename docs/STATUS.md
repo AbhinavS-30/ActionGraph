@@ -45,10 +45,10 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Verify the actual Uvicorn/browser demo path, then add untouched evaluation cases
-and measure field-provenance enforcement with explicit rejection rates.
+Complete the manual browser check in `docs/DEMO.md`, then add untouched evaluation
+cases and measure field-provenance enforcement with explicit rejection rates.
 Experimental list/two-stage paths remain outside the API.
-Verify Uvicorn/browser behavior before release verification. Add untouched
+Add untouched
 cases before making broader quality claims. The approved presentation scope is a
 public project page plus recorded local demo; extraction remains local. See
 `docs/RELEASE.md`.
@@ -110,3 +110,12 @@ Evaluation-only two-stage commitment adapter implemented: classify candidates wi
 Two-stage decision run `82df13e`: 8/10 attempts completed, with 14 total generation calls. Provisional TP/FP/FN = 4/1/4 (80% precision, 50% recall); all three negative cases correctly excluded, but zero fully correct items out of eight labels. All five returned owners were Maya despite no Maya in the dataset; three returned deadlines were also Maya. Two attempts failed on fabricated first-stage evidence. Paired owner errors 4/4 and deadline errors 2/4. Successful-attempt median/max duration 1.877/4.406 seconds. Public API unchanged; experiment not adopted. See `evals/results/REPORT-82df13e.md`.
 
 Field provenance implemented in the public extraction flow: non-null owner/deadline must occur verbatim at word boundaries in item evidence; blanks, absent names/dates, and partial-name matches fail. Errors propagate as 502 and return no partial result. Prompt now requests verbatim values. Tests explicitly show that quote presence does not establish owner attribution. 147 tests and Ruff pass; no new live model quality measurements claimed. Deterministic replay only: the guard rejects all five formerly delivered items from the two-stage experiment and two of ten delivered list-contract items. These are archived-output checks, not new inference results or revised historical scores.
+
+November 2 demo smoke: launched the documented Uvicorn reload command and checked
+the actual TCP server. Health, Swagger markup, and OpenAPI returned 200. Blank
+transcript returned 422; the synthetic Maya report commitment returned 200 with
+the expected fields, exact evidence, and needs_review through real Ollama. Browser
+automation host was unavailable and native browser access timed out; visual
+rendering and Try it out remain unverified. See `docs/DEMO.md` for reproducible
+steps and limits. No video or public project page exists yet. Current checks:
+147 tests and Ruff pass.

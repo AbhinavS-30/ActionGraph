@@ -177,6 +177,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 - [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
 - [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.
 - [Validation design](docs/VALIDATION.md): component responsibilities and failure behavior.
+- [Local demo](docs/DEMO.md): presentation sequence, observed TCP smoke check, and pending browser verification.
 
 ## Extraction request and failures
 
