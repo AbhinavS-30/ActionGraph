@@ -72,7 +72,10 @@ Ollama; requests sent over TCP with HTTPX, not the in-process test transport:
 | Synthetic commitment above | HTTP 200 with Send the report / Maya / tomorrow / exact sentence / needs_review |
 
 Automated browser access was unavailable and native browser control timed out.
-Therefore visual rendering, browser CDN assets, and Swagger **Try it out**
-interaction remain unverified. The recorded check verifies TCP/API behavior only.
-No video has been recorded. These observations are one smoke test, not quality
-or latency evaluation.
+The user subsequently executed both requests through Swagger **Try it out** and
+provided screenshots reviewed in the conversation on November 2. They confirm
+visual rendering, HTTP 200 for the synthetic commitment with the expected fields,
+and HTTP 422 with "Transcript must not be blank" for whitespace input. This is
+user-executed browser verification, separate from the earlier automated TCP check.
+No video has been recorded. These observations are smoke tests, not quality or
+latency evaluation.

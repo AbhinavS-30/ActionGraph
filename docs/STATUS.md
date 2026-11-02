@@ -45,8 +45,8 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Complete the manual browser check in `docs/DEMO.md`, then add untouched evaluation
-cases and measure field-provenance enforcement with explicit rejection rates.
+Add a separate, frozen synthetic validation set and measure the current extractor
+with explicit failure and rejection rates, without tuning on its outputs.
 Experimental list/two-stage paths remain outside the API.
 Add untouched
 cases before making broader quality claims. The approved presentation scope is a
@@ -119,3 +119,9 @@ automation host was unavailable and native browser access timed out; visual
 rendering and Try it out remain unverified. See `docs/DEMO.md` for reproducible
 steps and limits. No video or public project page exists yet. Current checks:
 147 tests and Ruff pass.
+
+Browser verification completed by the user on November 2: screenshots show
+Swagger rendering and actual Try it out server responses, HTTP 200 with the
+expected Maya report item and HTTP 422 for blank input. Screenshots were reviewed
+in the conversation; no automated browser success is claimed. `docs/DEMO.md`
+records this distinction. Recording and public project page remain pending.

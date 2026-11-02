@@ -27,6 +27,7 @@ semantic correctness claim. Actual browser verification and untouched evaluation
 remain pending.
 
 November 2 demo smoke verified the running Uvicorn TCP path, Swagger markup,
-OpenAPI, blank-input rejection, and one real-model extraction. Browser interaction
-remains unverified because automated browser access was unavailable. Reproducible
+OpenAPI, blank-input rejection, and one real-model extraction. The user then
+verified Swagger Try it out via screenshots showing actual 200 and 422 responses.
+Automated browser access remained unavailable. Reproducible
 steps and presentation limits are in `docs/DEMO.md`; no recording is complete.
