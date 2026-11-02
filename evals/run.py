@@ -15,6 +15,7 @@ from app.config import get_settings
 from app.extraction import extract_actions
 from app.prompts import EXTRACTION_INSTRUCTIONS
 from evals.baseline import extract_baseline
+from evals.concise import CONCISE_INSTRUCTIONS, extract_concise_actions
 from evals.decisions import (
     DECISION_INSTRUCTIONS,
     FIELD_INSTRUCTIONS,
@@ -45,7 +46,9 @@ def main():
         "--dataset", choices=["development", "validation"], default="development"
     )
     parser.add_argument(
-        "--contract", choices=["public", "lists", "decisions"], default="public"
+        "--contract",
+        choices=["public", "lists", "decisions", "concise"],
+        default="public",
     )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
@@ -57,6 +60,7 @@ def main():
     settings = get_settings()
     variants = {
         "public": (EXTRACTION_INSTRUCTIONS, extract_actions, "ollama"),
+        "concise": (CONCISE_INSTRUCTIONS, extract_concise_actions, "ollama_concise"),
         "lists": (LIST_INSTRUCTIONS, extract_list_actions, "ollama_lists"),
         "decisions": (
             DECISION_INSTRUCTIONS + FIELD_INSTRUCTIONS,

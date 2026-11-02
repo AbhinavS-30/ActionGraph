@@ -20,7 +20,7 @@ Updated November 2, 2026.
 
 ## Verification
 
-149 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+151 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -130,3 +130,5 @@ records this distinction. Recording and public project page remain pending.
 Fresh validation set prepared: `evals/validation-cases.json`, ten synthetic cases with eight labeled commitments, fixed before model execution. Collector supports explicit development/validation selection and records filename/hash. Labels pass input, schema, evidence, and field-provenance checks. The set was authored with knowledge of prior failure modes, so it is not an independent external benchmark. 149 tests and Ruff pass; the first validation run is recorded below.
 
 First fresh validation run from clean `d21e6b6`: model 5/10 successful attempts, TP/FP/FN = 2/2/6 (precision 50%, recall 25%), two fully correct matched items out of eight labels. Baseline 10/10 successful, 5/0/3 (100% precision, 62.5% recall), three fully correct items. Three string-null deadline failures and two evidence failures occurred; quote/provenance checks did not prevent refusal/unanswered-request false positives. Successful model-call median/max 1.239/1.272 seconds; failed times are separate in `evals/results/REPORT-validation-d21e6b6.md`. Labels and implementation were frozen before running; these cases are now observed and cannot be described as untouched after further tuning. Provisional Codex review, not an independent benchmark. Public page and recording remain unbuilt.
+
+Example-free prompt candidate implemented evaluation-only with unchanged public schema and enforcement. Planned two development repetitions per prompt in public/concise/public/concise order; selection criteria recorded before execution in `evals/README.md`. API prompt and first validation results remain unchanged. 151 tests and Ruff pass; paired model comparison pending.

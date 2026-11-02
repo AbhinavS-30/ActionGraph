@@ -180,3 +180,19 @@ The [first validation results](results/REPORT-validation-d21e6b6.md) are now
 recorded without post-run label/prompt changes. These cases are no longer
 untouched; preserve the first run and identify later tuning explicitly. The
 model underperformed the simple baseline on this sample.
+
+## Example-free prompt experiment
+
+`--contract concise` uses the public schema, single model call, exact evidence
+check, field-provenance check, and needs_review enforcement. Only the extraction
+instructions change: no illustrative names/tasks/dates and exclusion rules first.
+This variant is evaluation-only. Before inspecting outputs, the planned comparison
+is two development repetitions in public/concise/public/concise order, with no
+retries, setting changes, or validation-set rerun. Sampling remains at defaults;
+this tiny paired comparison cannot prove causality or generalization.
+
+Candidate selection criteria (not release accuracy guarantees): zero delivered
+false positives in both candidate runs; at least as many fully correct items and
+no more failed calls than its paired public run; a strict fully-correct-item
+improvement in at least one pair. If these are not met, do not adopt. Passing them
+would still require independent review and separately frozen validation.
