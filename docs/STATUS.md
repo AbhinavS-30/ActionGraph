@@ -1,6 +1,6 @@
 # Project status
 
-Updated November 1, 2026.
+Updated November 2, 2026.
 
 ## Implemented
 
@@ -20,7 +20,7 @@ Updated November 1, 2026.
 
 ## Verification
 
-136 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+147 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -45,10 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Constrain and validate field provenance against source evidence before adding
-further inference stages; keep strict validation. The two-stage decision
-experiment was not adopted after field correctness regressed. The list-contract experiment improved formatting success
-but still delivered false commitments, so it is not adopted in the API. The explicit JSON-null prompt candidate was rejected after evaluation.
+Verify the actual Uvicorn/browser demo path, then add untouched evaluation cases
+and measure field-provenance enforcement with explicit rejection rates.
+Experimental list/two-stage paths remain outside the API.
 Verify Uvicorn/browser behavior before release verification. Add untouched
 cases before making broader quality claims. The approved presentation scope is a
 public project page plus recorded local demo; extraction remains local. See
@@ -109,3 +108,5 @@ List-contract run from clean `2ccb473`: 9/10 calls completed; one prompt-example
 Evaluation-only two-stage commitment adapter implemented: classify candidates with exact evidence, then generate fields only for committed candidates. No selected candidates skips the second call. Final evidence references and item counts must match selected candidates; failures propagate. Public API unchanged. 136 tests and Ruff pass; live results are recorded below.
 
 Two-stage decision run `82df13e`: 8/10 attempts completed, with 14 total generation calls. Provisional TP/FP/FN = 4/1/4 (80% precision, 50% recall); all three negative cases correctly excluded, but zero fully correct items out of eight labels. All five returned owners were Maya despite no Maya in the dataset; three returned deadlines were also Maya. Two attempts failed on fabricated first-stage evidence. Paired owner errors 4/4 and deadline errors 2/4. Successful-attempt median/max duration 1.877/4.406 seconds. Public API unchanged; experiment not adopted. See `evals/results/REPORT-82df13e.md`.
+
+Field provenance implemented in the public extraction flow: non-null owner/deadline must occur verbatim at word boundaries in item evidence; blanks, absent names/dates, and partial-name matches fail. Errors propagate as 502 and return no partial result. Prompt now requests verbatim values. Tests explicitly show that quote presence does not establish owner attribution. 147 tests and Ruff pass; no new live model quality measurements claimed. Deterministic replay only: the guard rejects all five formerly delivered items from the two-stage experiment and two of ten delivered list-contract items. These are archived-output checks, not new inference results or revised historical scores.

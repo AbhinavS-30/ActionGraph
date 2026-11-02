@@ -229,3 +229,26 @@ def test_failure_releases_slot_for_next_request():
         ),
     )
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "field, value", [("owner", "InventedName"), ("deadline", "Friday")]
+)
+def test_unsupported_fields_return_502_without_raw_model_values(field, value):
+    transcript = "Nina: I will send the report tomorrow."
+    item = {
+        "action": "Send report",
+        "owner": "Nina",
+        "deadline": "tomorrow",
+        "evidence": transcript,
+    }
+    item[field] = value
+    response = post_extract(
+        {"transcript": transcript},
+        lambda request: httpx.Response(
+            200, json={"done": True, "response": json.dumps({"items": [item]})}
+        ),
+    )
+    assert response.status_code == 502
+    assert "items" not in response.json()
+    assert value not in response.text

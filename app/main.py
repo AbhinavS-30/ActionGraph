@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from app.config import Settings, get_settings
 from app.extraction import UnsupportedEvidenceError, extract_actions
 from app.ollama import OllamaResponseError
+from app.provenance import UnsupportedFieldError
 from app.schemas import ExtractionRequest, ExtractionResult
 
 
@@ -80,6 +81,11 @@ def extract(
     except UnsupportedEvidenceError as exc:
         raise HTTPException(
             502, "Model evidence did not match the transcript. Review input and retry."
+        ) from exc
+    except UnsupportedFieldError as exc:
+        raise HTTPException(
+            502,
+            "Model owner or deadline is not supported by its evidence. Review input and retry.",
         ) from exc
     except (OllamaResponseError, json.JSONDecodeError, ValidationError) as exc:
         raise HTTPException(

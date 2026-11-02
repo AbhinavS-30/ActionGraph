@@ -20,3 +20,8 @@ and release checks; do not describe it as a hosted inference service.
 November 1 strict-contract run: six of ten model calls failed string-null
 validation. Next quality work targets generation-contract alignment before
 untouched evaluation; see `evals/results/REPORT-b7bf4c4.md`.
+
+November 2: production field-text provenance checks now reject non-null owners
+and deadlines absent from item evidence. This is textual enforcement, not a
+semantic correctness claim. Actual browser verification and untouched evaluation
+remain pending.

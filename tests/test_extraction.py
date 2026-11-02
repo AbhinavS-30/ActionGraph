@@ -5,6 +5,7 @@ import pytest
 from pydantic import ValidationError
 
 from app.extraction import UnsupportedEvidenceError, extract_actions
+from app.provenance import UnsupportedFieldError
 
 TRANSCRIPT = "  Maya: I will send the report tomorrow.\n"
 
@@ -82,3 +83,10 @@ def test_invalid_input_never_calls_model(transcript, error):
         pytest.raises(error),
     ):
         extract_actions(transcript, client=client)
+
+
+@pytest.mark.parametrize("changes", [{"owner": "Nina"}, {"deadline": "Friday"}])
+def test_unsupported_fields_fail_whole_extraction(changes):
+    text = json.dumps({"items": [model_item(), model_item(**changes)]})
+    with client_returning(text) as client, pytest.raises(UnsupportedFieldError):
+        extract_actions(TRANSCRIPT, client=client)

@@ -7,6 +7,7 @@ from app.evidence import evidence_matches
 from app.ollama import generate_text
 from app.parsing import parse_extraction_result
 from app.prompts import build_extraction_prompt
+from app.provenance import validate_field_evidence
 from app.schemas import ExtractionResult
 
 
@@ -38,6 +39,7 @@ def extract_actions(
             raise UnsupportedEvidenceError(
                 f"Item {index} evidence does not match the transcript."
             )
+        validate_field_evidence(item)
         # A model cannot perform human confirmation, even if it emits confirmed.
         item.review_status = "needs_review"
     return result

@@ -68,3 +68,22 @@ Health does not acquire the slot. Tests overlap two requests using events rather
 than timing sleeps and verify slot reuse after success and failure. This protects
 one API process only: multiple workers, standalone extraction, and other clients
 of Ollama are not coordinated.
+
+## Field-text provenance boundary
+
+After transcript quote matching, the production extraction function checks that
+each non-null owner and deadline occurs verbatim in that item's evidence, with
+Unicode word boundaries to prevent matching a name inside another name. Case,
+spacing, and punctuation are not normalized; blank non-null fields fail. Nulls
+remain allowed. `UnsupportedFieldError` fails the entire extraction and maps to
+HTTP 502 without echoing raw model values. The prompt explicitly requests this
+verbatim representation. Experimental adapters remain unchanged for traceable
+comparisons; they are not the production path.
+
+This establishes textual presence only, not semantic support. A recipient name
+can be mistaken for an owner and a meeting-end time for a deadline even when
+both appear in the quote. Paraphrased values and case variations can be rejected,
+which is an intentional restrictive policy for this local version. No value is
+silently rewritten or replaced with null. Old evaluation artifacts retain the
+behavior of their recorded revisions; replaying a new validator is not a fresh
+model-quality evaluation.

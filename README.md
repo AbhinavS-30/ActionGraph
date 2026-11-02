@@ -67,7 +67,7 @@ An illustrative result follows. It demonstrates the contract, not a measured eva
 | `evidence` | Required string with at least one character. The separate evidence helper rejects whitespace-only quotes and checks exact presence. |
 | `review_status` | `needs_review` by default, or `confirmed`. A confirmation workflow is not implemented. |
 
-Unexpected fields within an action item are rejected. Owner and deadline reject the string placeholder `"null"` (including case and surrounding-whitespace variants); unknown values must use JSON `null`. Current minimum-length schema checks do not reject every whitespace-only field. Schema validity does not establish extraction correctness, and the parser does not invoke the evidence checker automatically.
+Unexpected fields within an action item are rejected. Owner and deadline reject the string placeholder `"null"` (including case and surrounding-whitespace variants); unknown values must use JSON `null`. Current minimum-length schema checks do not reject every whitespace-only field. Schema validity does not establish extraction correctness, and the parser does not invoke evidence checks automatically. The connected extraction function additionally requires non-null owner/deadline text to occur verbatim at word boundaries in item evidence. This rejects absent or partial-name values but does not prove correct attribution.
 
 ## Available components
 
@@ -119,7 +119,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 136 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 147 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -196,7 +196,7 @@ The response uses the `items` contract above; model output can vary, and every i
 | 422 | Missing, non-string, blank, or over-12,000-character transcript, malformed request JSON, or extra request fields; correct the request. |
 | 503 | Ollama unreachable, model unavailable, or another extraction running; inspect the detail and retry as directed. |
 | 504 | Ollama timed out; retry with a shorter transcript. |
-| 502 | Upstream HTTP failure, invalid output, or unsupported evidence; inspect input and Ollama, then retry and review. |
+| 502 | Upstream HTTP failure, invalid output, unsupported evidence, or owner/deadline text absent from evidence; inspect input and Ollama, then retry and review. |
 
 There are no automatic retries, saved results, authentication, or human confirmation endpoint. Run this initial API locally.
 

@@ -26,6 +26,9 @@ Rules:
   case, spacing, punctuation, and speaker labels. For accepted requests, include
   the request and acceptance in that excerpt, including any intervening text.
 - Never invent an action, owner, deadline, or supporting words.
+- Non-null owner and deadline text must be copied verbatim from the item's
+  evidence, preserving case. Use null when no value is established; do not
+  borrow names or dates from examples or unrelated tasks.
 - If there are no accepted commitments, return {"items": []}.
 
 Example transcript: Maya: I will send the report by Friday.
