@@ -20,7 +20,7 @@ Updated November 2, 2026.
 
 ## Verification
 
-151 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+174 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
 
 A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
 transport with real local Ollama generation. The synthetic sentence “Maya: I will
@@ -45,9 +45,9 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Address the observed false commitments and prompt-example leakage with one
-controlled generation/policy change on development data; retain the first fresh
-validation run unchanged. Current reliability blocks production-quality claims.
+Measure the approved deterministic rules mode separately from the historical
+baseline, verify its new default API response over TCP, and document misses.
+Then prepare the public project page and recorded demo with accurate scope.
 Experimental list/two-stage paths remain outside the API.
 Add untouched
 cases before making broader quality claims. The approved presentation scope is a
@@ -134,3 +134,5 @@ First fresh validation run from clean `d21e6b6`: model 5/10 successful attempts,
 Example-free prompt candidate implemented evaluation-only with unchanged public schema and enforcement. Planned two development repetitions per prompt in public/concise/public/concise order; selection criteria recorded before execution in `evals/README.md`. API prompt and first validation results remain unchanged. 151 tests and Ruff pass; the paired comparison is recorded below.
 
 Example-free prompt paired comparison `1cd4164`: candidate rejected under pre-recorded criteria. Public runs delivered fully correct items 2/8 and 5/8 with 2/10 and 5/10 call success; concise runs 1/8 and 4/8 with 5/10 and 6/10 call success. Candidate false positives were four and one; public false positives were zero in both runs, with many rejected calls. No validation-set tuning or rerun occurred. API unchanged. See `evals/results/REPORT-1cd4164.md` and all four raw runs. Before further model-prompt iteration, agree whether to add a clearly limited deterministic extraction mode for a dependable demo while preserving model inference as experimental.
+
+Approved product direction: rules mode is now the default demo path, with experimental Ollama explicitly selected. Added bounded first-person grammar, verb set, conservative ambiguity/negation exclusions, dependencies and supported trailing dates. API success adds engine/limitations; old clients need engine=ollama for previous model behavior. Rules performs no model client construction/call and remains usable while model slot is busy. Historical baseline/model artifacts are unchanged. 174 tests and Ruff pass; evaluation of the new rule engine is pending. Scope/migration are in `docs/RULES.md`.

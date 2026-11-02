@@ -36,3 +36,9 @@ First fresh validation completed November 2: model task precision 50% (2/4),
 recall 25% (2/8), and 5/10 call success. Baseline exceeded those results. Current
 quality is a blocker for production-ready claims; see the preserved validation
 report before deciding release messaging or further tuning.
+
+Approved product pivot: the local API now defaults to a narrowly scoped rules
+engine; experimental Ollama is explicitly opt-in, with no silent fallback.
+Responses identify the engine and its limitations. See `docs/RULES.md` for grammar
+and response-shape migration. Existing baseline/model evaluations remain
+unchanged; the new rules engine requires its own recorded comparison.

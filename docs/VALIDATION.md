@@ -87,3 +87,7 @@ which is an intentional restrictive policy for this local version. No value is
 silently rewritten or replaced with null. Old evaluation artifacts retain the
 behavior of their recorded revisions; replaying a new validator is not a fresh
 model-quality evaluation.
+
+## Engine selection
+
+`ExtractionRequest.engine` defaults to rules, with ollama as explicit experimental mode. `ExtractionResponse` adds engine and limitations to items. Rules uses the shared input, schema and field-provenance helpers, original-line evidence and needs_review status. It never constructs the model client or acquires the inference slot. Model failures remain failures with no fallback. Rules scope and missed forms are documented in `docs/RULES.md`; successful grammar matching is not general commitment understanding.

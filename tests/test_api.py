@@ -8,7 +8,9 @@ import pytest
 from app.main import app, get_ollama_client
 
 
-def post_extract(body, handler):
+def post_extract(body, handler, *, use_default=False):
+    body = body if use_default else {"engine": "ollama", **body}
+
     def override():
         with httpx.Client(
             base_url="http://ollama.test", transport=httpx.MockTransport(handler)
@@ -47,7 +49,9 @@ def test_extract_returns_reviewable_items_with_original_evidence():
     response = post_extract({"transcript": transcript}, handler)
     assert response.status_code == 200
     item["review_status"] = "needs_review"
-    assert response.json() == {"items": [item]}
+    assert response.json()["items"] == [item]
+    assert response.json()["engine"] == "ollama"
+    assert response.json()["limitations"]
 
 
 @pytest.mark.parametrize(
@@ -58,6 +62,7 @@ def test_extract_returns_reviewable_items_with_original_evidence():
         {"transcript": None},
         {"transcript": 42},
         {"transcript": "Hello", "extra": 1},
+        {"transcript": "Hello", "engine": "unknown"},
     ],
 )
 def test_invalid_request_returns_422_without_model_call(body):
@@ -193,7 +198,7 @@ def test_overlapping_extraction_is_rejected_without_second_model_call():
         async with httpx.AsyncClient(
             transport=httpx.ASGITransport(app=app), base_url="http://test"
         ) as client:
-            body = {"transcript": "Maya: Hello."}
+            body = {"transcript": "Maya: Hello.", "engine": "ollama"}
             first = asyncio.create_task(client.post("/extract", json=body))
             try:
                 assert await asyncio.to_thread(entered.wait, 2)
@@ -202,6 +207,12 @@ def test_overlapping_extraction_is_rejected_without_second_model_call():
                 assert second.headers["Retry-After"] == "1"
                 assert len(calls) == 1
                 assert (await client.get("/health")).status_code == 200
+                rules_response = await client.post(
+                    "/extract",
+                    json={"transcript": "Nina: I will review logs tomorrow."},
+                )
+                assert rules_response.status_code == 200
+                assert rules_response.json()["engine"] == "rules"
             finally:
                 release.set()
                 first_response = await first
@@ -252,3 +263,24 @@ def test_unsupported_fields_return_502_without_raw_model_values(field, value):
     assert response.status_code == 502
     assert "items" not in response.json()
     assert value not in response.text
+
+
+def test_default_rules_mode_never_constructs_model_client(monkeypatch):
+    def fail(*args, **kwargs):
+        pytest.fail("Default rules mode must not construct an Ollama client")
+
+    monkeypatch.setattr("app.main.httpx.Client", fail)
+
+    async def request():
+        async with httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            return await client.post(
+                "/extract", json={"transcript": "Nina: I'll review the logs tomorrow."}
+            )
+
+    response = asyncio.run(request())
+    assert response.status_code == 200
+    assert response.json()["engine"] == "rules"
+    assert response.json()["limitations"]
+    assert response.json()["items"][0]["owner"] == "Nina"

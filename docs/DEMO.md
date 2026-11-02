@@ -7,8 +7,9 @@ The public project page and video recording are not yet created.
 
 ## Start
 
-From the repository root, ensure local Ollama is running with `llama3.2:3b`
-already installed. The application never downloads a model automatically.
+From the repository root, start the API. Default rules mode requires no Ollama.
+For an explicitly experimental model demo, start local Ollama with `llama3.2:3b`
+already installed and include `"engine": "ollama"`. No automatic model downloads occur.
 
 ```bash
 .venv/bin/python -m uvicorn app.main:app --reload
@@ -29,7 +30,7 @@ recorded local demo, not a publicly exposed inference endpoint.
    {"transcript": "Maya: I will send the report tomorrow."}
    ```
 
-3. Inspect the returned item: task, owner, original relative deadline, exact
+3. Confirm `engine` is `rules` and read the returned `limitations`. Inspect the item: task, owner, original relative deadline, exact
    evidence, and `needs_review`. Explain why the application preserves
    "tomorrow" and does not infer a calendar date.
 4. Submit a blank transcript:
@@ -79,3 +80,7 @@ and HTTP 422 with "Transcript must not be blank" for whitespace input. This is
 user-executed browser verification, separate from the earlier automated TCP check.
 No video has been recorded. These observations are smoke tests, not quality or
 latency evaluation.
+
+The verification table above records the earlier model-only source revision.
+The new default rules mode and expanded response fields require a new live smoke
+check; do not relabel old observations as verification of the new engine.

@@ -14,7 +14,8 @@ from app.config import Settings, get_settings
 from app.extraction import UnsupportedEvidenceError, extract_actions
 from app.ollama import OllamaResponseError
 from app.provenance import UnsupportedFieldError
-from app.schemas import ExtractionRequest, ExtractionResult
+from app.rules import RULES_SCOPE, extract_rule_actions
+from app.schemas import ExtractionRequest, ExtractionResponse
 
 
 @asynccontextmanager
@@ -33,13 +34,18 @@ def health() -> dict[str, str]:
         "status": "ok",
         "extraction": "function_available",
         "extraction_api": "available",
+        "default_engine": "rules",
     }
 
 
 def get_ollama_client(
+    request: ExtractionRequest,
     settings: Annotated[Settings, Depends(get_settings)],
-) -> Iterator[httpx.Client]:
+) -> Iterator[httpx.Client | None]:
     """Own and close one local client per request; no model readiness probe."""
+    if request.engine == "rules":
+        yield None
+        return
     with httpx.Client(
         base_url=settings.ollama_base_url,
         timeout=settings.ollama_timeout_seconds,
@@ -48,12 +54,18 @@ def get_ollama_client(
         yield client
 
 
-@app.post("/extract", response_model=ExtractionResult)
+@app.post("/extract", response_model=ExtractionResponse)
 def extract(
     request: ExtractionRequest,
-    client: Annotated[httpx.Client, Depends(get_ollama_client)],
+    client: Annotated[httpx.Client | None, Depends(get_ollama_client)],
     settings: Annotated[Settings, Depends(get_settings)],
-) -> ExtractionResult:
+) -> ExtractionResponse:
+    if request.engine == "rules":
+        result = extract_rule_actions(request.transcript)
+        return ExtractionResponse(
+            items=result.items, engine="rules", limitations=[RULES_SCOPE]
+        )
+    assert client is not None
     if not extraction_slot.acquire(blocking=False):
         raise HTTPException(
             503,
@@ -61,7 +73,14 @@ def extract(
             headers={"Retry-After": "1"},
         )
     try:
-        return extract_actions(request.transcript, client=client, settings=settings)
+        result = extract_actions(request.transcript, client=client, settings=settings)
+        return ExtractionResponse(
+            items=result.items,
+            engine="ollama",
+            limitations=[
+                "Experimental local model: evaluation found false commitments, missed tasks and invalid fields. Review every item."
+            ],
+        )
     except httpx.TimeoutException as exc:
         raise HTTPException(
             504, "Ollama timed out. Retry with a shorter transcript."

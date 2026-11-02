@@ -4,7 +4,7 @@ Evidence-backed action items from meeting transcripts, designed for local infere
 
 ActionGraph aims to turn meeting discussion into a structured list of commitments: what needs to happen, who owns it, when it is due, and the exact words supporting it. Unknown owners and deadlines remain explicit rather than being guessed.
 
-**Development status:** input validation, JSON parsing, output schemas, exact evidence matching, a health endpoint, a standalone Ollama text client, and an extraction prompt builder are implemented. A reusable Python extraction function connects these components. The local extraction API is implemented; synthetic development comparisons are available; human adjudication and broader evaluation remain pending.
+**Development status:** the local API defaults to an explicitly limited rule-based demo engine; experimental local Ollama extraction remains opt-in. Responses identify the engine and scope limits. Tests, source-evidence checks, CI, and synthetic evaluations are implemented. Broad meeting understanding and production readiness are not claimed.
 
 ## Intended application
 
@@ -12,12 +12,15 @@ The local API accepts a text transcript and returns proposed action items for re
 
 ## Architecture
 
-The diagram describes the target flow. The Python extraction function connects input validation through evidence checks. The API returns proposed items; human confirmation and persistence remain planned.
+The API selects rules by default or experimental local inference explicitly, then returns proposed items for review. Human confirmation and persistence remain planned.
 
 ```mermaid
 flowchart TD
     A[Text transcript] --> B[Input validation: implemented]
-    B --> C[Ollama text client: implemented; prompt builder implemented]
+    B --> R{Engine}
+    R --> Q[Rules: default, limited grammar]
+    R --> C[Ollama: experimental]
+    Q --> F
     C --> D[JSON parsing: implemented]
     D --> E[Pydantic output validation: implemented]
     E --> F[Exact evidence check: implemented]
@@ -83,7 +86,7 @@ Unexpected fields within an action item are rejected. Owner and deadline reject 
 
 ## Run locally
 
-Prerequisite: Python 3.12. Run commands from the repository root.
+Prerequisite: Python 3.12. Default rules mode does not need Ollama. Run commands from the repository root.
 
 For a new checkout, create an isolated Python environment and install pinned dependencies:
 
@@ -107,7 +110,7 @@ curl http://127.0.0.1:8000/health
 Expected response:
 
 ```json
-{"status": "ok", "extraction": "function_available", "extraction_api": "available"}
+{"status": "ok", "extraction": "function_available", "extraction_api": "available", "default_engine": "rules"}
 ```
 
 Unit tests use simulated HTTP responses and do not require Ollama. Calling the standalone model client requires a running local Ollama service and the installed `llama3.2:3b` model. The caller supplies an HTTPX client. The API loads validated exported settings at startup, defaults to local Ollama, and uses a 60-second HTTPX timeout for network operations. This is not a total generation deadline. No paid inference API is required by the planned architecture.
@@ -119,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 151 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 174 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -181,7 +184,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 
 ## Extraction request and failures
 
-Ensure the Ollama service is running with `llama3.2:3b` installed, then start Uvicorn using the command above. No model downloads are performed by this application. Defaults are `http://127.0.0.1:11434` and `llama3.2:3b`. Exported environment overrides are supported; `.env` files are not read automatically. Restart the API after changing settings.
+Start Uvicorn using the command above. Rules mode needs no model service. To opt into experimental inference, start Ollama with `llama3.2:3b` installed and send `"engine": "ollama"`. No model downloads are performed by this application. Defaults are `http://127.0.0.1:11434` and `llama3.2:3b`. Exported environment overrides are supported; `.env` files are not read automatically. Restart the API after changing settings.
 
 ```bash
 curl -X POST http://127.0.0.1:8000/extract \
@@ -250,3 +253,15 @@ completed 5/10 model calls and delivered two correct task matches, two extra tas
 and six missed labels. The baseline outperformed the model in that run. This
 project currently demonstrates a local extraction system and transparent
 evaluation; it is not a production-ready commitment extractor.
+
+## Default demo engine
+
+`POST /extract` now defaults to `engine: rules`. Successful responses contain
+`items`, `engine`, and `limitations`. The rules support a narrow first-person
+commitment grammar and stated date forms; see [exact scope and API migration](docs/RULES.md).
+Unsupported forms may be missed, including accepted requests and ownerless work.
+An empty result is not a completeness claim. This mode is separate from the
+unchanged evaluation baseline. No model call or automatic fallback occurs.
+
+Use `engine: ollama` explicitly for the experimental model path. Earlier model
+reports describe their recorded revisions and do not measure this new rules mode.

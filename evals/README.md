@@ -201,3 +201,13 @@ The [paired prompt results](results/REPORT-1cd4164.md) failed the selection
 criteria. The concise candidate remains evaluation-only, with all four runs
 preserved. Neither completion rate nor quote presence established correct task
 meaning, and the public prompt also showed substantial run-to-run variation.
+
+## Product rules engine
+
+`--contract rules` evaluates the new deterministic demo engine, separately from
+the unchanged historical baseline. No model inventory or generation requests occur;
+metadata records model_used=false. The default public contract option in this
+collector still measures experimental Ollama, whereas the API now defaults to
+rules. Do not confuse these paths. Both datasets have already been inspected and
+are development data for this rule implementation; future validation needs a new
+frozen set.

@@ -14,6 +14,7 @@ import httpx
 from app.config import get_settings
 from app.extraction import extract_actions
 from app.prompts import EXTRACTION_INSTRUCTIONS
+from app.rules import extract_rule_actions
 from evals.baseline import extract_baseline
 from evals.concise import CONCISE_INSTRUCTIONS, extract_concise_actions
 from evals.decisions import (
@@ -47,7 +48,7 @@ def main():
     )
     parser.add_argument(
         "--contract",
-        choices=["public", "lists", "decisions", "concise"],
+        choices=["public", "lists", "decisions", "concise", "rules"],
         default="public",
     )
     args = parser.parse_args()
@@ -60,6 +61,11 @@ def main():
     settings = get_settings()
     variants = {
         "public": (EXTRACTION_INSTRUCTIONS, extract_actions, "ollama"),
+        "rules": (
+            "Deterministic rules grammar v1; source commit records implementation.",
+            lambda transcript, **_: extract_rule_actions(transcript),
+            "rules",
+        ),
         "concise": (CONCISE_INSTRUCTIONS, extract_concise_actions, "ollama_concise"),
         "lists": (LIST_INSTRUCTIONS, extract_list_actions, "ollama_lists"),
         "decisions": (
@@ -69,6 +75,7 @@ def main():
         ),
     }
     instructions, extractor, system = variants[args.contract]
+    model_used = args.contract != "rules" and not args.baseline_only
 
     def git(*arguments):
         return subprocess.check_output(["git", *arguments], cwd=root, text=True).strip()
@@ -85,13 +92,18 @@ def main():
         "machine": platform.machine(),
         "processor": platform.processor(),
         "python": platform.python_version(),
-        "model": settings.ollama_model,
+        "model": settings.ollama_model if model_used else None,
+        "model_used": model_used,
         "generation_settings": {
             "num_predict": settings.ollama_num_predict,
             "other_options": "Ollama defaults; schema format; stream=false",
-        },
+        }
+        if model_used
+        else None,
         "runtime_settings": settings.model_dump(),
-        "model_initial_state": "unknown; no warmup request performed",
+        "model_initial_state": "unknown; no warmup request performed"
+        if model_used
+        else "not applicable",
         "timeout_seconds_per_operation": settings.ollama_timeout_seconds,
     }
 
@@ -107,7 +119,7 @@ def main():
             timeout=settings.ollama_timeout_seconds,
             trust_env=False,
         ) as client:
-            if not args.baseline_only:
+            if model_used:
                 for endpoint, key in [
                     ("/api/version", "ollama_version"),
                     ("/api/tags", "model_inventory"),

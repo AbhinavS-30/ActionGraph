@@ -12,6 +12,10 @@ class ExtractionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     transcript: str = Field(max_length=MAX_TRANSCRIPT_CHARS)
+    engine: Literal["rules", "ollama"] = Field(
+        default="rules",
+        description="rules: limited deterministic demo; ollama: experimental local inference.",
+    )
 
     @field_validator("transcript")
     @classmethod
@@ -40,3 +44,8 @@ class ActionItem(BaseModel):
 
 class ExtractionResult(BaseModel):
     items: list[ActionItem]
+
+
+class ExtractionResponse(ExtractionResult):
+    engine: Literal["rules", "ollama"]
+    limitations: list[str]
