@@ -45,7 +45,7 @@ recorded local demo, not a publicly exposed inference endpoint.
    reports, including the baseline comparison. Do not present a successful
    example as representative accuracy or omit failures from claimed metrics.
 
-Model output varies. If inference returns 502, explain the validation failure
+Only the explicitly selected experimental model output varies between runs. If inference returns 502, explain the validation failure
 and retain the result; do not silently substitute a saved response or retry until
 the result looks good. A saved example must be labeled as recorded, not live.
 503 means the model/service is unavailable or another extraction is active;
@@ -82,5 +82,7 @@ No video has been recorded. These observations are smoke tests, not quality or
 latency evaluation.
 
 The verification table above records the earlier model-only source revision.
-The new default rules mode and expanded response fields require a new live smoke
-check; do not relabel old observations as verification of the new engine.
+A separate new TCP smoke check verified the default rules mode and expanded
+response fields; see `evals/results/REPORT-rules-45bdcb3.md`. Browser interaction
+with the new engine label remains to be rechecked; do not relabel old screenshots
+as verification of the new response shape.

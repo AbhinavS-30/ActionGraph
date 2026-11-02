@@ -1,0 +1,465 @@
+{
+  "review_method": "Codex known-case development review; both sets previously inspected. Rule pairings match expected item objects exactly; baseline task matches allow equivalent wording while scoring deadlines separately. No independent benchmark claim.",
+  "reviews": [
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-01",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-02",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-03",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-04",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-05",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-06",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-07",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-08",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "baseline",
+      "case_id": "eval-10",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-01",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-02",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-03",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-04",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-05",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-06",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-07",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-08",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "development",
+      "system": "rules",
+      "case_id": "eval-10",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-01",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-02",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-03",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-04",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-05",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-06",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-07",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-08",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "baseline",
+      "case_id": "validation-10",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-01",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-02",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-03",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-04",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-05",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-06",
+      "pairs": [],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-07",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-08",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    },
+    {
+      "dataset": "validation",
+      "system": "rules",
+      "case_id": "validation-10",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Known-case comparison under original rubric. Rules outputs match paired labels exactly; supported empty negatives verified. Unpaired expected items remain misses. Baseline relative deadline errors retained."
+    }
+  ]
+}

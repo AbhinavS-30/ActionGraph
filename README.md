@@ -265,3 +265,8 @@ unchanged evaluation baseline. No model call or automatic fallback occurs.
 
 Use `engine: ollama` explicitly for the experimental model path. Earlier model
 reports describe their recorded revisions and do not measure this new rules mode.
+
+The [rules v1 known-case report](evals/results/REPORT-rules-45bdcb3.md) records
+six fully correct items out of eight labels on each known synthetic set, no extra
+tasks, and explicit misses for accepted requests and ownerless work. These sets
+were inspected during development; these are not held-out accuracy estimates.

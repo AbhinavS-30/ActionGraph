@@ -211,3 +211,8 @@ collector still measures experimental Ollama, whereas the API now defaults to
 rules. Do not confuse these paths. Both datasets have already been inspected and
 are development data for this rule implementation; future validation needs a new
 frozen set.
+
+The [rules v1 known-case report](results/REPORT-rules-45bdcb3.md) retains separate
+results for the old baseline and new product engine on both already observed
+sets. The label file named validation-cases is now development data for these
+rules; a fresh set is needed before validation claims.

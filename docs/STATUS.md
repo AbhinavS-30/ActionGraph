@@ -45,8 +45,8 @@ Human review of provisional evaluation decisions, an agreed response to observed
 
 ## Next task
 
-Measure the approved deterministic rules mode separately from the historical
-baseline, verify its new default API response over TCP, and document misses.
+Freeze a new rules-focused validation set before measuring generalization, then
+prepare the public project page and recorded demo with the approved limited scope.
 Then prepare the public project page and recorded demo with accurate scope.
 Experimental list/two-stage paths remain outside the API.
 Add untouched
@@ -135,4 +135,6 @@ Example-free prompt candidate implemented evaluation-only with unchanged public 
 
 Example-free prompt paired comparison `1cd4164`: candidate rejected under pre-recorded criteria. Public runs delivered fully correct items 2/8 and 5/8 with 2/10 and 5/10 call success; concise runs 1/8 and 4/8 with 5/10 and 6/10 call success. Candidate false positives were four and one; public false positives were zero in both runs, with many rejected calls. No validation-set tuning or rerun occurred. API unchanged. See `evals/results/REPORT-1cd4164.md` and all four raw runs. Before further model-prompt iteration, agree whether to add a clearly limited deterministic extraction mode for a dependable demo while preserving model inference as experimental.
 
-Approved product direction: rules mode is now the default demo path, with experimental Ollama explicitly selected. Added bounded first-person grammar, verb set, conservative ambiguity/negation exclusions, dependencies and supported trailing dates. API success adds engine/limitations; old clients need engine=ollama for previous model behavior. Rules performs no model client construction/call and remains usable while model slot is busy. Historical baseline/model artifacts are unchanged. 174 tests and Ruff pass; evaluation of the new rule engine is pending. Scope/migration are in `docs/RULES.md`.
+Approved product direction: rules mode is now the default demo path, with experimental Ollama explicitly selected. Added bounded first-person grammar, verb set, conservative ambiguity/negation exclusions, dependencies and supported trailing dates. API success adds engine/limitations; old clients need engine=ollama for previous model behavior. Rules performs no model client construction/call and remains usable while model slot is busy. Historical baseline/model artifacts are unchanged. 174 tests and Ruff pass; the rule-engine comparison is recorded below. Scope/migration are in `docs/RULES.md`.
+
+Rules v1 known-case comparison from clean `45bdcb3`: both ten-case sets completed with no model calls or failures. On each set rules TP/FP/FN = 6/0/2, six fully correct items out of eight labels, and 3/3 correct empty negatives. Misses are accepted requests and ownerless commitments. Both sets were already known during implementation, so these are development results, not held-out accuracy. Live TCP API smoke verified default engine=rules, correct Asha/Ben attribution, Thursday deadline, exact evidence, needs_review, limitations, and blank-input 422. Source `45bdcb3` contains the new response shape. See `evals/results/REPORT-rules-45bdcb3.md`. Browser demo re-verification/video and public page remain pending.
