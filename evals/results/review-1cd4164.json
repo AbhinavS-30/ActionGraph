@@ -1,0 +1,396 @@
+{
+  "review_method": "Provisional Codex review under unchanged rubric and pre-recorded selection criteria; no independent human adjudication; zero-based indices. Action must preserve work and object, not merely quote them in evidence.",
+  "reviews": [
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-01",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-02",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-03",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-04",
+      "pairs": [],
+      "note": "UnsupportedEvidenceError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-05",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-06",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-07",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-08",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "public",
+      "run": 1,
+      "case_id": "eval-10",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-01",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-02",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-03",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-04",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-05",
+      "pairs": [],
+      "note": "UnsupportedEvidenceError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-06",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-07",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-08",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "public",
+      "run": 2,
+      "case_id": "eval-10",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        },
+        {
+          "prediction": 1,
+          "label": 1,
+          "owner_correct": false,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Both tasks match; second owner is null despite explicit Omar commitment."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-01",
+      "pairs": [],
+      "note": "Action omits the work/object (send, investigate, or Established commitment); cannot pair by task meaning."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-02",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-03",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-04",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-05",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-06",
+      "pairs": [],
+      "note": "Action omits the work/object (send, investigate, or Established commitment); cannot pair by task meaning."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-07",
+      "pairs": [],
+      "note": "Action omits the work/object (send, investigate, or Established commitment); cannot pair by task meaning."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-08",
+      "pairs": [],
+      "note": "UnsupportedFieldError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "concise",
+      "run": 1,
+      "case_id": "eval-10",
+      "pairs": [],
+      "note": "Action omits the work/object (send, investigate, or Established commitment); cannot pair by task meaning."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-01",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-02",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Task and acceptance evidence match; acceptance sentence incorrectly used as deadline."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-03",
+      "pairs": [],
+      "note": "False positive: declined work extracted using only request evidence."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-04",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-05",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-06",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-07",
+      "pairs": [],
+      "note": "ValidationError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-08",
+      "pairs": [],
+      "note": "UnsupportedFieldError; no delivered items and no correct-negative credit."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-09",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    },
+    {
+      "variant": "concise",
+      "run": 2,
+      "case_id": "eval-10",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and correct paired fields; any missing labels remain FN."
+    }
+  ]
+}

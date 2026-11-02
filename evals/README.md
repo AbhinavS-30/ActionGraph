@@ -196,3 +196,8 @@ false positives in both candidate runs; at least as many fully correct items and
 no more failed calls than its paired public run; a strict fully-correct-item
 improvement in at least one pair. If these are not met, do not adopt. Passing them
 would still require independent review and separately frozen validation.
+
+The [paired prompt results](results/REPORT-1cd4164.md) failed the selection
+criteria. The concise candidate remains evaluation-only, with all four runs
+preserved. Neither completion rate nor quote presence established correct task
+meaning, and the public prompt also showed substantial run-to-run variation.
