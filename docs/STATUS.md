@@ -37,8 +37,7 @@ speaker's explicit Yes + first-person promise + matching verb + it/them. Both
 original lines form the evidence. Dates and dependencies use the existing parser.
 Bare yes, mismatching speakers/verbs, intervening lines and conditional replies
 are excluded. Cancellation still applies. API coverage verifies no model call.
-No dependencies added. Quality replay of v3 remains pending; v2 numbers below
-remain historical results and do not measure this change.
+No dependencies added. The v3 replay is recorded below; earlier results remain historical.
 
 ## Current verification
 
@@ -73,8 +72,8 @@ changed after inspection. These cases are now observed.
 
 ## Remaining limits and next task
 
-Rules v2 replay is recorded with original labels and preserved v1 results.
-Next replay rules v3 against the recorded datasets with unchanged labels,
+Rules v3 replay is recorded with original labels and preserved earlier results.
+Next define a bounded policy for compound-task splitting before implementation,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -100,3 +99,13 @@ with implementation knowledge, not independent human validation or real-meeting
 accuracy. 175 tests and Ruff pass.
 
 Rules v2 explicit cancellation handling implemented under the policy in `docs/RULES.md`. Tests cover negative forms, exact speaker identity, task/date/dependency separation, vague/conditional targets, unqualified removal, and later recommitment with original evidence. API returns only surviving items; no model call added. 192 tests and Ruff pass. The [observed-case replay](../evals/results/REPORT-rules-v2-5a696b4.md) changes only the cancelled-task output: rules-focused scores are 4 TP, 0 FP, 5 FN; earlier two sets remain 6/0/2 each. These are regression results, not independent validation.
+
+## Rules v3 observed-case replay
+
+Clean source `c9e5e64`: one additional correctly accepted request per dataset;
+all other outputs unchanged. Development and observed validation each score
+7 TP, 0 FP, 1 FN (seven fully correct of eight labels); rules-focused scores
+5 TP, 0 FP, 4 FN (five fully correct of nine). All 32 rules attempts succeeded
+without model calls. Original labels and baseline remain unchanged. These are
+known-case regression results, not independent quality estimates.
+[Report and audit artifacts](../evals/results/REPORT-rules-v3-c9e5e64.md).

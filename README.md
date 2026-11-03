@@ -284,4 +284,4 @@ public page are deferred until the remaining product-release gates are complete.
 
 Rules v3 supports the bounded adjacent request/acceptance pairs documented in
 [Rules policy](docs/RULES.md), preserving both source lines as evidence.
-This change passes 214 tests; its dataset replay remains pending.
+This change passes 214 tests. The [observed-case replay](evals/results/REPORT-rules-v3-c9e5e64.md) finds one additional correct task per dataset, with other outputs unchanged; this is not independent validation.
