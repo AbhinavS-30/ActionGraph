@@ -61,11 +61,12 @@ def test_multiple_supported_lines_are_independent():
     assert result.items[1].owner == "Ben"
 
 
-def test_accepted_requests_remain_outside_this_explicit_grammar():
+def test_adjacent_explicit_acceptance_resolves_request_task():
     result = extract_rule_actions(
         "Asha: Ben, can you review the checklist?\nBen: Yes, I will review it."
     )
-    assert result.items == []
+    assert result.items[0].action == "Review the checklist"
+    assert result.items[0].owner == "Ben"
 
 
 @pytest.mark.parametrize(
@@ -136,3 +137,47 @@ def test_dependency_must_match_and_cannot_cancel_unqualified_task():
         promise + "\nBen: I will not test the patch after Asha sends the build."
     )
     assert result.items == []
+
+
+@pytest.mark.parametrize("promise", ["I will", "I'll", "I’ll"])
+@pytest.mark.parametrize("separator", ["\n", "\r\n"])
+def test_accepted_request_preserves_contiguous_evidence_and_date(promise, separator):
+    transcript = f"  Asha: Ben, could you review the checklist by Friday?  {separator} Ben: Yes, {promise} review it. "
+    item = extract_rule_actions(transcript).items[0]
+    assert item.action == "Review the checklist"
+    assert item.owner == "Ben"
+    assert item.deadline == "Friday"
+    assert item.evidence == transcript
+    assert item.review_status == "needs_review"
+
+
+@pytest.mark.parametrize("reply", [
+    "Ben: Yes.",
+    "Ben: Yes, I will review it if approved.",
+    "Ben: Yes, I will publish it.",
+    "BEN: Yes, I will review it.",
+    "Cara: Yes, I will review it.",
+    "Ben: No, I will not review it.",
+    "Ben: Yes, I will review it tomorrow.",
+    "Ben: Yes, I will review it and send it.",
+])
+def test_ambiguous_or_mismatching_acceptance_is_not_inferred(reply):
+    assert extract_rule_actions("Asha: Ben, can you review the checklist?\n" + reply).items == []
+
+
+@pytest.mark.parametrize("middle", ["\n", "Cara: The meeting is ending.\n"])
+def test_acceptance_must_be_immediately_adjacent(middle):
+    assert extract_rule_actions("Asha: Ben, can you review the checklist?\n" + middle + "Ben: Yes, I will review it.").items == []
+
+
+@pytest.mark.parametrize("work", ["review it", "review the checklist and send logs", "review the checklist at noon", "review the checklist if approved"])
+def test_request_task_must_pass_existing_grammar(work):
+    assert extract_rule_actions(f"Asha: Ben, can you {work}?\nBen: Yes, I will review it.").items == []
+
+
+def test_accepted_request_can_be_cancelled_and_dependency_is_preserved():
+    pair = "Asha: Ben, can you review the checklist after Cara sends the build?\nBen: Yes, I'll review it."
+    item = extract_rule_actions(pair).items[0]
+    assert item.action == "Review the checklist after Cara sends the build"
+    assert item.deadline is None
+    assert extract_rule_actions(pair + "\nBen: I won't review the checklist after Cara sends the build.").items == []

@@ -104,3 +104,12 @@ Returned evidence remains the original surviving commitment line. This does not
 implement general dialogue resolution. Exact supported forms are in `RULES.md`.
 Historical baseline and v1 reports are unchanged; updated runs need their own
 source revision and `rules_version` metadata.
+
+## Rules accepted-request boundary
+
+Rules v3 recognizes only adjacent named requests and explicit matching-verb
+acceptances as defined in RULES.md. The request supplies action and deadline;
+the exact addressed speaker must accept. Evidence spans both original lines,
+preserving CRLF or LF and boundary spaces. Other replies or intervening lines
+are skipped. Existing cancellation matching applies to the resulting task.
+This bounded reference rule does not establish general dialogue understanding.

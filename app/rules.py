@@ -10,14 +10,23 @@ from app.validation import validate_transcript
 RULES_SCOPE = (
     "Rules mode supports one explicit first-person task per speaker-labelled line. "
     "Explicit same-speaker cancellations with matching task wording are applied. "
-    "Accepted requests, ownerless work, broader cross-line interpretation and unsupported "
+    "Only adjacent named requests with explicit matching-verb acceptance are supported. "
+    "Ownerless work, broader cross-line interpretation and unsupported "
     "phrasing may be missed. Empty output does not prove no commitments exist."
 )
-RULES_VERSION = "2"
+RULES_VERSION = "3"
 COMMITMENT = re.compile(r"(?P<owner>[^:\n]{1,80}):\s+I(?: will|['’]ll) (?P<work>.+)")
 CANCELLATION = re.compile(
     r"(?P<owner>[^:\n]{1,80}):\s+(?:Correction,\s+)?I(?: will not| won['’]t) (?P<work>.+)"
 )
+REQUEST = re.compile(
+    r"(?P<requester>[^:\n]{1,80}):\s+(?P<owner>[^,:\n]{1,80}), (?:can|could) you (?P<work>.+)\?"
+)
+ACCEPTANCE = re.compile(
+    r"(?P<owner>[^:\n]{1,80}):\s+Yes, I(?: will|['’]ll) (?P<verb>[A-Za-z]+) (?:it|them)\.?"
+)
+
+
 VERBS = frozenset(
     [
         "send",
@@ -96,7 +105,37 @@ def extract_rule_actions(transcript: str) -> ExtractionResult:
     """
     validate_transcript(transcript)
     items: list[ActionItem] = []
-    for original_line in transcript.splitlines():
+    lines = transcript.splitlines(keepends=True)
+    for index, raw_line in enumerate(lines):
+        original_line = raw_line.rstrip("\r\n")
+        acceptance = ACCEPTANCE.fullmatch(original_line.strip())
+        request = (
+            REQUEST.fullmatch(lines[index - 1].strip())
+            if acceptance and index > 0
+            else None
+        )
+        if request and acceptance:
+            owner = request["owner"].strip()
+            parsed_request = _parse_work(request["work"])
+            if (
+                owner
+                and owner.casefold() != "null"
+                and owner == acceptance["owner"].strip()
+                and owner != request["requester"].strip()
+                and parsed_request is not None
+                and request["work"].split()[0].casefold()
+                == acceptance["verb"].casefold()
+            ):
+                action, deadline = parsed_request
+                item = ActionItem(
+                    action=action,
+                    owner=owner,
+                    deadline=deadline,
+                    evidence=lines[index - 1] + original_line,
+                )
+                validate_field_evidence(item)
+                items.append(item)
+                continue
         cancellation = CANCELLATION.fullmatch(original_line.strip())
         match = cancellation or COMMITMENT.fullmatch(original_line.strip())
         if match is None:

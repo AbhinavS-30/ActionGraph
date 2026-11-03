@@ -1,4 +1,4 @@
-# Rules mode v2
+# Rules mode v3
 
 Rules mode is the default local demo engine. It requires no running Ollama and
 does not call a model. The API explicitly labels `engine: rules` and returns a
@@ -63,7 +63,7 @@ limited to Friday does not remove a task stated for Monday.
 
 ## Explicit limitations
 
-- Requests accepted across lines, ownerless agreed work, indirect commitments,
+- Requests outside the adjacent acceptance policy, ownerless agreed work, indirect commitments,
   unsupported verbs, and compound tasks are not handled.
 - Pronoun resolution, sarcasm, quotations, cancellations outside the explicit
   policy, reassignment, and meeting-wide semantic consistency are not understood.
@@ -91,3 +91,17 @@ still validated at application startup.
 This is a deliberately limited product mode selected after the local model
 underperformed the simple baseline. It is not a claim that the model extraction
 problem was solved.
+
+## Accepted-request policy (v3)
+
+Support only an immediately adjacent pair: `Requester: Assignee, can you ...?`
+(or `could you`) followed by `Assignee: Yes, I will VERB it.` (or `them`,
+`I'll`, `I’ll`). Speaker labels must match exactly after edge trimming; requester
+and assignee must differ. The repeated verb must match the request verb ignoring
+case. The request task must pass the existing bounded parser, including dates
+and dependencies. Bare yes, different verbs/speakers, intervening or blank lines,
+conditional replies and additional clauses are skipped. This is a fixed local
+reference rule, not general pronoun resolution. Both original lines and their
+original line separator form one contiguous evidence excerpt. Request deadlines
+are preserved verbatim, without conversion; replies cannot override them.
+Later explicit cancellations use the same task matching policy as other items.

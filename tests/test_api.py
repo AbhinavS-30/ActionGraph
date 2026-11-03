@@ -300,3 +300,16 @@ def test_default_rules_response_excludes_cancelled_task():
     assert response.status_code == 200
     assert response.json()["engine"] == "rules"
     assert response.json()["items"] == []
+
+
+def test_default_rules_returns_request_and_acceptance_evidence():
+    def fail(request):
+        pytest.fail("Rules acceptance must not call Ollama")
+
+    transcript = "Asha: Ben, can you review the checklist by Friday?\nBen: Yes, I'll review it."
+    response = post_extract({"transcript": transcript}, fail, use_default=True)
+    assert response.status_code == 200
+    item = response.json()["items"][0]
+    assert item["owner"] == "Ben"
+    assert item["deadline"] == "Friday"
+    assert item["evidence"] == transcript

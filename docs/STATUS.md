@@ -19,8 +19,8 @@ claimed as a production-ready general meeting extractor.
   JSON parsing. Unknown owner/deadline use genuine null; string-null is rejected.
 - Exact transcript-quote validation and verbatim owner/deadline text-presence
   checks in the model path. These do not establish semantic attribution.
-- Rules v2 grammar, contractions, supported trailing dates, dependency preservation,
-  original-line evidence, and conservative exclusions. Accepted requests,
+- Rules v3 grammar, contractions, supported trailing dates, dependency preservation,
+  original-source evidence, and conservative exclusions. Requests outside the adjacent acceptance policy,
   ownerless work, compound tasks and broader dialogue interpretation remain limited.
   Explicit same-speaker, matching-task cancellations now remove earlier items.
 - Validated local runtime settings, generated-token caps, model error mapping,
@@ -30,9 +30,19 @@ claimed as a production-ready general meeting extractor.
 - CI on pushes/pull requests: pinned official actions, Python 3.12, pytest and Ruff
   including evals. Existing rules checkpoint `dc9e85d` passed GitHub CI.
 
+## Latest implementation
+
+Rules v3 supports adjacent named can/could-you requests followed by the addressed
+speaker's explicit Yes + first-person promise + matching verb + it/them. Both
+original lines form the evidence. Dates and dependencies use the existing parser.
+Bare yes, mismatching speakers/verbs, intervening lines and conditional replies
+are excluded. Cancellation still applies. API coverage verifies no model call.
+No dependencies added. Quality replay of v3 remains pending; v2 numbers below
+remain historical results and do not measure this change.
+
 ## Current verification
 
-192 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+214 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -64,7 +74,7 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v2 replay is recorded with original labels and preserved v1 results.
-Next define a bounded accepted-request policy before implementing support,
+Next replay rules v3 against the recorded datasets with unchanged labels,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 

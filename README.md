@@ -259,7 +259,7 @@ evaluation; it is not a production-ready commitment extractor.
 `POST /extract` now defaults to `engine: rules`. Successful responses contain
 `items`, `engine`, and `limitations`. The rules support a narrow first-person
 commitment grammar and stated date forms; see [exact scope and API migration](docs/RULES.md).
-Unsupported forms may be missed, including accepted requests and ownerless work.
+Unsupported forms may be missed, including requests outside the adjacent acceptance policy and ownerless work.
 An empty result is not a completeness claim. This mode is separate from the
 unchanged evaluation baseline. No model call or automatic fallback occurs.
 
@@ -281,3 +281,7 @@ Rules v2 additionally applies [explicit cancellation matching](docs/RULES.md)
 for later same-speaker negations of the same task. This is not general dialogue
 understanding; historical v1 reports remain unchanged. The recorded demo and
 public page are deferred until the remaining product-release gates are complete.
+
+Rules v3 supports the bounded adjacent request/acceptance pairs documented in
+[Rules policy](docs/RULES.md), preserving both source lines as evidence.
+This change passes 214 tests; its dataset replay remains pending.
