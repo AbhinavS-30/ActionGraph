@@ -47,3 +47,8 @@ November 3 rules-focused validation: 4 TP, 1 FP, 5 FN on nine labels in twelve
 fresh synthetic cases; cross-line cancellation produced an extra task. Results
 and scope must accompany the public project page/demo. No production-ready or
 real-meeting accuracy claim is supported by this sample.
+
+Rules v2 adds explicit same-speaker matching-task cancellation under a documented
+policy; broader correction/reassignment remains unsupported. Per the user’s
+instruction, public page creation and demo recording are deferred until product
+readiness. Current next gate is evaluation of this change with original labels.

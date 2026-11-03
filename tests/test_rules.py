@@ -66,3 +66,73 @@ def test_accepted_requests_remain_outside_this_explicit_grammar():
         "Asha: Ben, can you review the checklist?\nBen: Yes, I will review it."
     )
     assert result.items == []
+
+
+@pytest.mark.parametrize(
+    "negation", ["I will not", "I won't", "I won’t", "Correction, I will not"]
+)
+def test_later_explicit_cancellation_removes_matching_prior_commitment(negation):
+    transcript = f"Ben: I will publish the access guide tomorrow.\nBen: {negation} publish the access guide."
+    assert extract_rule_actions(transcript).items == []
+
+
+@pytest.mark.parametrize(
+    "cancellation",
+    [
+        "Asha: I will not review the budget.",
+        "Ben: I will not review the checklist.",
+        "Ben: I will not review the budget by Friday.",
+        "Ben: I will not review the budget if approval is missing.",
+        "Ben: Never mind.",
+        "Ben: I won't review it.",
+        "Ben: I won't review the budget at noon.",
+    ],
+)
+def test_unrelated_or_unsupported_cancellation_does_not_remove_task(cancellation):
+    promise = "Ben: I will review the budget tomorrow."
+    items = extract_rule_actions(promise + "\n" + cancellation).items
+    assert len(items) == 1
+    assert items[0].evidence == promise
+
+
+def test_dated_cancellation_removes_only_that_deadline():
+    transcript = "Ben: I will review the budget by Monday.\nBen: I will review the budget by Friday.\nBen: I will not review the budget on Monday."
+    items = extract_rule_actions(transcript).items
+    assert len(items) == 1
+    assert items[0].deadline == "Friday"
+
+
+def test_undated_cancellation_removes_all_prior_matching_dates():
+    transcript = "Ben: I will review the budget by Monday.\nBen: I will review the budget by Friday.\nBen: I won't review the budget."
+    assert extract_rule_actions(transcript).items == []
+
+
+def test_recommitment_after_cancellation_is_kept_with_original_evidence():
+    promise = "  Ben: I'll review the budget tomorrow.  "
+    items = extract_rule_actions(
+        "Ben: I will review the budget by Monday.\nBen: I will not review the budget.\n"
+        + promise
+    ).items
+    assert len(items) == 1
+    assert items[0].evidence == promise
+
+
+def test_cancellation_compares_task_case_and_spacing_but_not_speaker_identity():
+    transcript = (
+        "Ben: I will review the budget tomorrow.\nBen: I will not REVIEW  THE BUDGET."
+    )
+    assert extract_rule_actions(transcript).items == []
+    transcript = (
+        "Ben: I will review the budget tomorrow.\nBEN: I will not review the budget."
+    )
+    assert len(extract_rule_actions(transcript).items) == 1
+
+
+def test_dependency_must_match_and_cannot_cancel_unqualified_task():
+    promise = "Ben: I will test the patch after Asha sends the build."
+    result = extract_rule_actions(promise + "\nBen: I will not test the patch.")
+    assert len(result.items) == 1
+    result = extract_rule_actions(
+        promise + "\nBen: I will not test the patch after Asha sends the build."
+    )
+    assert result.items == []

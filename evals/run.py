@@ -14,7 +14,7 @@ import httpx
 from app.config import get_settings
 from app.extraction import extract_actions
 from app.prompts import EXTRACTION_INSTRUCTIONS
-from app.rules import extract_rule_actions
+from app.rules import RULES_VERSION, extract_rule_actions
 from evals.baseline import extract_baseline
 from evals.concise import CONCISE_INSTRUCTIONS, extract_concise_actions
 from evals.decisions import (
@@ -66,7 +66,7 @@ def main():
     variants = {
         "public": (EXTRACTION_INSTRUCTIONS, extract_actions, "ollama"),
         "rules": (
-            "Deterministic rules grammar v1; source commit records implementation.",
+            f"Deterministic rules grammar v{RULES_VERSION}; source commit records implementation.",
             lambda transcript, **_: extract_rule_actions(transcript),
             "rules",
         ),
@@ -92,6 +92,7 @@ def main():
         "dataset_name": dataset_name,
         "instructions_sha256": hashlib.sha256(instructions.encode()).hexdigest(),
         "generation_contract": args.contract,
+        "rules_version": RULES_VERSION if args.contract == "rules" else None,
         "platform": platform.platform(),
         "machine": platform.machine(),
         "processor": platform.processor(),

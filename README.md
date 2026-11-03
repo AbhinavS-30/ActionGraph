@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 175 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 192 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -276,3 +276,8 @@ returned 4 correct tasks, 1 cancelled-task false positive and 5 misses across
 nine labeled tasks in twelve new synthetic cases. This exposes the cross-line
 cancellation limit and prevents interpreting the earlier known-case results as
 general accuracy. See the report for denominators and provisional review notes.
+
+Rules v2 additionally applies [explicit cancellation matching](docs/RULES.md)
+for later same-speaker negations of the same task. This is not general dialogue
+understanding; historical v1 reports remain unchanged. The recorded demo and
+public page are deferred until the remaining product-release gates are complete.

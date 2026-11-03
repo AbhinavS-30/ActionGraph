@@ -19,9 +19,10 @@ claimed as a production-ready general meeting extractor.
   JSON parsing. Unknown owner/deadline use genuine null; string-null is rejected.
 - Exact transcript-quote validation and verbatim owner/deadline text-presence
   checks in the model path. These do not establish semantic attribution.
-- Rules v1 grammar, contractions, supported trailing dates, dependency preservation,
+- Rules v2 grammar, contractions, supported trailing dates, dependency preservation,
   original-line evidence, and conservative exclusions. Accepted requests,
-  ownerless work, compound tasks and cross-line cancellation are known limitations.
+  ownerless work, compound tasks and broader dialogue interpretation remain limited.
+  Explicit same-speaker, matching-task cancellations now remove earlier items.
 - Validated local runtime settings, generated-token caps, model error mapping,
   and one active API model extraction per process. Rules requests use no model.
 - Synthetic datasets, a preserved simple baseline, collection tooling, raw outputs,
@@ -31,7 +32,7 @@ claimed as a production-ready general meeting extractor.
 
 ## Current verification
 
-175 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+192 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -62,10 +63,11 @@ changed after inspection. These cases are now observed.
 
 ## Remaining limits and next task
 
-Prepare the public project page and recorded local demo with precise scope and
-disclosed errors, including the later-cancellation false positive. Public inference
-is not planned. Any cancellation-support change should be separately agreed,
-implemented and evaluated; do not alter the preserved first validation result.
+Re-evaluate rules v2 on the recorded datasets without changing labels. Preserve
+the first v1 validation result and describe any replay as development evidence.
+Then address the remaining agreed release gates. The user deferred public page
+work and demo recording until the product is ready; neither is in progress.
+
 
 Real-meeting quality, independent human evaluation, cross-line semantic consistency,
 raw HTTP body/response byte limits, total-duration limits and distributed concurrency
@@ -86,3 +88,5 @@ No model calls or execution failures occurred. See
 counts, review decisions and timing limits. This is a small synthetic set authored
 with implementation knowledge, not independent human validation or real-meeting
 accuracy. 175 tests and Ruff pass.
+
+Rules v2 explicit cancellation handling implemented under the policy in `docs/RULES.md`. Tests cover negative forms, exact speaker identity, task/date/dependency separation, vague/conditional targets, unqualified removal, and later recommitment with original evidence. API returns only surviving items; no model call added. 192 tests and Ruff pass; measured replay is pending.

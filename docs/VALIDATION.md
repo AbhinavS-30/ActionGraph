@@ -91,3 +91,16 @@ model-quality evaluation.
 ## Engine selection
 
 `ExtractionRequest.engine` defaults to rules, with ollama as explicit experimental mode. `ExtractionResponse` adds engine and limitations to items. Rules uses the shared input, schema and field-provenance helpers, original-line evidence and needs_review status. It never constructs the model client or acquires the inference slot. Model failures remain failures with no fallback. Rules scope and missed forms are documented in `docs/RULES.md`; successful grammar matching is not general commitment understanding.
+
+## Rules cancellation boundary
+
+Rules v2 processes explicit same-speaker negations against earlier active items.
+Task matching shares the bounded promise parser and compares case-folded,
+whitespace-collapsed actions with dependencies retained. Undated negations remove
+all earlier matches; dated ones remove only the same deadline. Speaker labels
+remain exact after edge trimming. Unrelated, vague, conditional, and unresolved
+pronoun targets do not remove items. Later recommitments remain possible.
+Returned evidence remains the original surviving commitment line. This does not
+implement general dialogue resolution. Exact supported forms are in `RULES.md`.
+Historical baseline and v1 reports are unchanged; updated runs need their own
+source revision and `rules_version` metadata.

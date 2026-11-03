@@ -284,3 +284,19 @@ def test_default_rules_mode_never_constructs_model_client(monkeypatch):
     assert response.json()["engine"] == "rules"
     assert response.json()["limitations"]
     assert response.json()["items"][0]["owner"] == "Nina"
+
+
+def test_default_rules_response_excludes_cancelled_task():
+    def fail(request):
+        pytest.fail("Cancellation handling must not call Ollama")
+
+    response = post_extract(
+        {
+            "transcript": "Nina: I will publish the guide tomorrow.\nNina: Correction, I will not publish the guide."
+        },
+        fail,
+        use_default=True,
+    )
+    assert response.status_code == 200
+    assert response.json()["engine"] == "rules"
+    assert response.json()["items"] == []

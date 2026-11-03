@@ -1,4 +1,4 @@
-# Rules mode v1
+# Rules mode v2
 
 Rules mode is the default local demo engine. It requires no running Ollama and
 does not call a model. The API explicitly labels `engine: rules` and returns a
@@ -33,13 +33,42 @@ An optional `after ...` dependency is retained in the action. Its timing is not
 borrowed as the task deadline. A supported deadline before that dependency may
 be extracted independently. Owner/deadline text is checked against evidence.
 
+## Explicit cancellation policy
+
+Process lines in transcript order. Recognize `Name: I will not ...`,
+`Name: I won't ...`, or `Name: I won’t ...`, optionally with `Correction, `
+before the first-person phrase. The same bounded task grammar is used for
+promises and cancellation targets, so conditional or pronoun-only targets are
+not guessed.
+
+A cancellation removes earlier items only when the speaker label matches exactly
+after trimming its edges, and task wording matches after case folding and internal
+whitespace collapsing. Supported task deadlines are removed for task comparison;
+dependencies remain part of the comparison. Output evidence and fields are never
+normalized by this comparison.
+
+- Without a deadline, cancel all earlier same-speaker items with that task wording.
+- With a deadline, cancel only earlier matching tasks with the same stated deadline
+  (case/whitespace comparison only, no calendar normalization).
+- Do not cancel another speaker's work, different task wording, or a different
+  dependency. Do not infer aliases or paraphrases.
+- A cancellation affects earlier commitments only. A later explicit recommitment
+  is kept with its own original evidence.
+- Vague withdrawals, pronoun references, reassignment, unsupported timing, and
+  other correction phrasing remain outside this policy.
+
+For example, an earlier `Ben: I will publish the guide tomorrow.` is removed by
+a later `Ben: Correction, I will not publish the guide.` A later cancellation
+limited to Friday does not remove a task stated for Monday.
+
 ## Explicit limitations
 
 - Requests accepted across lines, ownerless agreed work, indirect commitments,
   unsupported verbs, and compound tasks are not handled.
-- Pronoun resolution, sarcasm, quotations, cross-line cancellation/reassignment,
-  and meeting-wide semantic consistency are not understood. Later corrections
-  can invalidate a previously matched line; human review remains required.
+- Pronoun resolution, sarcasm, quotations, cancellations outside the explicit
+  policy, reassignment, and meeting-wide semantic consistency are not understood.
+  Unsupported later corrections may still invalidate matched work; human review
+  remains required.
 - Matching a grammar does not guarantee the speaker means a real commitment.
 - Empty output means no supported lines matched; it does not prove no work exists.
 - Performance on known synthetic datasets is development evidence, not broad
