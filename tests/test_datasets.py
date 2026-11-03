@@ -9,11 +9,18 @@ from app.schemas import ExtractionResult
 from app.validation import validate_transcript
 
 
-@pytest.mark.parametrize("filename", ["cases.json", "validation-cases.json"])
-def test_frozen_labels_have_valid_inputs_contract_and_evidence(filename):
+@pytest.mark.parametrize(
+    "filename, count",
+    [
+        ("cases.json", 10),
+        ("validation-cases.json", 10),
+        ("rules-validation-v1.json", 12),
+    ],
+)
+def test_frozen_labels_have_valid_inputs_contract_and_evidence(filename, count):
     root = Path(__file__).resolve().parents[1]
     cases = json.loads((root / "evals" / filename).read_text())
-    assert len(cases) == 10
+    assert len(cases) == count
     assert len({case["id"] for case in cases}) == len(cases)
     for case in cases:
         validate_transcript(case["transcript"])

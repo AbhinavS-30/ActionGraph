@@ -216,3 +216,20 @@ The [rules v1 known-case report](results/REPORT-rules-45bdcb3.md) retains separa
 results for the old baseline and new product engine on both already observed
 sets. The label file named validation-cases is now development data for these
 rules; a fresh set is needed before validation claims.
+
+## Rules-focused validation v1
+
+`rules-validation-v1.json` freezes twelve synthetic cases and nine expected tasks
+before running rules on this set. It includes supported constructions, unsupported
+legitimate work, refusal, uncertainty, unanswered requests, compound tasks, and a
+later cancellation. Score all cases, including known scope limits; do not remove
+cancellation to make the result look better. This set was authored with knowledge
+of the implementation, not independently or blindly.
+
+```bash
+.venv/bin/python -m evals.run --contract rules --dataset rules-validation --output /tmp/actiongraph-rules-validation.jsonl
+```
+
+The initial run has not yet been collected. Commit source and labels before
+execution; afterward these cases are observed and must not be called untouched
+if tuning on their outcomes.

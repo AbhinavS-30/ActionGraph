@@ -44,7 +44,9 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--baseline-only", action="store_true")
     parser.add_argument(
-        "--dataset", choices=["development", "validation"], default="development"
+        "--dataset",
+        choices=["development", "validation", "rules-validation"],
+        default="development",
     )
     parser.add_argument(
         "--contract",
@@ -53,9 +55,11 @@ def main():
     )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    dataset_name = (
-        "validation-cases.json" if args.dataset == "validation" else "cases.json"
-    )
+    dataset_name = {
+        "development": "cases.json",
+        "validation": "validation-cases.json",
+        "rules-validation": "rules-validation-v1.json",
+    }[args.dataset]
     dataset = (root / "evals" / dataset_name).read_bytes()
     cases = json.loads(dataset)
     settings = get_settings()

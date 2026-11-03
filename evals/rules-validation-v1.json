@@ -1,0 +1,181 @@
+[
+  {
+    "id": "rules-check-01",
+    "category": "speaker_and_recipient",
+    "transcript": "Quinn: I will email Tess the access checklist by Tuesday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Email Tess the access checklist",
+          "owner": "Quinn",
+          "deadline": "Tuesday",
+          "evidence": "Quinn: I will email Tess the access checklist by Tuesday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Quinn commits; Tess is recipient, not owner."
+  },
+  {
+    "id": "rules-check-02",
+    "category": "contraction_and_relative_date",
+    "transcript": "Tess: I'll revise the installation guide next Friday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Revise the installation guide",
+          "owner": "Tess",
+          "deadline": "next Friday",
+          "evidence": "Tess: I'll revise the installation guide next Friday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Explicit commitment; preserve relative deadline wording."
+  },
+  {
+    "id": "rules-check-03",
+    "category": "prerequisite_date",
+    "transcript": "Morgan: I will inspect the parcel after Quinn provides the manifest by Monday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Inspect the parcel after Quinn provides the manifest by Monday",
+          "owner": "Morgan",
+          "deadline": null,
+          "evidence": "Morgan: I will inspect the parcel after Quinn provides the manifest by Monday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Monday qualifies the prerequisite manifest, not parcel inspection."
+  },
+  {
+    "id": "rules-check-04",
+    "category": "absolute_date",
+    "transcript": "Quinn: I will export the invoice ledger on 2026-11-06.",
+    "expected": {
+      "items": [
+        {
+          "action": "Export the invoice ledger",
+          "owner": "Quinn",
+          "deadline": "2026-11-06",
+          "evidence": "Quinn: I will export the invoice ledger on 2026-11-06.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Explicit task deadline; keep original ISO date."
+  },
+  {
+    "id": "rules-check-05",
+    "category": "unsupported_verb_and_time",
+    "transcript": "Tess: I will deliver the customer briefing at 14:00.",
+    "expected": {
+      "items": [
+        {
+          "action": "Deliver the customer briefing",
+          "owner": "Tess",
+          "deadline": "14:00",
+          "evidence": "Tess: I will deliver the customer briefing at 14:00.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Genuine commitment even though verb and clock time are outside rules v1 scope."
+  },
+  {
+    "id": "rules-check-06",
+    "category": "ownerless_agreement",
+    "transcript": "Agreement: The incident index will be refreshed. Nobody was assigned and no date was set.",
+    "expected": {
+      "items": [
+        {
+          "action": "Refresh the incident index",
+          "owner": null,
+          "deadline": null,
+          "evidence": "Agreement: The incident index will be refreshed. Nobody was assigned and no date was set.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Agreed work; owner/deadline unknown, not guessed."
+  },
+  {
+    "id": "rules-check-07",
+    "category": "accepted_request",
+    "transcript": "Morgan: Quinn, can you inspect the crash dump?\nQuinn: Yes, I will inspect it.",
+    "expected": {
+      "items": [
+        {
+          "action": "Inspect the crash dump",
+          "owner": "Quinn",
+          "deadline": null,
+          "evidence": "Morgan: Quinn, can you inspect the crash dump?\nQuinn: Yes, I will inspect it.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Acceptance establishes commitment; request resolves it."
+  },
+  {
+    "id": "rules-check-08",
+    "category": "negation",
+    "transcript": "Morgan: I will not deploy the staging package.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Explicit negation is not a commitment."
+  },
+  {
+    "id": "rules-check-09",
+    "category": "uncertain_condition",
+    "transcript": "Tess: Maybe I will deploy the staging package if we get approval.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Tentative conditional offer with no acceptance; excluded under ambiguity policy."
+  },
+  {
+    "id": "rules-check-10",
+    "category": "unanswered_request",
+    "transcript": "Quinn: Morgan, could you review the incident index?\nTess: The meeting room is booked until noon.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "No acceptance; room booking is not the task deadline."
+  },
+  {
+    "id": "rules-check-11",
+    "category": "compound_tasks",
+    "transcript": "Tess: I will prepare the release notes and upload the package.",
+    "expected": {
+      "items": [
+        {
+          "action": "Prepare the release notes",
+          "owner": "Tess",
+          "deadline": null,
+          "evidence": "Tess: I will prepare the release notes and upload the package.",
+          "review_status": "needs_review"
+        },
+        {
+          "action": "Upload the package",
+          "owner": "Tess",
+          "deadline": null,
+          "evidence": "Tess: I will prepare the release notes and upload the package.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Two explicit tasks; count both despite unsupported compound grammar."
+  },
+  {
+    "id": "rules-check-12",
+    "category": "cross_line_cancellation",
+    "transcript": "Morgan: I will publish the access guide tomorrow.\nMorgan: Correction, I will not publish the access guide.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Later explicit correction cancels the earlier commitment. Test known cross-line limitation rather than treating it as correct."
+  }
+]

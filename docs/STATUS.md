@@ -1,140 +1,74 @@
 # Project status
 
-Updated November 2, 2026.
+Updated November 3, 2026.
+
+## Current product
+
+ActionGraph is a local text-transcript API. The default `rules` engine supports a
+limited first-person commitment grammar; `ollama` explicitly selects experimental
+local `llama3.2:3b` inference. Successful responses identify the engine, scope
+limitations, and proposed items requiring review. No automatic fallback occurs.
+The repository is public; the extraction service is local. A public project page
+and recorded demo are planned but have not been built or published. This is not
+claimed as a production-ready general meeting extractor.
 
 ## Implemented
 
-- FastAPI health endpoint reporting the extraction function and API as available, without probing model readiness.
-- Pydantic action-item and extraction-result contracts.
-- Transcript validation with explicit type and blank-input failures.
-- JSON parsing followed by output schema validation.
-- Exact evidence substring checking, including blank-evidence rejection.
-- Standalone Ollama text client using existing HTTPX: nonstreaming requests, prompt checks, response-envelope checks, and propagated connection, timeout, and HTTP status errors. The caller supplies the client base URL and timeout.
-- Optional JSON schema forwarding through Ollama’s `format` field; parser-boundary tests preserve malformed-JSON and schema-error behavior.
-- Extraction policy and standalone prompt builder covering accepted commitments, unknown values, relative deadlines, exact evidence, and review status.
+- FastAPI health and extraction endpoints with Swagger interactive documentation.
+- Explicit input errors, 12,000-character transcript cap, output contracts, and
+  JSON parsing. Unknown owner/deadline use genuine null; string-null is rejected.
+- Exact transcript-quote validation and verbatim owner/deadline text-presence
+  checks in the model path. These do not establish semantic attribution.
+- Rules v1 grammar, contractions, supported trailing dates, dependency preservation,
+  original-line evidence, and conservative exclusions. Accepted requests,
+  ownerless work, compound tasks and cross-line cancellation are known limitations.
+- Validated local runtime settings, generated-token caps, model error mapping,
+  and one active API model extraction per process. Rules requests use no model.
+- Synthetic datasets, a preserved simple baseline, collection tooling, raw outputs,
+  and provisional Codex semantic reviews. No independent adjudication is claimed.
+- CI on pushes/pull requests: pinned official actions, Python 3.12, pytest and Ruff
+  including evals. Existing rules checkpoint `dc9e85d` passed GitHub CI.
 
-`extract_actions` connects input validation, prompt construction, schema-constrained generation, parsing, and exact evidence checks. Any unsupported evidence fails the entire call; generated items always return as `needs_review`. `POST /extract` exposes the flow with strict request fields, blank-input rejection, and actionable 422/502/503/504 responses.
+## Current verification
 
-- Ten labeled synthetic development cases and an evaluation rubric in `evals/`; first comparison collected and provisionally reviewed by Codex (human adjudication pending).
-- Evaluation collector and narrow deterministic first-person baseline; saves per-case status, durations, raw model envelopes, and source/runtime metadata.
+175 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+`.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
+extraction-quality measurements. No new dependencies or model downloads were added.
 
-## Verification
+The user verified Swagger rendering and real model 200/blank-input 422 responses
+through screenshots on November 2. After the rules pivot, an actual Uvicorn TCP
+smoke check returned default `engine=rules`, expected task/owner/deadline/evidence,
+a scope notice, and blank-input 422. The updated engine-label browser interaction
+has not been reverified; no video recording is complete. See `docs/DEMO.md`.
 
-174 test cases passed using `.venv/bin/python -m pytest`. Ruff lint passed using `.venv/bin/python -m ruff check app tests`. These checks do not measure extraction quality.
+## Evaluation evidence
 
-A live smoke check invoked `POST /extract` through HTTPX's in-process ASGI
-transport with real local Ollama generation. The synthetic sentence “Maya: I will
-send the report tomorrow.” returned HTTP 200 with one item, owner Maya, deadline
-“tomorrow”, exact sentence evidence, and `needs_review`. This verified the route
-through model, parser, and evidence checks; Uvicorn/browser interaction and broader
-extraction quality were not evaluated by this check.
+- Rules v1 on the two previously observed ten-case sets: 6 TP, 0 FP, 2 FN and
+  six fully correct items out of eight labels on each. Both sets were known during
+  implementation; these are development results, not held-out accuracy.
+  [Report](../evals/results/REPORT-rules-45bdcb3.md).
+- First fresh model validation: 5/10 successful calls, task precision 50% (2/4),
+  recall 25% (2/8), two fully correct items out of eight. The baseline exceeded the
+  model in that run. [Report](../evals/results/REPORT-validation-d21e6b6.md).
+- String-null, list-valued, two-stage, and concise-prompt experiments remain
+  preserved under `evals/results/`; unsuccessful candidates were not adopted.
+  [Evaluation design and artifact guide](../evals/README.md).
 
-Read-only connectivity checks on October 30 confirmed that GitHub remote `main`
-matches local commit `4e40ba6` at `https://github.com/AbhinavS-30/ActionGraph.git`.
-The local Ollama service responded at `http://127.0.0.1:11434`, and its model
-inventory includes `llama3.2:3b`. A live smoke request through the new client
-returned `ready` for a prompt requesting that word. A small development-set comparison is now available; broader extraction quality remains unknown.
+A new rules-focused set, `evals/rules-validation-v1.json`, contains twelve cases
+and nine labeled tasks, fixed before extraction on that set. It includes known
+out-of-scope forms and later cancellation. It was authored with knowledge of the
+grammar and prior failure modes, not independently or blindly. First-run results
+are pending; do not tune labels to the outputs.
 
-## Documentation
+## Remaining limits and next task
 
-README now describes the architecture, contract, setup, terminology, design rationale, delivery phases, and limitations. Supporting documents describe the technical roadmap and validation design. Personal learning history is maintained outside project documentation.
+Commit the new labels and collector selector, run the unchanged rules engine and
+baseline, and record false positives, misses, field errors, and failures. Preserve
+the first result before any fix. Then prepare the public project page and recorded
+local demo with precise scope and disclosed errors; public inference is not planned.
 
-## Remaining work
-
-Human review of provisional evaluation decisions, an agreed response to observed semantic errors, and reproducible demonstration. Real-meeting quality remains unknown.
-
-## Next task
-
-Freeze a new rules-focused validation set before measuring generalization, then
-prepare the public project page and recorded demo with the approved limited scope.
-Then prepare the public project page and recorded demo with accurate scope.
-Experimental list/two-stage paths remain outside the API.
-Add untouched
-cases before making broader quality claims. The approved presentation scope is a
-public project page plus recorded local demo; extraction remains local. See
-`docs/RELEASE.md`.
-
-A manual structured-output smoke check combined the prompt builder, client, and parser on the synthetic sentence “Maya: I will send the report tomorrow.” The result contained one item with owner Maya, deadline “tomorrow”, exact sentence evidence, and `needs_review`. This is one smoke example, not extraction-quality evaluation or an integrated service.
-
-Dataset integrity check: ten unique case IDs, eight labeled items validated against `ExtractionResult`, all labeled evidence present exactly, and all labeled items marked `needs_review`. These checks validate fixture integrity, not model quality.
-
-Collector checks: baseline-only CLI smoke produced metadata plus ten successful attempt records in `/tmp`; no semantic scores calculated. Ruff also passed on `evals`. The first full comparison is now retained under `evals/results/`.
-
-First comparison: clean source `8dc8253`, ten successful attempts per system. Provisional Codex review: baseline task TP/FP/FN = 6/0/2; Ollama = 6/4/2. Fully correct matched items: baseline 4/8 labels, model 3/8. Model median/max extraction durations: 1.139/2.585 seconds, including loading. All model responses passed schema and quote-presence checks despite semantic errors. See `evals/results/REPORT-8dc8253.md` for per-case decisions, denominators, runtime, raw outputs, and limitations. Human adjudication is pending.
-
-Added an explicit refusal instruction and a synthetic refusal example to the
-prompt. Unit checks remain 89 passing tests and passing Ruff. This is development-set prompt tuning, not an
-independent validation. No model settings, schema, labels, or parser behavior were
-changed for this experiment.
-
-Refusal-example rerun from clean source `99f2cf6`: all ten model attempts
-completed, but the refused request was still extracted. Provisional task TP/FP/FN
-= 6/3/2 (precision 66.7%, recall 75%); fully correct matched items 4/8 labels.
-Model median/max duration 1.022/2.098 seconds. An unrelated meeting-end time was
-incorrectly used as a task deadline. No causal improvement claim is justified by
-one stochastic rerun. Original artifacts remain unchanged; see
-`evals/results/REPORT-99f2cf6.md`. This application is not production ready or
-publicly hosted.
-
-Unknown-value hardening: owner/deadline string-null placeholders are rejected with `ValidationError`, including case and surrounding-whitespace variants. Genuine JSON null and other strings are preserved. API regression tests verify HTTP 502 with no returned items. Current checks: 98 tests and Ruff pass. No new live quality results are claimed for this contract change.
-
-Local runtime hardening: validated cached exported settings for loopback URL, model, per-operation timeout (0–120 seconds, exclusive of zero), and generation tokens (1–4096, default 1024). Invalid settings fail startup; local clients ignore proxy environment variables. Input is capped at 12,000 original characters with API 422; generation stopped for length fails with API 502. These are not raw body-size, total-duration, concurrency, or upstream response-byte limits. Collector now records effective settings. Baseline-only CLI smoke passed; 120 tests and Ruff pass. No new model quality measurements claimed.
-
-Concurrency hardening: one active API extraction per process; overlapping valid requests receive 503 with `Retry-After: 1` without invoking the model. A `finally` block releases the slot on success or failure. Tests verify real request overlap, responsive health, reuse after success, and reuse after timeout. Use one Uvicorn worker; standalone calls and other processes are outside this guard. Current checks: 122 tests, Ruff, and diff checks pass. No new extraction-quality claim.
-
-Continuous integration: `.github/workflows/tests.yml` runs Python 3.12 pytest and
-Ruff on pushes/pull requests, including `evals/`, with a ten-minute job timeout.
-GitHub runs for `ae8de66`, `d555b6f`, and `bc49c70` passed, including clean Ubuntu
-installation from the lockfile. Local verification remains 122 passing tests and
-passing Ruff. CI runs no model downloads or inference. The `bc49c70` run reported
-deprecated action runtimes; checkout and setup-python were updated to official
-releases v7.0.1/v7.1.0, pinned to immutable commit hashes. GitHub run
-41241775468 passed for source `b7bf4c4`, verifying that action-version update.
-
-Strict-contract evaluation on November 1 from clean `b7bf4c4`: ten model attempts, four successful and six ValidationError failures for string-null fields. Provisional delivered task TP/FP/FN = 5/0/3; precision 5/5 (100%) must be read with 4/10 call success and 5/8 (62.5%) recall. Five fully correct matched items; no correct empty-label cases. Model successful-call median/max 1.481/2.995 seconds; failed-call times are reported separately. No token-limit stop occurred. Raw refusal/suggestion errors remain in rejected responses. See `evals/results/REPORT-b7bf4c4.md`; human adjudication and untouched evaluation remain pending. No prompt or application behavior was changed during this measurement.
-
-Repository visibility was changed to public at the user’s request on November 1. The extraction service remains local; no hosted inference or project page has been deployed.
-
-JSON-null prompt experiment: explicitly distinguishes unquoted JSON null from
-the invalid string placeholder and adds one synthetic accepted-work example with
-unknown owner and deadline. Validator, schema, dataset, and generation settings
-were unchanged for the experiment; results are now recorded below.
-
-JSON-null candidate `fcc91ec` is not adopted: 6/10 calls completed (three string-null validation failures and one evidence rejection), but delivered task TP/FP/FN fell to 3/3/5; precision 50%, recall 37.5%, fully correct 3/8 labels. One raw result copied a prompt example into an unrelated transcript and was rejected. The previous prompt is restored; no schema or validator weakening. See `evals/results/REPORT-fcc91ec.md` and immutable raw run/review artifacts. This remains one stochastic development comparison, not independent validation.
-
-List-contract experiment implemented only under `evals/`: model owner/deadline use required zero-or-one-string lists, deterministically mapped to public strings/null and checked by existing validation and evidence helpers. The production endpoint is unchanged. Tests cover conversion, invalid/multiple values, string-null rejection, and evidence enforcement. 128 tests and Ruff pass; the live experiment is recorded below.
-
-List-contract run from clean `2ccb473`: 9/10 calls completed; one prompt-example quote failed evidence validation. Provisional delivered TP/FP/FN = 6/4/2 (precision 60%, recall 75%); five fully correct matched items out of eight labels. No string-null failures, but refusals, suggestions, unanswered requests, invented deadlines and wrong ownership persisted. The adapter remains evaluation-only; public API behavior is unchanged. Model successful-call median/max 1.083/1.707 seconds; failed call 0.868 seconds. See `evals/results/REPORT-2ccb473.md`.
-
-Evaluation-only two-stage commitment adapter implemented: classify candidates with exact evidence, then generate fields only for committed candidates. No selected candidates skips the second call. Final evidence references and item counts must match selected candidates; failures propagate. Public API unchanged. 136 tests and Ruff pass; live results are recorded below.
-
-Two-stage decision run `82df13e`: 8/10 attempts completed, with 14 total generation calls. Provisional TP/FP/FN = 4/1/4 (80% precision, 50% recall); all three negative cases correctly excluded, but zero fully correct items out of eight labels. All five returned owners were Maya despite no Maya in the dataset; three returned deadlines were also Maya. Two attempts failed on fabricated first-stage evidence. Paired owner errors 4/4 and deadline errors 2/4. Successful-attempt median/max duration 1.877/4.406 seconds. Public API unchanged; experiment not adopted. See `evals/results/REPORT-82df13e.md`.
-
-Field provenance implemented in the public extraction flow: non-null owner/deadline must occur verbatim at word boundaries in item evidence; blanks, absent names/dates, and partial-name matches fail. Errors propagate as 502 and return no partial result. Prompt now requests verbatim values. Tests explicitly show that quote presence does not establish owner attribution. 147 tests and Ruff pass; no new live model quality measurements claimed. Deterministic replay only: the guard rejects all five formerly delivered items from the two-stage experiment and two of ten delivered list-contract items. These are archived-output checks, not new inference results or revised historical scores.
-
-November 2 demo smoke: launched the documented Uvicorn reload command and checked
-the actual TCP server. Health, Swagger markup, and OpenAPI returned 200. Blank
-transcript returned 422; the synthetic Maya report commitment returned 200 with
-the expected fields, exact evidence, and needs_review through real Ollama. Browser
-automation host was unavailable and native browser access timed out; visual
-rendering and Try it out remain unverified. See `docs/DEMO.md` for reproducible
-steps and limits. No video or public project page exists yet. Current checks:
-147 tests and Ruff pass.
-
-Browser verification completed by the user on November 2: screenshots show
-Swagger rendering and actual Try it out server responses, HTTP 200 with the
-expected Maya report item and HTTP 422 for blank input. Screenshots were reviewed
-in the conversation; no automated browser success is claimed. `docs/DEMO.md`
-records this distinction. Recording and public project page remain pending.
-
-Fresh validation set prepared: `evals/validation-cases.json`, ten synthetic cases with eight labeled commitments, fixed before model execution. Collector supports explicit development/validation selection and records filename/hash. Labels pass input, schema, evidence, and field-provenance checks. The set was authored with knowledge of prior failure modes, so it is not an independent external benchmark. 149 tests and Ruff pass; the first validation run is recorded below.
-
-First fresh validation run from clean `d21e6b6`: model 5/10 successful attempts, TP/FP/FN = 2/2/6 (precision 50%, recall 25%), two fully correct matched items out of eight labels. Baseline 10/10 successful, 5/0/3 (100% precision, 62.5% recall), three fully correct items. Three string-null deadline failures and two evidence failures occurred; quote/provenance checks did not prevent refusal/unanswered-request false positives. Successful model-call median/max 1.239/1.272 seconds; failed times are separate in `evals/results/REPORT-validation-d21e6b6.md`. Labels and implementation were frozen before running; these cases are now observed and cannot be described as untouched after further tuning. Provisional Codex review, not an independent benchmark. Public page and recording remain unbuilt.
-
-Example-free prompt candidate implemented evaluation-only with unchanged public schema and enforcement. Planned two development repetitions per prompt in public/concise/public/concise order; selection criteria recorded before execution in `evals/README.md`. API prompt and first validation results remain unchanged. 151 tests and Ruff pass; the paired comparison is recorded below.
-
-Example-free prompt paired comparison `1cd4164`: candidate rejected under pre-recorded criteria. Public runs delivered fully correct items 2/8 and 5/8 with 2/10 and 5/10 call success; concise runs 1/8 and 4/8 with 5/10 and 6/10 call success. Candidate false positives were four and one; public false positives were zero in both runs, with many rejected calls. No validation-set tuning or rerun occurred. API unchanged. See `evals/results/REPORT-1cd4164.md` and all four raw runs. Before further model-prompt iteration, agree whether to add a clearly limited deterministic extraction mode for a dependable demo while preserving model inference as experimental.
-
-Approved product direction: rules mode is now the default demo path, with experimental Ollama explicitly selected. Added bounded first-person grammar, verb set, conservative ambiguity/negation exclusions, dependencies and supported trailing dates. API success adds engine/limitations; old clients need engine=ollama for previous model behavior. Rules performs no model client construction/call and remains usable while model slot is busy. Historical baseline/model artifacts are unchanged. 174 tests and Ruff pass; the rule-engine comparison is recorded below. Scope/migration are in `docs/RULES.md`.
-
-Rules v1 known-case comparison from clean `45bdcb3`: both ten-case sets completed with no model calls or failures. On each set rules TP/FP/FN = 6/0/2, six fully correct items out of eight labels, and 3/3 correct empty negatives. Misses are accepted requests and ownerless commitments. Both sets were already known during implementation, so these are development results, not held-out accuracy. Live TCP API smoke verified default engine=rules, correct Asha/Ben attribution, Thursday deadline, exact evidence, needs_review, limitations, and blank-input 422. Source `45bdcb3` contains the new response shape. See `evals/results/REPORT-rules-45bdcb3.md`. Browser demo re-verification/video and public page remain pending.
+Real-meeting quality, independent human evaluation, cross-line semantic consistency,
+raw HTTP body/response byte limits, total-duration limits and distributed concurrency
+are not established. No persistence or human confirmation endpoint exists. Audio,
+calendar integration, cross-meeting memory and elaborate dashboards remain deferred.
+See `docs/RELEASE.md` and `docs/RULES.md` for release requirements and exact scope.
