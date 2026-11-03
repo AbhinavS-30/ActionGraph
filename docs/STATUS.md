@@ -63,9 +63,9 @@ changed after inspection. These cases are now observed.
 
 ## Remaining limits and next task
 
-Re-evaluate rules v2 on the recorded datasets without changing labels. Preserve
-the first v1 validation result and describe any replay as development evidence.
-Then address the remaining agreed release gates. The user deferred public page
+Rules v2 replay is recorded with original labels and preserved v1 results.
+Next define a bounded accepted-request policy before implementing support,
+then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
 
@@ -89,4 +89,4 @@ counts, review decisions and timing limits. This is a small synthetic set author
 with implementation knowledge, not independent human validation or real-meeting
 accuracy. 175 tests and Ruff pass.
 
-Rules v2 explicit cancellation handling implemented under the policy in `docs/RULES.md`. Tests cover negative forms, exact speaker identity, task/date/dependency separation, vague/conditional targets, unqualified removal, and later recommitment with original evidence. API returns only surviving items; no model call added. 192 tests and Ruff pass; measured replay is pending.
+Rules v2 explicit cancellation handling implemented under the policy in `docs/RULES.md`. Tests cover negative forms, exact speaker identity, task/date/dependency separation, vague/conditional targets, unqualified removal, and later recommitment with original evidence. API returns only surviving items; no model call added. 192 tests and Ruff pass. The [observed-case replay](../evals/results/REPORT-rules-v2-5a696b4.md) changes only the cancelled-task output: rules-focused scores are 4 TP, 0 FP, 5 FN; earlier two sets remain 6/0/2 each. These are regression results, not independent validation.

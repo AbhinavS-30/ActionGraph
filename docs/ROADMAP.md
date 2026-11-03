@@ -51,4 +51,4 @@ real-meeting accuracy claim is supported by this sample.
 Rules v2 adds explicit same-speaker matching-task cancellation under a documented
 policy; broader correction/reassignment remains unsupported. Per the user’s
 instruction, public page creation and demo recording are deferred until product
-readiness. Current next gate is evaluation of this change with original labels.
+readiness. Replay with original labels is recorded: cancellation false positive removed, five broader-set misses remain. Next define bounded accepted-request handling before implementation.
