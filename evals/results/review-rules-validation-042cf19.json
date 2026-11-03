@@ -1,0 +1,213 @@
+{
+  "review_method": "Provisional Codex review under the existing rubric. Fresh cases authored with implementation knowledge before running; no post-run label or implementation change. Indices zero-based; human adjudication pending.",
+  "reviews": [
+    {
+      "case_id": "rules-check-01",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-02",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Unsupported phrasing omitted; real labeled task(s) still count as FN."
+    },
+    {
+      "case_id": "rules-check-03",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Pair core task and prerequisite event; prerequisite due date is incorrectly promoted to task deadline. Score deadline error rather than withholding task match."
+    },
+    {
+      "case_id": "rules-check-04",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-05",
+      "system": "baseline",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": false,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-06",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Unsupported phrasing omitted; real labeled task(s) still count as FN."
+    },
+    {
+      "case_id": "rules-check-07",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Unsupported phrasing omitted; real labeled task(s) still count as FN."
+    },
+    {
+      "case_id": "rules-check-08",
+      "system": "baseline",
+      "pairs": [],
+      "note": "False positive: explicitly negated work extracted."
+    },
+    {
+      "case_id": "rules-check-09",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative."
+    },
+    {
+      "case_id": "rules-check-10",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Correct empty negative."
+    },
+    {
+      "case_id": "rules-check-11",
+      "system": "baseline",
+      "pairs": [],
+      "note": "Two separate labeled tasks; baseline bundles both into one broader task (cannot match either exactly under scope rubric), rules skips compound line. Both labels are FN."
+    },
+    {
+      "case_id": "rules-check-12",
+      "system": "baseline",
+      "pairs": [],
+      "note": "False positive: later explicit cancellation means no active commitment; earlier line still returned."
+    },
+    {
+      "case_id": "rules-check-01",
+      "system": "rules",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-02",
+      "system": "rules",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-03",
+      "system": "rules",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-04",
+      "system": "rules",
+      "pairs": [
+        {
+          "prediction": 0,
+          "label": 0,
+          "owner_correct": true,
+          "deadline_correct": true,
+          "evidence_supports": true
+        }
+      ],
+      "note": "Equivalent task and preserved dependency event; score field values separately."
+    },
+    {
+      "case_id": "rules-check-05",
+      "system": "rules",
+      "pairs": [],
+      "note": "Unsupported phrasing omitted; real labeled task(s) still count as FN."
+    },
+    {
+      "case_id": "rules-check-06",
+      "system": "rules",
+      "pairs": [],
+      "note": "Unsupported phrasing omitted; real labeled task(s) still count as FN."
+    },
+    {
+      "case_id": "rules-check-07",
+      "system": "rules",
+      "pairs": [],
+      "note": "Unsupported phrasing omitted; real labeled task(s) still count as FN."
+    },
+    {
+      "case_id": "rules-check-08",
+      "system": "rules",
+      "pairs": [],
+      "note": "Correct empty negative."
+    },
+    {
+      "case_id": "rules-check-09",
+      "system": "rules",
+      "pairs": [],
+      "note": "Correct empty negative."
+    },
+    {
+      "case_id": "rules-check-10",
+      "system": "rules",
+      "pairs": [],
+      "note": "Correct empty negative."
+    },
+    {
+      "case_id": "rules-check-11",
+      "system": "rules",
+      "pairs": [],
+      "note": "Two separate labeled tasks; baseline bundles both into one broader task (cannot match either exactly under scope rubric), rules skips compound line. Both labels are FN."
+    },
+    {
+      "case_id": "rules-check-12",
+      "system": "rules",
+      "pairs": [],
+      "note": "False positive: later explicit cancellation means no active commitment; earlier line still returned."
+    }
+  ]
+}

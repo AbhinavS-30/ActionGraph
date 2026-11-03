@@ -57,18 +57,32 @@ has not been reverified; no video recording is complete. See `docs/DEMO.md`.
 A new rules-focused set, `evals/rules-validation-v1.json`, contains twelve cases
 and nine labeled tasks, fixed before extraction on that set. It includes known
 out-of-scope forms and later cancellation. It was authored with knowledge of the
-grammar and prior failure modes, not independently or blindly. First-run results
-are pending; do not tune labels to the outputs.
+grammar and prior failure modes, not independently or blindly. The first-run result is now recorded below; labels and implementation were not
+changed after inspection. These cases are now observed.
 
 ## Remaining limits and next task
 
-Commit the new labels and collector selector, run the unchanged rules engine and
-baseline, and record false positives, misses, field errors, and failures. Preserve
-the first result before any fix. Then prepare the public project page and recorded
-local demo with precise scope and disclosed errors; public inference is not planned.
+Prepare the public project page and recorded local demo with precise scope and
+disclosed errors, including the later-cancellation false positive. Public inference
+is not planned. Any cancellation-support change should be separately agreed,
+implemented and evaluated; do not alter the preserved first validation result.
 
 Real-meeting quality, independent human evaluation, cross-line semantic consistency,
 raw HTTP body/response byte limits, total-duration limits and distributed concurrency
 are not established. No persistence or human confirmation endpoint exists. Audio,
 calendar integration, cross-meeting memory and elaborate dashboards remain deferred.
 See `docs/RELEASE.md` and `docs/RULES.md` for release requirements and exact scope.
+
+## First rules-focused validation
+
+Clean source `042cf19`, twelve cases and nine labels: rules completed 12/12
+attempts with 4 TP, 1 FP and 5 FN; task precision 4/5 (80%), recall 4/9 (44.4%),
+four fully correct items. A later-cancelled promise was the false positive;
+accepted requests, ownerless work, unsupported verb/time, and compound tasks
+were missed. Baseline: 4/3/5, one fully correct item. All delivered quotes and
+fields passed text-presence checks despite cancellation being semantically wrong.
+No model calls or execution failures occurred. See
+[full report](../evals/results/REPORT-rules-validation-042cf19.md) for category
+counts, review decisions and timing limits. This is a small synthetic set authored
+with implementation knowledge, not independent human validation or real-meeting
+accuracy. 175 tests and Ruff pass.

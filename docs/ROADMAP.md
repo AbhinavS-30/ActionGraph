@@ -42,3 +42,8 @@ engine; experimental Ollama is explicitly opt-in, with no silent fallback.
 Responses identify the engine and its limitations. See `docs/RULES.md` for grammar
 and response-shape migration. Existing baseline/model evaluations remain
 unchanged; the new rules engine requires its own recorded comparison.
+
+November 3 rules-focused validation: 4 TP, 1 FP, 5 FN on nine labels in twelve
+fresh synthetic cases; cross-line cancellation produced an extra task. Results
+and scope must accompany the public project page/demo. No production-ready or
+real-meeting accuracy claim is supported by this sample.

@@ -270,3 +270,9 @@ The [rules v1 known-case report](evals/results/REPORT-rules-45bdcb3.md) records
 six fully correct items out of eight labels on each known synthetic set, no extra
 tasks, and explicit misses for accepted requests and ownerless work. These sets
 were inspected during development; these are not held-out accuracy estimates.
+
+The [first rules-focused validation](evals/results/REPORT-rules-validation-042cf19.md)
+returned 4 correct tasks, 1 cancelled-task false positive and 5 misses across
+nine labeled tasks in twelve new synthetic cases. This exposes the cross-line
+cancellation limit and prevents interpreting the earlier known-case results as
+general accuracy. See the report for denominators and provisional review notes.

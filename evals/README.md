@@ -230,6 +230,7 @@ of the implementation, not independently or blindly.
 .venv/bin/python -m evals.run --contract rules --dataset rules-validation --output /tmp/actiongraph-rules-validation.jsonl
 ```
 
-The initial run has not yet been collected. Commit source and labels before
+The [first result](results/REPORT-rules-validation-042cf19.md) is preserved with a
+later-cancellation false positive and five missed labels. Commit source and labels before
 execution; afterward these cases are observed and must not be called untouched
 if tuning on their outcomes.
