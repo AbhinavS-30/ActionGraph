@@ -89,3 +89,7 @@ November 4 clean install verification completed for source 252c776: fresh Python
 3.12.13 environment and committed source pass 303 tests/Ruff/pip check. Exact CI
 job is queued; browser automation unavailable. Manual Swagger checklist prepared;
 current visual interaction remains pending. No public presentation started.
+
+November 4 saved-session browser sequence completed through user screenshots.
+CI and clean install passed; isolated test server stopped. Next declare existing
+custom API errors in OpenAPI and finish remaining resource/semantic release gates.

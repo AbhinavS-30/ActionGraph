@@ -54,3 +54,15 @@ The queued observation above is historical. Current browser automation remains
 unavailable; native Chrome additionally reports noWindowsAvailable. A disposable
 loopback server was started on port 8001 for user-assisted Swagger verification.
 Health/docs/OpenAPI return 200; that does not establish rendered interaction.
+
+## Browser follow-up — user-assisted workflow passed
+
+The user executed the saved-session Swagger sequence and supplied screenshots
+reviewed in conversation. Create/review/conflict/read, persistence across restart,
+stale/current deletion, deleted retrieval and blank-input rejection are observed.
+See [completed checklist](../SWAGGER_CHECK.md) for status table and evidence scope.
+The isolated server was stopped after the user deleted the synthetic test session.
+Historical browser-blocked entries above describe automation, not the final
+user-assisted result. Resource/semantic policy, independent quality adjudication
+and release packaging remain open. Custom 409/404 OpenAPI declarations are still
+missing, which Swagger labels Undocumented Error despite correct runtime status.

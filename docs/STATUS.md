@@ -57,8 +57,8 @@ extraction-quality measurements. No new dependencies or model downloads were add
 The user verified Swagger rendering and real model 200/blank-input 422 responses
 through screenshots on November 2. After the rules pivot, an actual Uvicorn TCP
 smoke check returned default `engine=rules`, expected task/owner/deadline/evidence,
-a scope notice, and blank-input 422. The updated engine-label browser interaction
-has not been reverified; no video recording is complete. See `docs/DEMO.md`.
+a scope notice, and blank-input 422. On November 4, user screenshots also verified current rules engine labels and
+the saved-session browser workflow; no video recording is complete. See `docs/DEMO.md`.
 
 ## Evaluation evidence
 
@@ -84,7 +84,8 @@ changed after inspection. These cases are now observed.
 Rules v3 replay is recorded with original labels and preserved earlier results.
 First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
 Opt-in saved rules sessions are now implemented under docs/STORAGE.md.
-Next verify current saved-session browser interaction and finish release checks,
+Saved-session browser interaction is now verified. Next document custom API
+error responses in OpenAPI and finish the remaining release checks,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -236,3 +237,17 @@ Storage source 252c776 GitHub test check now completed successfully (run
 automation remains unavailable and native Chrome reports noWindowsAvailable.
 An isolated disposable server on port 8001 is ready for user-assisted Swagger
 checks; health/docs/OpenAPI 200 is confirmed, visual execution still pending.
+
+## Saved-session browser verification completed
+
+User-executed Swagger screenshots verify creation 201, review 200/revision 2,
+stale review 409, retrieved original needs_review/separate confirmed review and
+persisted=true, persistence after agent-controlled restart, stale delete 409,
+current delete 204, deleted GET 404 and blank transcript 422. The agent separately
+compared the complete before/after restart response over TCP. Synthetic test
+session deleted; isolated port-8001 server stopped; normal server untouched.
+See SWAGGER_CHECK.md for exact evidence limits. No application code/test counts
+changed: last checks remain 303 passing, Ruff, clean install and storage CI passed.
+Next fix Swagger's Undocumented Error presentation by declaring existing custom
+responses, then finish remaining resource/semantic release checks. Page/video
+and independent human quality adjudication remain pending.

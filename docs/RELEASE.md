@@ -124,3 +124,13 @@ See [verification checkpoint](verification/RELEASE-252c776.md) and the
 [disposable Swagger procedure](SWAGGER_CHECK.md). These remaining checks do not
 require more feature scope. Resource/semantic policy and independent review
 remain separate release requirements.
+
+### Audit follow-up: user-assisted browser workflow passed
+
+November 4 screenshots verify the saved-session Swagger sequence, including
+confirmation preservation, stale writes/deletes, actual restart persistence,
+deletion and blank rejection. See SWAGGER_CHECK.md for precise observation scope.
+Storage source CI and clean installation passed. Port-8001 test server stopped.
+Custom error declarations in Swagger, local resource policy, semantic scope and
+independent adjudication remain separate work before release packaging; no
+public page or video created.
