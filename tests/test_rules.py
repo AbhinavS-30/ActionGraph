@@ -228,3 +228,48 @@ def test_single_task_cancellation_removes_only_one_split_task():
 def test_compound_cancellation_is_not_interpreted():
     line = "Ben: I will review the checklist and send the report."
     assert len(extract_rule_actions(line + "\nBen: I won't review the checklist and send the report.").items) == 2
+
+
+@pytest.mark.parametrize('verb,kind', [('publish','publication'),('review','review'),('upload','upload'),('export','export')])
+def test_adjacent_explicit_withdrawal_removes_its_single_task(verb,kind):
+    source=f"Dev: I'll {verb} the audit report tomorrow.\nDev: Cancel that {kind}; I am withdrawing the commitment."
+    assert extract_rule_actions(source).items == []
+
+
+@pytest.mark.parametrize('withdrawal', [
+    'Other: Cancel that publication; I am withdrawing the commitment.',
+    'DEV: Cancel that publication; I am withdrawing the commitment.',
+    'Dev: Cancel that review; I am withdrawing the commitment.',
+    'Dev: Cancel that publication; I am withdrawing the commitment if approved.',
+    'Dev: Maybe cancel that publication; I am withdrawing the commitment.',
+    'Dev: "Cancel that publication; I am withdrawing the commitment."',
+    'Dev: Never mind.',
+])
+def test_unsupported_or_mismatched_withdrawal_preserves_task(withdrawal):
+    promise='Dev: I will publish the audit report tomorrow.'
+    items=extract_rule_actions(promise+'\n'+withdrawal).items
+    assert len(items)==1 and items[0].evidence==promise
+
+
+@pytest.mark.parametrize('middle', ['\n','Other: Good morning.\n'])
+def test_withdrawal_does_not_resolve_over_intervening_lines(middle):
+    source='Dev: I will publish the audit report tomorrow.\n'+middle+'Dev: Cancel that publication; I am withdrawing the commitment.'
+    assert len(extract_rule_actions(source).items)==1
+
+
+def test_withdrawal_preserves_other_dates_speakers_tasks_and_future_promise():
+    source='Dev: I will publish the audit report by Monday.\nOther: I will publish the audit report tomorrow.\nDev: I will review the checklist.\nDev: I will publish the audit report tomorrow.\nDev: Cancel that publication; I am withdrawing the commitment.\nDev: I will publish the audit report by Friday.'
+    items=extract_rule_actions(source).items
+    assert [(i.owner,i.deadline) for i in items]==[('Dev','Monday'),('Other','tomorrow'),('Dev',None),('Dev','Friday')]
+
+
+def test_compound_previous_promise_is_not_withdrawn_by_singular_reference():
+    source='Dev: I will publish the audit report and review the checklist.\nDev: Cancel that publication; I am withdrawing the commitment.'
+    assert len(extract_rule_actions(source).items)==2
+
+
+def test_withdrawal_matches_null_deadline_duplicates_but_preserves_dependency():
+    promise='Dev: I will review the checklist after Other sends the build.'
+    source='Dev: I will review the checklist.\n'+promise+'\n'+promise+'\nDev: Cancel that review; I am withdrawing the commitment'
+    items=extract_rule_actions(source).items
+    assert len(items)==1 and items[0].action=='Review the checklist'

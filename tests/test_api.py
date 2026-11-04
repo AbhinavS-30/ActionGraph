@@ -339,3 +339,12 @@ def test_blank_model_field_returns_502_without_partial_result(field):
     assert response.status_code == 502
     assert response.json() == {"detail": "Ollama returned invalid output. Retry and review the result."}
     assert transcript not in response.text
+
+
+def test_adjacent_withdrawal_returns_no_task_without_model_call():
+    def fail(request):
+        pytest.fail('Rules withdrawal must not call Ollama')
+    source='Dev: I will publish the audit report tomorrow.\nDev: Cancel that publication; I am withdrawing the commitment.'
+    response=post_extract({'transcript':source},fail,use_default=True)
+    assert response.status_code==200
+    assert response.json()['items']==[]

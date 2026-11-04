@@ -19,7 +19,7 @@ claimed as a production-ready general meeting extractor.
   JSON parsing. Unknown owner/deadline use genuine null; string-null is rejected.
 - Exact transcript-quote validation and verbatim owner/deadline text-presence
   checks in the model path. These do not establish semantic attribution.
-- Rules v4 grammar, contractions, supported trailing dates, dependency preservation,
+- Rules v5 grammar, contractions, supported trailing dates, dependency preservation,
   original-source evidence, and conservative exclusions. Requests outside the adjacent acceptance policy,
   ownerless work, unsupported compounds and broader dialogue interpretation remain limited.
   Explicit same-speaker, matching-task cancellations now remove earlier items.
@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-305 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+322 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -263,3 +263,14 @@ header described; delete success remains body-free 204. Runtime behavior unchang
 Rendered Swagger for these new declarations has not been rechecked. No new
 dependency or quality measurement. Next define bounded withdrawal handling for
 the known semantic false positive; preserve the original evaluation evidence.
+
+## Bounded adjacent withdrawal implemented
+
+Rules v5 recognizes the exact Cancel that KIND; I am withdrawing the commitment
+form for publication/review/upload/export only when immediately preceded by one
+supported same-speaker promise with matching verb. It removes matching same-date
+active tasks, preserves other tasks/dates/speakers and allows recommitment. No
+intervening lines, compound antecedents, mismatched nouns or conditional/quoted
+withdrawals resolved. See RULES.md. 322 tests and Ruff pass; no dependencies added.
+Replay against original observed labels is pending. Original v4 first validation
+remains preserved; this is targeted development work, not independent validation.

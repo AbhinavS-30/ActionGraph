@@ -99,3 +99,7 @@ storage missing/conflict/failure/unavailable, saved 422 shapes and busy model
 Retry-After. 305 tests and Ruff pass. Runtime behavior unchanged. Next define
 bounded withdrawal handling against the observed false positive without changing
 historical labels/reports. Remaining local resource/release gates stay open.
+
+November 4 rules v5 bounded adjacent explicit withdrawal implemented under the
+policy in RULES.md; 322 tests and Ruff pass. Next replay the four observed sets
+without changing labels or historical reports. No general paraphrase claim.

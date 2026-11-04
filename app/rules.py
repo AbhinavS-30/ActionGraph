@@ -9,16 +9,26 @@ from app.validation import validate_transcript
 
 RULES_SCOPE = (
     "Rules mode supports bounded one- or two-task first-person promises per speaker-labelled line. "
-    "Explicit same-speaker cancellations with matching task wording are applied. "
+    "Explicit same-speaker matching-task cancellations and bounded adjacent withdrawals are applied. "
     "Only adjacent named requests with explicit matching-verb acceptance are supported. "
     "Ownerless work, broader cross-line interpretation and unsupported "
     "phrasing may be missed. Empty output does not prove no commitments exist."
 )
-RULES_VERSION = "4"
+RULES_VERSION = "5"
 COMMITMENT = re.compile(r"(?P<owner>[^:\n]{1,80}):\s+I(?: will|['’]ll) (?P<work>.+)")
 CANCELLATION = re.compile(
     r"(?P<owner>[^:\n]{1,80}):\s+(?:Correction,\s+)?I(?: will not| won['’]t) (?P<work>.+)"
 )
+WITHDRAWAL = re.compile(
+    r"(?P<owner>[^:\n]{1,80}):\s+Cancel that (?P<kind>publication|review|upload|export); "
+    r"I am withdrawing the commitment\.?"
+)
+WITHDRAWAL_VERBS = {
+    "publication": "publish",
+    "review": "review",
+    "upload": "upload",
+    "export": "export",
+}
 REQUEST = re.compile(
     r"(?P<requester>[^:\n]{1,80}):\s+(?P<owner>[^,:\n]{1,80}), (?:can|could) you (?P<work>.+)\?"
 )
@@ -124,6 +134,35 @@ def extract_rule_actions(transcript: str) -> ExtractionResult:
     lines = transcript.splitlines(keepends=True)
     for index, raw_line in enumerate(lines):
         original_line = raw_line.rstrip("\r\n")
+        withdrawal = WITHDRAWAL.fullmatch(original_line.strip())
+        if withdrawal and index > 0:
+            previous = COMMITMENT.fullmatch(lines[index - 1].strip())
+            parsed = _parse_work(previous["work"]) if previous else None
+            if (
+                previous is not None
+                and parsed is not None
+                and previous["owner"].strip() == withdrawal["owner"].strip()
+                and previous["work"].split()[0].casefold()
+                == WITHDRAWAL_VERBS[withdrawal["kind"]]
+            ):
+                action, deadline = parsed
+                items = [
+                    item
+                    for item in items
+                    if not (
+                        item.owner == previous["owner"].strip()
+                        and _task_key(item.action) == _task_key(action)
+                        and (
+                            (item.deadline is None and deadline is None)
+                            or (
+                                item.deadline is not None
+                                and deadline is not None
+                                and _task_key(item.deadline) == _task_key(deadline)
+                            )
+                        )
+                    )
+                ]
+            continue
         acceptance = ACCEPTANCE.fullmatch(original_line.strip())
         request = (
             REQUEST.fullmatch(lines[index - 1].strip())

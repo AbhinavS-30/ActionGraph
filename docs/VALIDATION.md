@@ -178,3 +178,14 @@ listed only on applicable routes, with model-busy Retry-After documented. Other
 models against representative actual responses and preserve no-content 204.
 Declarations do not validate semantics, change handler behavior or prove browser
 rendering. No errors are transformed into successful responses.
+
+## Adjacent withdrawal boundary
+
+Rules v5 uses a full-line withdrawal form and explicit reference-kind/verb mapping
+against the immediately preceding physical line. That antecedent must pass the
+single-task parser with the exact same speaker. Active items matching action,
+dependency and deadline (including null) are removed; survivors keep original
+evidence. Other references are skipped. This does not rewrite earlier saved
+sessions or reviewed decisions; newly created sessions record rules_version=5.
+See RULES.md for scope and exclusions. Original evaluation artifacts remain valid
+for their recorded revisions; new replay is observed-case regression evidence.

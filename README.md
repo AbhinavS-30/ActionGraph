@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 305 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 322 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -323,3 +323,8 @@ Swagger now declares existing application errors: experimental extraction
 422 may contain a list of request issues; stored-source review errors use a
 string detail. Busy model-slot 503 may include Retry-After. These declarations
 describe existing behavior; they do not change statuses or extraction quality.
+
+Rules v5 adds the bounded adjacent explicit withdrawal policy in docs/RULES.md.
+It requires the same speaker, one preceding supported promise, and a matching
+reference kind. Broader withdrawals remain unsupported. 322 tests and Ruff pass;
+updated observed-case replay is pending. Historical quality reports are unchanged.

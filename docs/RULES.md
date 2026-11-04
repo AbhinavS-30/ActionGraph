@@ -1,4 +1,4 @@
-# Rules mode v4
+# Rules mode v5
 
 Rules mode is the default local demo engine. It requires no running Ollama and
 does not call a model. The API explicitly labels `engine: rules` and returns a
@@ -54,7 +54,7 @@ normalized by this comparison.
   dependency. Do not infer aliases or paraphrases.
 - A cancellation affects earlier commitments only. A later explicit recommitment
   is kept with its own original evidence.
-- Vague withdrawals, pronoun references, reassignment, unsupported timing, and
+- Withdrawals outside the v5 adjacent policy, other pronoun references, reassignment, unsupported timing, and
   other correction phrasing remain outside this policy.
 
 For example, an earlier `Ben: I will publish the guide tomorrow.` is removed by
@@ -122,3 +122,23 @@ If only the final clause has a deadline, skip the whole promise because its
 scope may include both tasks. Undated pairs are supported. Compound requests
 and compound negations remain unsupported. A later single-task cancellation
 can remove one matching split item without removing the other.
+
+## Adjacent explicit withdrawal policy (v5)
+
+Recognize a full speaker line `Name: Cancel that KIND; I am withdrawing the commitment.`
+with optional final period. KIND is one of publication, review, upload or export,
+corresponding exactly to a preceding publish, review, upload or export task.
+The immediately preceding physical line must be a single supported direct
+first-person promise by the exact same speaker (edge trimming only). Its task,
+dependency and deadline are parsed with the existing single-task grammar. No
+intervening text/blank line, compound promise, accepted request, mismatched noun,
+other speaker, conditional suffix or quoted wording is resolved.
+
+Remove earlier active items matching that preceding task, speaker and stated
+deadline (including null matching null). Task/date comparison ignores case and
+whitespace only; dependency wording must still match. This also removes duplicate
+matching proposals for the same dated task. Other dates/tasks/speakers remain;
+later recommitments are allowed. Evidence of surviving items stays untouched.
+This is bounded reference resolution motivated by an observed failure, not general
+paraphrase/cancellation understanding. Original v4 validation remains preserved;
+replaying it after this change is development evidence.
