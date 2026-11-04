@@ -1,5 +1,9 @@
 # Release readiness
 
+Current consolidated decision document: [local release candidate](RELEASE_CANDIDATE.md).
+The dated audit and follow-ups below are historical evidence; STATUS.md identifies
+current completed work and remaining limitations.
+
 The current application is a local text extraction prototype with tested API
 failure handling and an initial synthetic evaluation. It is not a production
 service. The November 3, 2026 target is an initial demonstration, not a guaranteed
@@ -160,3 +164,13 @@ the cap. 346 tests/Ruff pass; no dependency/model download or quality remeasurem
 Remaining total-duration/API-output/disk/distributed boundaries are disclosed in
 LIMITS.md. Next reconcile the local portfolio release checklist and semantic scope
 instead of implying these caps establish production readiness.
+
+### Candidate reconciliation — implementation 351b3a0
+
+346 tests, Ruff, exact implementation CI and committed-source checks pass. Latest
+integrated TCP saved-session restart and request-cap checks pass. The unchanged
+lockfile uses the separately verified installation. RELEASE_CANDIDATE.md defines
+the proposed loopback-only portfolio release with provisional evaluation and
+explicit resource/storage gaps. No version tag, GitHub Release, page or recording
+is created. Next finalize notes and source packaging; independent adjudication
+remains incomplete and cannot be claimed.

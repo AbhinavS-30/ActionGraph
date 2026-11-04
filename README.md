@@ -135,7 +135,7 @@ checks use simulated model responses; they do not download or run Ollama.
 | 1. Validation foundation | Implemented as standalone components | Validated input, structured output contract, response parser, evidence helper, and focused tests. |
 | 2. Local model integration | Implemented; experimental quality limitations measured | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
 | 3. Connected extraction service | Python function implemented; first development comparison available | Connect the components; enforce the agreed ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
-| 4. Usable MVP | Endpoint and failure responses implemented; demo verification in progress | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
+| 4. Usable MVP | Local API/review/storage implemented; user-assisted browser flow verified | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
 | 5. Evaluation and demonstration | First development comparison recorded; human adjudication pending | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
 
 The initial demo target is November 3, 2026. It is a delivery target, not a claim of completion.
@@ -178,6 +178,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 - `data/synthetic/`: example input transcripts.
 - `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); collector and deterministic baseline available; first raw comparison and provisional semantic review available in `evals/results/`.
 - [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
+- [Local release candidate](docs/RELEASE_CANDIDATE.md): verified gates, proposed scope and remaining delivery work.
 - [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.
 - [Validation design](docs/VALIDATION.md): component responsibilities and failure behavior.
 - [Local demo](docs/DEMO.md): presentation sequence, observed TCP smoke check, and user-verified browser success/rejection paths.
