@@ -96,3 +96,15 @@ rules engine and limitations; returned items were needs_review with exact eviden
 Blank input, more than 12,000 characters and unknown engine returned 422. The
 temporary process was stopped after checking. This does not verify Swagger visual
 rendering or browser interaction; those current-version checks remain pending.
+
+## Extract-to-review TCP verification — November 4
+
+Source `5acb10e`, fresh loopback Uvicorn process, HTTPX over TCP: extraction
+returned three needs_review proposals. A complete review confirmed one unchanged,
+corrected one action, and rejected one, with original snapshots/evidence preserved
+and records in proposal order despite out-of-order decisions. Missing decisions,
+duplicate indices and changed evidence each returned 422 without partial records.
+Repeated extraction stayed unchanged; review appeared in OpenAPI; persisted=false.
+The temporary server was stopped. No model was selected. This is not a browser
+rendering check, storage test or semantic-quality measurement.
+[Machine-readable observations](verification/review-tcp-5acb10e.json).

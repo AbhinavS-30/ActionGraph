@@ -1,0 +1,41 @@
+{
+  "source_commit": "5acb10eb7534f5a60e566b48b7c45e3dc341fcce",
+  "checks": [
+    {
+      "check": "extract",
+      "status": 200,
+      "items": 3
+    },
+    {
+      "check": "confirm_correct_reject_in_proposal_order",
+      "status": 200,
+      "records": 3
+    },
+    {
+      "check": "missing_decision",
+      "status": 422,
+      "partial_records": false
+    },
+    {
+      "check": "duplicate_index",
+      "status": 422,
+      "partial_records": false
+    },
+    {
+      "check": "edited_evidence",
+      "status": 422,
+      "partial_records": false
+    },
+    {
+      "check": "review_does_not_change_later_extraction",
+      "same_result": true
+    },
+    {
+      "check": "review_in_openapi",
+      "present": true
+    }
+  ],
+  "transport": "HTTPX over TCP to fresh loopback Uvicorn; no model requested",
+  "browser_verified": false,
+  "persisted": false
+}

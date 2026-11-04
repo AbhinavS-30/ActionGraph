@@ -73,3 +73,8 @@ November 4 stateless POST /review implemented with preserved originals, explicit
 confirm/correct/reject decisions and exact evidence. 284 tests and Ruff pass.
 Persistence remains deferred pending retention/identity/version policy. Next
 verify extract-to-review over TCP before expanding review scope.
+
+November 4 extract-to-review TCP workflow verified for source 5acb10e, including
+confirm/correct/reject and invalid-batch failures. STORAGE.md defines opt-in local
+SQLite, immutable proposals, revisions, atomicity and explicit retention/deletion.
+Next implement persistence under that policy; saved-session routes do not exist yet.

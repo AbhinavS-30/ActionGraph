@@ -60,3 +60,7 @@ Submit through POST /review in Swagger. The response keeps original.owner=Leo
 and original.review_status=needs_review, while reviewed.owner=Maya and
 reviewed.review_status=confirmed. persisted=false. To confirm unchanged, omit
 replacement. To reject, set decision=reject and omit replacement.
+
+The current HTTP workflow has been [verified over TCP](DEMO.md). Optional saved
+sessions will follow [the storage policy](STORAGE.md); that persistence is not
+implemented and does not change this stateless endpoint's guarantees.

@@ -82,7 +82,8 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. Next verify the implemented stateless extract-to-review workflow over TCP,
+First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
+Next implement opt-in saved rules sessions under docs/STORAGE.md,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -183,3 +184,17 @@ records; no model, storage, identity or authenticated provenance is involved.
 extract-to-review workflow over real TCP, then define persistence/retention and
 review identity/version requirements before adding storage. Quality findings
 remain unchanged; this workflow does not repair extraction automatically.
+
+## Review TCP verification and storage policy
+
+Clean source 5acb10e passed actual loopback HTTP extract-to-review checks: confirm,
+correction, rejection, original preservation/order, no partial invalid batches,
+unchanged repeated extraction and OpenAPI presence. See DEMO.md and its recorded
+observations. Browser verification remains separate and pending.
+
+[Storage policy](STORAGE.md) now defines optional local sqlite3 sessions, immutable
+server-generated rules proposals, revisions/conflicts, atomic reviews/deletion,
+explicit retention and no authenticated reviewer/history guarantees. This is a
+design only: no database, persistence setting or saved-session route implemented.
+Next implement and test saved-session storage under that policy. Public page and
+recording remain deferred; 284 tests and Ruff pass.
