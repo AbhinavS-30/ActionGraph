@@ -97,3 +97,11 @@ Parser and model API fail the whole result for invalid fields (502 for model
 output). 259 tests and Ruff pass. The table above is the preserved audit snapshot;
 its blank-field work item is now complete. Resource limits, review workflow and
 other release requirements remain open. Next define review policy.
+
+### Audit follow-up: stateless review available
+
+POST /review now implements caller-directed confirmation/correction/rejection
+with original snapshots and unchanged evidence. 284 tests and Ruff pass. It
+does not implement saved reviews, authenticated identity or extraction provenance,
+a custom UI, conflict handling or task additions. Next verify the current
+extract-to-review TCP flow and define storage semantics before persistence.

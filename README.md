@@ -12,7 +12,7 @@ The local API accepts a text transcript and returns proposed action items for re
 
 ## Architecture
 
-The API selects rules by default or experimental local inference explicitly, then returns proposed items for review. Human confirmation and persistence remain planned.
+The API selects rules by default or experimental local inference explicitly, then returns proposed items for review. Stateless human review is available through POST /review; persistence remains planned.
 
 ```mermaid
 flowchart TD
@@ -68,7 +68,7 @@ An illustrative result follows. It demonstrates the contract, not a measured eva
 | `owner` | Required field containing a string or `null` when unknown. |
 | `deadline` | Required field containing a string or `null` when unspecified. Date normalization is not implemented. |
 | `evidence` | Required string with at least one character. The separate evidence helper rejects whitespace-only quotes and checks exact presence. |
-| `review_status` | `needs_review` by default, or `confirmed`. A confirmation workflow is not implemented. |
+| `review_status` | `needs_review` by default, or `confirmed`. Stateless confirmation is available through POST /review; see docs/REVIEW.md. |
 
 Unexpected fields within an action item are rejected. Owner and deadline reject the string placeholder `"null"` (including case and surrounding-whitespace variants); unknown values must use JSON `null`. All action/evidence strings and non-null owner/deadline strings must contain a character remaining after Python str.strip(); blank strings are rejected without rewriting valid text. Schema validity does not establish extraction correctness, and the parser does not invoke evidence checks automatically. The connected extraction function additionally requires non-null owner/deadline text to occur verbatim at word boundaries in item evidence. This rejects absent or partial-name values but does not prove correct attribution.
 
@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 259 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 284 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -202,7 +202,7 @@ The response uses the `items` contract above; model output can vary, and every i
 | 504 | Ollama timed out; retry with a shorter transcript. |
 | 502 | Upstream HTTP failure, invalid output, unsupported evidence, or owner/deadline text absent from evidence; inspect input and Ollama, then retry and review. |
 
-There are no automatic retries, saved results, authentication, or human confirmation endpoint. Run this initial API locally.
+There are no automatic retries, saved results, or authentication. POST /review supports stateless caller-directed confirmation. Run this initial API locally.
 
 ## Local runtime configuration
 
@@ -296,3 +296,12 @@ finds 6 correct tasks, 1 withdrawn-task false positive and 5 misses across eleve
 labels. Source-text validity does not prevent semantic errors. This new synthetic
 set was labeled before extraction, authored with implementation knowledge, and
 is now observed. Current checks: 234 tests and Ruff pass.
+
+## Review proposed items
+
+`POST /review` accepts the transcript, submitted proposals and one confirm/reject
+decision per proposal. Optional complete replacements can correct action, owner
+and deadline while preserving source evidence. The response retains originals
+and separate confirmed copies, or rejection records. Nothing is stored and no
+model is called. This is a caller decision, not authenticated semantic proof.
+See [review contract and complete example](docs/REVIEW.md).

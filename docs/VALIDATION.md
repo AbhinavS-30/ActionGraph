@@ -16,7 +16,7 @@ An exact match establishes quote presence only. It does not establish that an ac
 
 ## Review boundary
 
-The current schema defaults review_status to needs_review and also permits confirmed. No confirmation workflow or persistence is implemented. The extraction function forces generated items to `needs_review` and fails on unsupported evidence.
+The current schema defaults review_status to needs_review and also permits confirmed. Stateless confirmation is available through POST /review; persistence is not implemented. The extraction function forces generated items to `needs_review` and fails on unsupported evidence.
 
 ## Model transport boundary
 
@@ -139,3 +139,16 @@ without raw content or partial items. These custom Python checks are not encoded
 in generated JSON Schema; local validation remains authoritative. Historical
 evaluation artifacts retain their recorded behavior. No semantic accuracy claim
 or rules grammar change follows from this validation fix.
+
+## Stateless review boundary
+
+ReviewRequest validates source length, up to 100 proposals/decisions, exact
+source quotes, needs_review inputs and complete unique index coverage before
+review_actions runs. Confirmed corrected owner/deadline retain text-presence
+requirements; original evidence cannot change. Rejections preserve submitted
+originals without requiring their potentially wrong field attribution to pass.
+The function creates deep copies, never mutates its request, and returns records
+in proposal order. Validation errors map to 422 with no partial records. No
+model dependency or inference slot is used. Caller-supplied originals are not
+server-authenticated extraction snapshots, and confirmation is caller assertion.
+See REVIEW.md for contract, exact bounds and deferred persistence semantics.

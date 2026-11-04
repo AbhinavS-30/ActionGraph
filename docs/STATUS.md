@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-259 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+284 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -82,15 +82,14 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. Next define the bounded local
-review workflow,
+First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. Next verify the implemented stateless extract-to-review workflow over TCP,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
 
 Real-meeting quality, independent human evaluation, cross-line semantic consistency,
 raw HTTP body/response byte limits, total-duration limits and distributed concurrency
-are not established. No persistence or human confirmation endpoint exists. Audio,
+are not established. No persistence exists. Stateless caller-directed confirmation is now available via POST /review. Audio,
 calendar integration, cross-meeting memory and elaborate dashboards remain deferred.
 See `docs/RELEASE.md` and `docs/RULES.md` for release requirements and exact scope.
 
@@ -171,3 +170,16 @@ without partial results. Earlier evidence/provenance tests now expect schema
 failure first for blank fields. 259 tests and Ruff pass. No dependencies added;
 no extraction-quality measurement changed. Next define local review/correction/
 confirmation policy before implementing storage or endpoints.
+
+## Stateless review implemented
+
+POST /review supports confirming, correcting or rejecting a complete submitted
+batch (up to 100 proposals), preserving original snapshots and exact evidence.
+Corrections must pass the output contract and field-text checks; no evidence
+edits. Rejections retain the original with reviewed=null. Server sets confirmed
+only on reviewed copies. Invalid/incomplete batches return 422 without partial
+records; no model, storage, identity or authenticated provenance is involved.
+284 tests and Ruff pass. [Contract and example](REVIEW.md). Next verify the
+extract-to-review workflow over real TCP, then define persistence/retention and
+review identity/version requirements before adding storage. Quality findings
+remain unchanged; this workflow does not repair extraction automatically.

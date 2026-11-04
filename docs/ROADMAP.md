@@ -68,3 +68,8 @@ November 4 nonblank output-field validation implemented: blank strings fail the
 shared schema before evidence/provenance validation; model API maps to 502 with
 no partial result. 259 tests and Ruff pass. Next define bounded local review
 behavior before implementing persistence/endpoints.
+
+November 4 stateless POST /review implemented with preserved originals, explicit
+confirm/correct/reject decisions and exact evidence. 284 tests and Ruff pass.
+Persistence remains deferred pending retention/identity/version policy. Next
+verify extract-to-review over TCP before expanding review scope.

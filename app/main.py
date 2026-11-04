@@ -14,6 +14,7 @@ from app.config import Settings, get_settings
 from app.extraction import UnsupportedEvidenceError, extract_actions
 from app.ollama import OllamaResponseError
 from app.provenance import UnsupportedFieldError
+from app.review import ReviewRequest, ReviewResponse, review_actions
 from app.rules import RULES_SCOPE, extract_rule_actions
 from app.schemas import ExtractionRequest, ExtractionResponse
 
@@ -112,3 +113,8 @@ def extract(
         ) from exc
     finally:
         extraction_slot.release()
+
+
+@app.post("/review", response_model=ReviewResponse)
+def review(request: ReviewRequest) -> ReviewResponse:
+    return review_actions(request)
