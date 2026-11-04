@@ -289,4 +289,4 @@ This change passes 214 tests. The [observed-case replay](evals/results/REPORT-ru
 Rules v4 additionally splits two complete direct-promise tasks under the
 [compound-task policy](docs/RULES.md), retaining full-line evidence and local
 deadlines. Ambiguous or partly unsupported pairs are skipped. 233 tests and Ruff
-pass; dataset replay for this version remains pending.
+pass. The [v4 replay](evals/results/REPORT-rules-v4-aa3c999.md) recovers two compound tasks; other outputs are unchanged. These are known-case results.

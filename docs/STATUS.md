@@ -37,8 +37,7 @@ by and. Both retain the full source line and speaker, in clause order. Unsupport
 halves reject the whole pair. Ambiguous final-only dates, dependencies, three-task
 lists, compound requests and compound negations are excluded. Explicit per-clause
 dates remain local; a later single cancellation removes only its matching item.
-233 tests and Ruff pass; no dependencies or model calls added. The v4 quality
-replay remains pending; v3 measurements below do not measure v4.
+233 tests and Ruff pass; no dependencies or model calls added. The v4 replay is recorded below; prior reports remain historical.
 
 ## Previous implementation
 
@@ -83,7 +82,7 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-Next replay rules v4 on the recorded datasets with unchanged labels,
+Next evaluate frozen rules v4 on new pre-labeled cases,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -119,3 +118,13 @@ all other outputs unchanged. Development and observed validation each score
 without model calls. Original labels and baseline remain unchanged. These are
 known-case regression results, not independent quality estimates.
 [Report and audit artifacts](../evals/results/REPORT-rules-v3-c9e5e64.md).
+
+## Rules v4 observed-case replay
+
+Clean source `aa3c999`: rules-check-11 now returns both compound tasks exactly
+as labeled; all other rules and baseline outputs remain unchanged. Development
+and observed validation each remain 7 TP, 0 FP, 1 FN; rules-focused improves
+to 7 TP, 0 FP, 2 FN. All paired rule items are fully correct under provisional
+review. All 32 rules attempts succeeded without model calls. These are known-case
+regression results, not independent validation. Ownerless work and unsupported
+verb/time remain missed. [Report and artifacts](../evals/results/REPORT-rules-v4-aa3c999.md).
