@@ -10,7 +10,7 @@ of delivery or production readiness. Current implementation checkpoint: 351b3a0.
 | Rules extraction and evaluation | Rules v5 implemented; first-run and observed-case replay reports recorded | Semantic misses/unsupported forms disclosed; independent adjudication pending. |
 | Human review and local persistence | Stateless and saved-session paths implemented; TCP restart and user-assisted Swagger checks pass | Latest-review-only/local-access limitations disclosed. |
 | Local resource boundary | Request/upstream generation buffering, token/operation/concurrency/write-lock bounds implemented | Total duration, API output size, disk growth and distributed controls not established; not public hosting. |
-| Local release candidate | Scope and verified evidence consolidated in RELEASE_CANDIDATE.md | Finalize versioned notes and source package with exact commit/checks; not yet tagged/released. |
+| Local release candidate | Scope and verified evidence consolidated in RELEASE_CANDIDATE.md | Verified package 70cf9d4 tagged v0.1.0-rc.1; final walkthrough/stable readiness remains. |
 | Public presentation | Approved project page plus recorded local demo; not started | Begin after product readiness; extraction stays local. LinkedIn draft afterward; no automatic posting. |
 
 The candidate is a local engineering portfolio tool with provisional evaluation.

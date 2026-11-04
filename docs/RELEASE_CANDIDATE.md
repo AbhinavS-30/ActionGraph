@@ -1,8 +1,8 @@
 # ActionGraph local release candidate
 
-Draft candidate for a local engineering portfolio release, November 4, 2026.
-Implementation checkpoint: `351b3a0`. No Git tag or GitHub Release is created by
-this document. Public page and recording remain deferred under the user's plan.
+Verified candidate for a local engineering portfolio release, November 4, 2026.
+Annotated tag v0.1.0-rc.1 points to verified source package 70cf9d4; application
+implementation checkpoint is 351b3a0. No stable tag or GitHub Release exists. Public page and recording remain deferred under the user's plan.
 
 ## Product contract
 
@@ -80,8 +80,9 @@ commit and SHA-256 separately. No release tag/publication is implied by a bundle
 
 1. Review the candidate scope and provisional-quality disclosure; address any
    concrete defect found during review. Independent adjudication remains open.
-2. Review the draft v0.1.0 notes in RELEASE_NOTES.md and the source bundle;
-   verify the package commit's CI before any release label/publication.
+2. Final local-release walkthrough and review of draft stable v0.1.0 notes.
+   The candidate bundle and exact package CI passed; see verification/CANDIDATE-70cf9d4.md.
+   A stable release is not implied by the release-candidate tag.
 3. After product readiness, create the approved project page and record the
    local demo, then prepare the LinkedIn draft. Do not publish posts automatically.
 

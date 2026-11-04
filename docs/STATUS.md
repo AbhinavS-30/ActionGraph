@@ -65,14 +65,15 @@ than treated as current open tasks.
 ## Release candidate and next task
 
 [RELEASE_CANDIDATE.md](RELEASE_CANDIDATE.md) consolidates the proposed local
-portfolio scope, verified gates and remaining limitations. No release tag or
-GitHub Release exists. The November 3 initial demo target has passed; no new
+portfolio scope, verified gates and remaining limitations. Release-candidate tag v0.1.0-rc.1 points to verified package commit 70cf9d4.
+No stable release tag or GitHub Release exists. The November 3 initial demo target has passed; no new
 completion date is asserted. The project is not declared fully finished.
 
 Draft v0.1.0 notes are prepared in RELEASE_NOTES.md. A source-only candidate
 bundle is prepared from this documentation checkpoint, keeping quality review
-explicitly provisional. Next review the candidate and check its exact CI before
-finalizing a version tag.
+explicitly provisional. Candidate ZIP exactly matches that Git source; extracted-package tests/Ruff/pip
+check and exact candidate CI pass. See verification/CANDIDATE-70cf9d4.md. Next
+perform the final local-release walkthrough and assess stable release readiness.
 Independent human adjudication remains open; no independent-validation claim may
 be made. Public page and recorded demo remain deferred until product readiness,
 followed by a LinkedIn draft; no post will be published automatically. Audio,

@@ -1,7 +1,7 @@
 # Draft v0.1.0 local release notes
 
-Status: candidate source package only. No v0.1.0 tag, GitHub Release, public
-project page or recorded video has been published. Implementation checkpoint:
+Status: verified source candidate tagged v0.1.0-rc.1 at 70cf9d4. No stable v0.1.0
+tag, GitHub Release, public project page or recorded video has been published. Implementation checkpoint:
 351b3a0. The package's Git commit identifies documentation revisions as well.
 
 ActionGraph turns supported text commitments into proposed action items with
@@ -51,3 +51,7 @@ chunked uploads. User screenshots verified the earlier saved-session browser
 workflow. Response-limit tests use simulated envelopes; no new real-model quality
 run is claimed. Later documentation-only package revisions require their own CI
 observation before a release tag is finalized.
+
+Candidate package verification: exact ZIP/source identity and checksum passed;
+all 346 tests, Ruff and pip check pass from the extracted source using a separate
+pinned environment. Exact 70cf9d4 CI passed. See verification/CANDIDATE-70cf9d4.md.

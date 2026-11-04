@@ -174,3 +174,10 @@ the proposed loopback-only portfolio release with provisional evaluation and
 explicit resource/storage gaps. No version tag, GitHub Release, page or recording
 is created. Next finalize notes and source packaging; independent adjudication
 remains incomplete and cannot be claimed.
+
+### Verified candidate tag
+
+v0.1.0-rc.1 points to verified source 70cf9d4. Existing ZIP matched fresh Git
+archive bytes and checksum; extracted package passed all 346 tests/Ruff/pip check;
+exact candidate CI passed. See verification/CANDIDATE-70cf9d4.md. No stable tag,
+GitHub Release, presentation or independent quality validation is claimed.
