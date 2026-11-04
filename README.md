@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 233 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 234 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -290,3 +290,9 @@ Rules v4 additionally splits two complete direct-promise tasks under the
 [compound-task policy](docs/RULES.md), retaining full-line evidence and local
 deadlines. Ambiguous or partly unsupported pairs are skipped. 233 tests and Ruff
 pass. The [v4 replay](evals/results/REPORT-rules-v4-aa3c999.md) recovers two compound tasks; other outputs are unchanged. These are known-case results.
+
+The [first frozen-v4 validation](evals/results/REPORT-rules-v4-fresh-486fcb5.md)
+finds 6 correct tasks, 1 withdrawn-task false positive and 5 misses across eleven
+labels. Source-text validity does not prevent semantic errors. This new synthetic
+set was labeled before extraction, authored with implementation knowledge, and
+is now observed. Current checks: 234 tests and Ruff pass.

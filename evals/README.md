@@ -244,3 +244,7 @@ Authoring used implementation knowledge; this is not independent human validatio
 No post-run label or source tuning is permitted for this first result.
 Command: `.venv/bin/python -m evals.run --contract rules --dataset rules-v4-validation --output OUTPUT`.
 The collector now supports four dataset choices; earlier two-choice wording is historical.
+
+The [first v4 result](results/REPORT-rules-v4-fresh-486fcb5.md) is preserved.
+These cases are now observed: rules returned one withdrawn task and missed five
+labels. Keep this result when evaluating any later changes.

@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-233 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+234 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -82,7 +82,8 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-Next evaluate frozen rules v4 on new pre-labeled cases,
+First frozen-v4 validation is recorded below. Next audit local release requirements
+against the measured failures and remaining verification gaps,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -138,3 +139,15 @@ out-of-scope work and broader withdrawal wording. Author knows the grammar and
 prior failures; this is not independent or blind evaluation. Preserve all first
 outputs and labels, score all cases under the existing rubric, and do not tune
 the extractor during this run. Collection choice: rules-v4-validation.
+
+## First frozen-v4 validation result
+
+Clean source `486fcb5`, unchanged rules v4, fourteen new cases and eleven labels:
+rules 6 TP, 1 FP, 5 FN, precision 6/7 (85.7%), recall 6/11 (54.5%), six fully
+correct items; baseline 5/6/6, two fully correct. All 14 attempts per engine
+succeeded without model calls. Paraphrased withdrawal remained a false positive;
+ownerless work, clock/verb, object list and two shared-date tasks were missed.
+Labels were committed before extraction and not changed afterward. Author knew
+the grammar; review is provisional, not independent or real-meeting validation.
+The set is now observed. 234 tests and Ruff pass.
+[Full report and audit artifacts](../evals/results/REPORT-rules-v4-fresh-486fcb5.md).
