@@ -33,6 +33,14 @@ class ActionItem(BaseModel):
     evidence: str = Field(min_length=1)
     review_status: Literal["needs_review", "confirmed"] = "needs_review"
 
+    @field_validator("action", "owner", "deadline", "evidence")
+    @classmethod
+    def reject_blank_text(cls, value: str | None) -> str | None:
+        """Reject blank strings without changing valid source text or nulls."""
+        if isinstance(value, str) and not value.strip():
+            raise ValueError("Text fields must not be blank; use JSON null for unknown values.")
+        return value
+
     @field_validator("owner", "deadline")
     @classmethod
     def reject_string_null(cls, value: str | None) -> str | None:

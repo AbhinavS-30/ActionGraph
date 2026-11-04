@@ -325,3 +325,17 @@ def test_default_rules_splits_two_tasks_without_model_call():
     items = response.json()["items"]
     assert [item["action"] for item in items] == ["Review the checklist", "Send the report"]
     assert all(item["evidence"] == transcript for item in items)
+
+
+@pytest.mark.parametrize("field", ["action", "owner", "deadline", "evidence"])
+def test_blank_model_field_returns_502_without_partial_result(field):
+    transcript = "Maya: I will review the logs tomorrow."
+    valid = {"action": "Review the logs", "owner": "Maya", "deadline": "tomorrow", "evidence": transcript}
+    invalid = {**valid, field: " \t\n"}
+    response = post_extract(
+        {"transcript": transcript},
+        lambda request: httpx.Response(200, json={"done": True, "response": json.dumps({"items": [valid, invalid]})}),
+    )
+    assert response.status_code == 502
+    assert response.json() == {"detail": "Ollama returned invalid output. Retry and review the result."}
+    assert transcript not in response.text

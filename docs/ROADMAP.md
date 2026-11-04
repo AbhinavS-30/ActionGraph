@@ -63,3 +63,8 @@ current rules TCP smoke pass. Latest CI queried is queued. Next close blank
 output-field validation, define local review/correction behavior, then finish
 release verification and packaging before the page/video. No completion date
 or general extraction reliability is established by this audit.
+
+November 4 nonblank output-field validation implemented: blank strings fail the
+shared schema before evidence/provenance validation; model API maps to 502 with
+no partial result. 259 tests and Ruff pass. Next define bounded local review
+behavior before implementing persistence/endpoints.

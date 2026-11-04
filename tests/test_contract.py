@@ -57,3 +57,18 @@ def test_real_values_are_preserved_without_normalization():
     )
     assert item.owner == "  Maya  "
     assert item.deadline == "Friday"
+
+
+@pytest.mark.parametrize("field", ["action", "owner", "deadline", "evidence"])
+@pytest.mark.parametrize("value", ["", "   ", "\t\r\n", "\u00a0\u2003"])
+def test_output_text_cannot_be_blank(field, value):
+    data = {"action": "Review draft", "owner": None, "deadline": None, "evidence": "Review draft"}
+    data[field] = value
+    with pytest.raises(ValidationError) as error:
+        ActionItem.model_validate(data)
+    assert error.value.errors()[0]["loc"] == (field,)
+
+
+def test_valid_output_text_is_preserved_in_all_fields():
+    data = {"action": "  Review draft\t", "owner": " Maya ", "deadline": " Friday ", "evidence": "  Maya: Review draft Friday.\n"}
+    assert ActionItem.model_validate(data).model_dump(exclude={"review_status"}) == data

@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-234 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+259 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -82,8 +82,8 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-First frozen-v4 validation and the release audit are recorded. Next close blank
-output-field validation, then define the bounded local review workflow,
+First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. Next define the bounded local
+review workflow,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -161,3 +161,13 @@ unknown-engine 422. This is not rendered-browser verification. Latest queried CI
 runs through 6088aa2 are queued; no current CI pass is claimed. Clean-install
 verification, current browser interaction, human adjudication, review workflow,
 blank output-field validation and release packaging remain. No page/video built.
+
+## Nonblank output fields completed
+
+ActionItem now rejects blank action/evidence and blank non-null owner/deadline
+strings, preserving valid text and genuine nulls. Schema/parser/API tests cover
+Unicode whitespace and whole-result failure; blank model output returns 502
+without partial results. Earlier evidence/provenance tests now expect schema
+failure first for blank fields. 259 tests and Ruff pass. No dependencies added;
+no extraction-quality measurement changed. Next define local review/correction/
+confirmation policy before implementing storage or endpoints.

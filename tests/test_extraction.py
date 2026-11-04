@@ -43,10 +43,10 @@ def test_accepts_empty_result():
         assert extract_actions("Maya: Good morning.", client=client).items == []
 
 
-@pytest.mark.parametrize("evidence", ["Invented quote", " \n"])
-def test_any_unsupported_item_fails_entire_result(evidence):
+@pytest.mark.parametrize("evidence, error", [("Invented quote", UnsupportedEvidenceError), (" \n", ValidationError)])
+def test_any_unsupported_item_fails_entire_result(evidence, error):
     text = json.dumps({"items": [model_item(), model_item(evidence=evidence)]})
-    with client_returning(text) as client, pytest.raises(UnsupportedEvidenceError):
+    with client_returning(text) as client, pytest.raises(error):
         extract_actions(TRANSCRIPT, client=client)
 
 

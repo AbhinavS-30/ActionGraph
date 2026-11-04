@@ -122,3 +122,20 @@ date with no first-clause date is treated as ambiguous and the pair is skipped.
 Dependencies in pairs are skipped. Requests and negations retain the single-task
 parser. Items share exact original-line evidence; later single-task cancellations
 match each item independently. See RULES.md for exact bounds and known omissions.
+
+## Nonblank output-field boundary
+
+ActionItem rejects empty or whitespace-only action/evidence strings and non-null
+owner/deadline strings, using Python str.strip() only for the check. Valid values
+are returned byte-for-byte unchanged as Python strings; genuine null stays allowed
+for owner/deadline. Unicode whitespace recognized by strip is included; this is
+not a general invisible-character filter. Zero-width format characters are not
+classified as whitespace by this rule. String-null rejection remains separate.
+
+Pydantic field validation runs before evidence/provenance checks: blank output
+now raises ValidationError at parsing rather than UnsupportedEvidenceError or
+UnsupportedFieldError later. Experimental Ollama API output maps this to 502
+without raw content or partial items. These custom Python checks are not encoded
+in generated JSON Schema; local validation remains authoritative. Historical
+evaluation artifacts retain their recorded behavior. No semantic accuracy claim
+or rules grammar change follows from this validation fix.

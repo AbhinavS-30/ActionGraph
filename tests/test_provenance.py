@@ -1,4 +1,5 @@
 import pytest
+from pydantic import ValidationError
 
 from app.provenance import UnsupportedFieldError, validate_field_evidence
 from app.schemas import ActionItem
@@ -16,11 +17,11 @@ def test_verbatim_fields_and_nulls_are_allowed():
 
 
 @pytest.mark.parametrize(
-    "fields",
-    [{"owner": "Maya"}, {"deadline": "Friday"}, {"owner": "nina"}, {"deadline": " "}],
+    "fields, error",
+    [({"owner": "Maya"}, UnsupportedFieldError), ({"deadline": "Friday"}, UnsupportedFieldError), ({"owner": "nina"}, UnsupportedFieldError), ({"deadline": " "}, ValidationError)],
 )
-def test_absent_or_blank_field_text_is_rejected(fields):
-    with pytest.raises(UnsupportedFieldError):
+def test_absent_or_blank_field_text_is_rejected(fields, error):
+    with pytest.raises(error):
         validate_field_evidence(item(**fields))
 
 

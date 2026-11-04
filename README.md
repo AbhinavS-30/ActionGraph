@@ -70,7 +70,7 @@ An illustrative result follows. It demonstrates the contract, not a measured eva
 | `evidence` | Required string with at least one character. The separate evidence helper rejects whitespace-only quotes and checks exact presence. |
 | `review_status` | `needs_review` by default, or `confirmed`. A confirmation workflow is not implemented. |
 
-Unexpected fields within an action item are rejected. Owner and deadline reject the string placeholder `"null"` (including case and surrounding-whitespace variants); unknown values must use JSON `null`. Current minimum-length schema checks do not reject every whitespace-only field. Schema validity does not establish extraction correctness, and the parser does not invoke evidence checks automatically. The connected extraction function additionally requires non-null owner/deadline text to occur verbatim at word boundaries in item evidence. This rejects absent or partial-name values but does not prove correct attribution.
+Unexpected fields within an action item are rejected. Owner and deadline reject the string placeholder `"null"` (including case and surrounding-whitespace variants); unknown values must use JSON `null`. All action/evidence strings and non-null owner/deadline strings must contain a character remaining after Python str.strip(); blank strings are rejected without rewriting valid text. Schema validity does not establish extraction correctness, and the parser does not invoke evidence checks automatically. The connected extraction function additionally requires non-null owner/deadline text to occur verbatim at word boundaries in item evidence. This rejects absent or partial-name values but does not prove correct attribution.
 
 ## Available components
 
@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 234 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 259 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated

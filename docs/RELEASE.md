@@ -88,3 +88,12 @@ These are snapshots of queued state, not claims about their later outcome.
 No new dependency, service, model download, public endpoint, website or recording
 was introduced by this audit. Production hosting controls in this document remain
 future requirements, not additional blockers for a loopback-only portfolio demo.
+
+### Audit follow-up: nonblank fields complete
+
+November 4: the blank output-field gap is closed. Action/evidence and non-null
+owner/deadline must contain non-whitespace text; valid strings stay unchanged.
+Parser and model API fail the whole result for invalid fields (502 for model
+output). 259 tests and Ruff pass. The table above is the preserved audit snapshot;
+its blank-field work item is now complete. Resource limits, review workflow and
+other release requirements remain open. Next define review policy.

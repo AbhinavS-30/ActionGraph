@@ -77,3 +77,11 @@ def test_rejects_json_that_fails_schema(data):
 def test_rejects_non_string_response():
     with pytest.raises(TypeError, match="Extraction response must be a string"):
         parse_extraction_result(42)
+
+
+@pytest.mark.parametrize("field", ["action", "owner", "deadline", "evidence"])
+def test_parser_rejects_entire_result_with_a_blank_field(field):
+    valid = {"action": "Review logs", "owner": None, "deadline": None, "evidence": "I will review logs."}
+    invalid = {**valid, field: " \t\n"}
+    with pytest.raises(ValidationError):
+        parse_extraction_result(json.dumps({"items": [valid, invalid]}))
