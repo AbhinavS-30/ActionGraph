@@ -105,3 +105,12 @@ with original snapshots and unchanged evidence. 284 tests and Ruff pass. It
 does not implement saved reviews, authenticated identity or extraction provenance,
 a custom UI, conflict handling or task additions. Next verify the current
 extract-to-review TCP flow and define storage semantics before persistence.
+
+### Audit follow-up: saved rules sessions implemented
+
+Opt-in SQLite storage now preserves server-generated original proposals and latest
+review across restarts, with atomic revision checks and deletion. 303 tests and
+Ruff pass; a disposable actual TCP restart smoke passes. No authenticated reviewer,
+full review history, listing or backup. See STORAGE.md for configured path,
+retention and limitations. Current browser interaction and other release gates
+remain open. No extraction-quality score changed through storage implementation.

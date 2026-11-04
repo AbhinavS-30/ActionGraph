@@ -1,10 +1,8 @@
-# Local persistence policy — design, not implemented
+# Local persistence policy — implemented v1
 
-The current extract/review routes remain stateless. The next implementation will
-add optional saved rules sessions using Python 3.12's standard-library sqlite3.
-No new dependency, service, model call or download is needed. This document defines
-the behavior before storage code is added; none of these saved-session routes or
-settings exist yet.
+The existing extract/review routes remain stateless. Optional saved rules sessions
+use Python 3.12 standard-library sqlite3. No new dependency, service, model call
+or download was added. The saved-session routes and setting below are implemented.
 
 ## Scope and opt-in
 
@@ -36,7 +34,7 @@ snapshot semantics. Experimental Ollama session creation is deferred; no implici
 model selection or fallback. At most 100 proposals per saved session, consistent
 with review limits; reject an oversized batch with 422 and save nothing.
 
-## Planned routes
+## Saved-session routes
 
 | Route | Contract |
 | --- | --- |
@@ -88,7 +86,7 @@ temporary databases, never a developer's configured database. Do not log transcr
 or review bodies as part of storage operations. File permissions and explicit
 configuration protect accidental handling, not an authenticated access boundary.
 
-## Required implementation checks
+## Verification coverage
 
 - Disabled mode creates no database; invalid configuration cannot silently redirect.
 - Create/read after closing and reopening connections preserves nulls, exact text,
@@ -100,3 +98,31 @@ configuration protect accidental handling, not an authenticated access boundary.
 - Deletion removes dependent records; GET returns 404 afterward.
 - Oversized input/batches and storage errors never leave partial records.
 - Existing stateless contracts remain unchanged; no Ollama calls are introduced.
+
+## Enable and use locally
+
+Choose a path in an existing directory you control; export it before starting
+Uvicorn. The .env.example entry is commented out and .env is not read automatically.
+
+```bash
+export ACTIONGRAPH_DB_PATH=/absolute/path/actiongraph.sqlite3
+.venv/bin/python -m uvicorn app.main:app --reload
+```
+
+Use POST /sessions in Swagger with `{"transcript":"Maya: I will review the report tomorrow."}`.
+Save the returned session id and revision. Submit PUT /sessions/{id}/review with
+`{"expected_revision":1,"decisions":[{"proposal_index":0,"decision":"confirm"}]}`.
+The response has revision=2 and a latest_review; original proposals remain
+needs_review. GET returns the same saved state after restart. DELETE must use
+the latest expected_revision. Keep the returned ID: listing is not implemented.
+Unset ACTIONGRAPH_DB_PATH and restart to disable access; that does not delete files.
+
+November 4 verification: 303 tests and Ruff pass. Tests cover reopen, original/ID
+preservation, nulls, correction/rejection, version conflicts, concurrent same-version
+writes, cascade deletion, lock timeout, injected write failure rollback, oversized
+batches, disabled storage, bad configuration and API errors. An actual TCP smoke
+check with two temporary Uvicorn processes verified create 201, review 200, saved
+state after restart, stale review/delete 409, current delete 204 and deleted GET
+404. Temporary server processes and test database were removed. This verifies
+local behavior, not browser rendering, authenticated multi-user safety or extraction
+quality. Latest review only; no TTL, audit-history store, listing or backup exists.

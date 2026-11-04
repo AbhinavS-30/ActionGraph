@@ -106,7 +106,7 @@ def main():
         }
         if model_used
         else None,
-        "runtime_settings": settings.model_dump(),
+        "runtime_settings": settings.model_dump(mode="json"),
         "model_initial_state": "unknown; no warmup request performed"
         if model_used
         else "not applicable",

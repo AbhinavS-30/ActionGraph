@@ -62,5 +62,5 @@ reviewed.review_status=confirmed. persisted=false. To confirm unchanged, omit
 replacement. To reject, set decision=reject and omit replacement.
 
 The current HTTP workflow has been [verified over TCP](DEMO.md). Optional saved
-sessions will follow [the storage policy](STORAGE.md); that persistence is not
-implemented and does not change this stateless endpoint's guarantees.
+sessions now follow [the storage policy](STORAGE.md) through separate routes.
+They do not change this stateless endpoint's guarantees.

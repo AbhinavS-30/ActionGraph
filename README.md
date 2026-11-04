@@ -12,7 +12,7 @@ The local API accepts a text transcript and returns proposed action items for re
 
 ## Architecture
 
-The API selects rules by default or experimental local inference explicitly, then returns proposed items for review. Stateless human review is available through POST /review; persistence remains planned.
+The API selects rules by default or experimental local inference explicitly, then returns proposed items for review. Stateless human review is available through POST /review; optional local saved sessions are available.
 
 ```mermaid
 flowchart TD
@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 284 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 303 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -164,7 +164,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 ## Scope and limitations
 
 - Use synthetic or public transcripts only. The supplied example is in `data/synthetic/meeting-01.txt`.
-- A reusable extraction function connects model generation, parsing, and evidence checks; the local extraction endpoint is available; review persistence is not implemented.
+- A reusable extraction function connects model generation, parsing, and evidence checks; the local extraction endpoint is available; opt-in local review persistence is implemented.
 - A [first development comparison](evals/results/REPORT-8dc8253.md) records provisional task scores and measured durations. It is one ten-case synthetic run reviewed by Codex, not a real-world accuracy claim.
 - Exact evidence matching proves quote presence, not interpretation, attribution, or completeness.
 - The initial policy excludes ambiguous commitments and unanswered requests and preserves relative deadline wording; date conversion is deferred. See [validation design](docs/VALIDATION.md).
@@ -202,7 +202,7 @@ The response uses the `items` contract above; model output can vary, and every i
 | 504 | Ollama timed out; retry with a shorter transcript. |
 | 502 | Upstream HTTP failure, invalid output, unsupported evidence, or owner/deadline text absent from evidence; inspect input and Ollama, then retry and review. |
 
-There are no automatic retries, saved results, or authentication. POST /review supports stateless caller-directed confirmation. Run this initial API locally.
+There are no automatic retries or authentication. Saved sessions require explicit storage configuration. POST /review supports stateless caller-directed confirmation. Run this initial API locally.
 
 ## Local runtime configuration
 
@@ -305,3 +305,13 @@ and deadline while preserving source evidence. The response retains originals
 and separate confirmed copies, or rejection records. Nothing is stored and no
 model is called. This is a caller decision, not authenticated semantic proof.
 See [review contract and complete example](docs/REVIEW.md).
+
+## Optional saved sessions
+
+Set `ACTIONGRAPH_DB_PATH` to an absolute SQLite file path in an existing writable
+directory and restart to enable saved rules sessions. Storage is disabled when
+unset; existing extract/review routes remain stateless. POST /sessions creates
+a server-generated proposal snapshot; GET /sessions/{id} retrieves it; PUT
+/sessions/{id}/review saves revision-checked decisions; DELETE removes the session
+and latest review. Stale changes return 409. No authentication or full review
+history is provided. See [storage setup and policy](docs/STORAGE.md).

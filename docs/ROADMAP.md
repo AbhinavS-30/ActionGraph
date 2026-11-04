@@ -78,3 +78,9 @@ November 4 extract-to-review TCP workflow verified for source 5acb10e, including
 confirm/correct/reject and invalid-batch failures. STORAGE.md defines opt-in local
 SQLite, immutable proposals, revisions, atomicity and explicit retention/deletion.
 Next implement persistence under that policy; saved-session routes do not exist yet.
+
+November 4 opt-in SQLite saved sessions implemented under STORAGE.md: immutable
+rules proposals, stable IDs, latest review, revision conflicts and atomic deletion.
+303 tests/Ruff pass; real TCP restart persistence and conflict/delete checks pass.
+Next current browser interaction and remaining release checks. No production
+readiness claim; broader semantic failures and independent review remain open.

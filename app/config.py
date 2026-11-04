@@ -2,6 +2,7 @@
 
 import os
 from functools import lru_cache
+from pathlib import Path
 from urllib.parse import urlsplit
 
 from pydantic import BaseModel, Field, field_validator
@@ -10,6 +11,25 @@ MAX_TRANSCRIPT_CHARS = 12_000
 
 
 class Settings(BaseModel):
+    actiongraph_db_path: Path | None = None
+
+    @field_validator("actiongraph_db_path", mode="before")
+    @classmethod
+    def require_explicit_database_file(cls, value):
+        if value is None:
+            return None
+        path = Path(value)
+        if (
+            not str(value).strip()
+            or not path.is_absolute()
+            or not path.parent.is_dir()
+            or path.is_dir()
+        ):
+            raise ValueError(
+                "ACTIONGRAPH_DB_PATH must be an absolute file path in an existing directory."
+            )
+        return path.resolve()
+
     ollama_base_url: str = "http://127.0.0.1:11434"
     ollama_model: str = "llama3.2:3b"
     ollama_timeout_seconds: float = Field(default=60, gt=0, le=120)

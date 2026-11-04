@@ -16,7 +16,7 @@ An exact match establishes quote presence only. It does not establish that an ac
 
 ## Review boundary
 
-The current schema defaults review_status to needs_review and also permits confirmed. Stateless confirmation is available through POST /review; persistence is not implemented. The extraction function forces generated items to `needs_review` and fails on unsupported evidence.
+The current schema defaults review_status to needs_review and also permits confirmed. Stateless confirmation is available through POST /review; opt-in saved sessions are available. The extraction function forces generated items to `needs_review` and fails on unsupported evidence.
 
 ## Model transport boundary
 
@@ -152,3 +152,17 @@ in proposal order. Validation errors map to 422 with no partial records. No
 model dependency or inference slot is used. Caller-supplied originals are not
 server-authenticated extraction snapshots, and confirmation is caller assertion.
 See REVIEW.md for contract, exact bounds and deferred persistence semantics.
+
+## Saved-session boundary
+
+Session creation accepts transcript only and runs rules server-side; it cannot
+import supplied proposals or select Ollama. Optional validated absolute DB path
+is initialized at startup; unknown schemas/config errors fail startup. Operations
+use per-operation SQLite connections, parameterized SQL and foreign keys. Review
+and delete acquire BEGIN IMMEDIATE before revision checks and mutation. Errors
+roll back the batch; reviews reuse the stateless validator against stored originals.
+Read uses a transaction to keep session revision and review consistent. Disabled
+store 503; stale version 409; missing UUID 404; invalid inputs/reviews 422; busy
+SQLite 503; other storage errors sanitized 500. Original snapshots and stable IDs
+survive reopening/restarts. No new dependencies, automatic retries or model calls.
+See STORAGE.md for retention, latest-only review and access limitations.

@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-284 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+303 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -83,14 +83,15 @@ changed after inspection. These cases are now observed.
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
 First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
-Next implement opt-in saved rules sessions under docs/STORAGE.md,
+Opt-in saved rules sessions are now implemented under docs/STORAGE.md.
+Next verify current saved-session browser interaction and finish release checks,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
 
 Real-meeting quality, independent human evaluation, cross-line semantic consistency,
 raw HTTP body/response byte limits, total-duration limits and distributed concurrency
-are not established. No persistence exists. Stateless caller-directed confirmation is now available via POST /review. Audio,
+are not established. Optional saved rules sessions and stateless caller-directed confirmation are available. Audio,
 calendar integration, cross-meeting memory and elaborate dashboards remain deferred.
 See `docs/RELEASE.md` and `docs/RULES.md` for release requirements and exact scope.
 
@@ -198,3 +199,21 @@ explicit retention and no authenticated reviewer/history guarantees. This is a
 design only: no database, persistence setting or saved-session route implemented.
 Next implement and test saved-session storage under that policy. Public page and
 recording remain deferred; 284 tests and Ruff pass.
+
+## Saved local sessions implemented
+
+ACTIONGRAPH_DB_PATH opts into sqlite3 storage; unset means disabled and no database
+creation. New session routes create server-generated rules snapshots and stable
+proposal UUIDs, retrieve saved state, save complete reviewed batches and delete
+with expected_revision checks. Transactions prevent partial writes; stale changes
+return 409, lock contention 503, missing IDs 404, invalid reviews 422, other storage
+errors sanitized 500. Source proposals/evidence stay unchanged. Latest review
+only; no authentication, list/search, TTL, backup or full history. Stateless routes
+remain unchanged. Database and sidecar patterns ignored in Git; no deps added.
+
+303 tests and Ruff pass. Real loopback TCP smoke across two Uvicorn processes
+verified saved review after restart, conflicts and deletion using a disposable
+database. These observations used the implementation working tree based on
+52788a8, not an earlier committed source. No persistent user database was created.
+See STORAGE.md. Next browser verification and release-check reconciliation;
+semantic extraction failures remain unchanged. Public page/video still deferred.

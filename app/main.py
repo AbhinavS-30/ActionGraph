@@ -5,9 +5,11 @@ from collections.abc import Iterator
 from contextlib import asynccontextmanager
 from threading import BoundedSemaphore
 from typing import Annotated
+from uuid import UUID
 
 import httpx
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response
+from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
 from app.config import Settings, get_settings
@@ -17,11 +19,20 @@ from app.provenance import UnsupportedFieldError
 from app.review import ReviewRequest, ReviewResponse, review_actions
 from app.rules import RULES_SCOPE, extract_rule_actions
 from app.schemas import ExtractionRequest, ExtractionResponse
+from app.storage import (
+    SavedReviewRequest,
+    SavedSession,
+    SessionCreate,
+    SessionStore,
+    StoreError,
+)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    get_settings()  # Fail startup on invalid settings, without contacting Ollama.
+    settings = get_settings()
+    if settings.actiongraph_db_path is not None:
+        SessionStore(settings.actiongraph_db_path).initialize()
     yield
 
 
@@ -118,3 +129,52 @@ def extract(
 @app.post("/review", response_model=ReviewResponse)
 def review(request: ReviewRequest) -> ReviewResponse:
     return review_actions(request)
+
+
+def get_session_store(
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> SessionStore:
+    if settings.actiongraph_db_path is None:
+        raise HTTPException(
+            503,
+            "Saved sessions are disabled. Configure ACTIONGRAPH_DB_PATH and restart.",
+        )
+    return SessionStore(settings.actiongraph_db_path)
+
+
+@app.exception_handler(StoreError)
+async def storage_error_handler(request: Request, exc: StoreError):
+    return JSONResponse(status_code=exc.status, content={"detail": exc.message})
+
+
+@app.post("/sessions", response_model=SavedSession, status_code=201)
+def create_session(
+    request: SessionCreate, store: Annotated[SessionStore, Depends(get_session_store)]
+):
+    return store.create(request)
+
+
+@app.get("/sessions/{session_id}", response_model=SavedSession)
+def get_session(
+    session_id: UUID, store: Annotated[SessionStore, Depends(get_session_store)]
+):
+    return store.get(session_id)
+
+
+@app.put("/sessions/{session_id}/review", response_model=SavedSession)
+def review_session(
+    session_id: UUID,
+    request: SavedReviewRequest,
+    store: Annotated[SessionStore, Depends(get_session_store)],
+):
+    return store.review(session_id, request)
+
+
+@app.delete("/sessions/{session_id}", status_code=204)
+def delete_session(
+    session_id: UUID,
+    expected_revision: Annotated[int, Query(ge=1)],
+    store: Annotated[SessionStore, Depends(get_session_store)],
+):
+    store.delete(session_id, expected_revision)
+    return Response(status_code=204)
