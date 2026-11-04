@@ -217,3 +217,14 @@ database. These observations used the implementation working tree based on
 52788a8, not an earlier committed source. No persistent user database was created.
 See STORAGE.md. Next browser verification and release-check reconciliation;
 semantic extraction failures remain unchanged. Public page/video still deferred.
+
+## Release verification checkpoint for 252c776
+
+Clean committed-source export and fresh Python 3.12.13 environment installed from
+requirements.lock.txt: 303 tests, Ruff and pip check pass. Current storage commit
+CI job is queued (exact check-runs API), not passed. Earlier 5acb10e CI passed.
+Browser host unavailable; native Safari access timed out, so current rendered
+Swagger interaction remains unverified. [Evidence](verification/RELEASE-252c776.md)
+and [isolated manual browser procedure](SWAGGER_CHECK.md). No user database
+modified; no page/video created. Next complete browser/CI verification and
+resolve local resource/semantic release scope.

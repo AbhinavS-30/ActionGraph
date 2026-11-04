@@ -84,3 +84,8 @@ rules proposals, stable IDs, latest review, revision conflicts and atomic deleti
 303 tests/Ruff pass; real TCP restart persistence and conflict/delete checks pass.
 Next current browser interaction and remaining release checks. No production
 readiness claim; broader semantic failures and independent review remain open.
+
+November 4 clean install verification completed for source 252c776: fresh Python
+3.12.13 environment and committed source pass 303 tests/Ruff/pip check. Exact CI
+job is queued; browser automation unavailable. Manual Swagger checklist prepared;
+current visual interaction remains pending. No public presentation started.

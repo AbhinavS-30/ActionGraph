@@ -45,7 +45,7 @@ flowchart TD
 
 ## Output contract
 
-An illustrative result follows. It demonstrates the contract, not a measured evaluation result.
+An illustrative inner ExtractionResult payload follows. POST /extract additionally returns engine and limitations. This example demonstrates the contract, not measured extraction quality.
 
 ```json
 {
@@ -133,7 +133,7 @@ checks use simulated model responses; they do not download or run Ollama.
 | Phase | Status | Deliverable and completion criteria |
 | --- | --- | --- |
 | 1. Validation foundation | Implemented as standalone components | Validated input, structured output contract, response parser, evidence helper, and focused tests. |
-| 2. Local model integration | In progress: standalone text client implemented | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
+| 2. Local model integration | Implemented; experimental quality limitations measured | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
 | 3. Connected extraction service | Python function implemented; first development comparison available | Connect the components; enforce the agreed ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
 | 4. Usable MVP | Endpoint and failure responses implemented; demo verification in progress | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
 | 5. Evaluation and demonstration | First development comparison recorded; human adjudication pending | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
@@ -229,10 +229,12 @@ settings actually used in their recorded source revisions.
 ## Local concurrency behavior
 
 Run one Uvicorn worker for the demo (the documented command does this). Each API
-process admits one extraction at a time. An overlapping valid request receives
+process admits one experimental Ollama extraction at a time. An overlapping valid Ollama request receives
 HTTP 503 with `Retry-After: 1` and no model invocation; the client should retry
 after the active extraction finishes. No request queue or automatic retry exists.
 The slot is released on success and failure; health requests remain available.
+Rules extraction, stateless review and saved-session operations do not use this
+model slot. SQLite writes have their own transaction/lock behavior.
 This process-local guard does not coordinate multiple workers, the evaluation
 runner, or other applications using Ollama. It is not a distributed rate limiter
 or a complete public-service overload control.

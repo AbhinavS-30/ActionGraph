@@ -114,3 +114,13 @@ Ruff pass; a disposable actual TCP restart smoke passes. No authenticated review
 full review history, listing or backup. See STORAGE.md for configured path,
 retention and limitations. Current browser interaction and other release gates
 remain open. No extraction-quality score changed through storage implementation.
+
+### Audit follow-up: clean install verified; browser/CI pending
+
+Source 252c776 passed 303 tests, Ruff and pip check from a committed-source export
+and fresh Python 3.12.13 environment. Storage commit CI is queued, not successful
+yet. Browser automation unavailable; no current rendered workflow claimed.
+See [verification checkpoint](verification/RELEASE-252c776.md) and the
+[disposable Swagger procedure](SWAGGER_CHECK.md). These remaining checks do not
+require more feature scope. Resource/semantic policy and independent review
+remain separate release requirements.
