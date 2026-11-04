@@ -113,3 +113,12 @@ the exact addressed speaker must accept. Evidence spans both original lines,
 preserving CRLF or LF and boundary spaces. Other replies or intervening lines
 are skipped. Existing cancellation matching applies to the resulting task.
 This bounded reference rule does not establish general dialogue understanding.
+
+## Rules two-task boundary
+
+Rules v4 uses a promise-only parser for exactly two complete clauses joined by
+and. Each passes the single-task parser before either item is returned. A final
+date with no first-clause date is treated as ambiguous and the pair is skipped.
+Dependencies in pairs are skipped. Requests and negations retain the single-task
+parser. Items share exact original-line evidence; later single-task cancellations
+match each item independently. See RULES.md for exact bounds and known omissions.

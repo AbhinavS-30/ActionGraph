@@ -1,4 +1,4 @@
-# Rules mode v3
+# Rules mode v4
 
 Rules mode is the default local demo engine. It requires no running Ollama and
 does not call a model. The API explicitly labels `engine: rules` and returns a
@@ -7,7 +7,7 @@ model path; no automatic fallback or mixing of engines occurs.
 
 ## Supported grammar
 
-One task per speaker-labelled line starting exactly with `I will`, `I'll`, or
+One task, or two tasks under the v4 policy below, per speaker-labelled line starting exactly with `I will`, `I'll`, or
 `I’ll`, followed by work beginning with a supported verb. Speaker text before
 the colon is the owner; the recipient is never substituted for the speaker.
 Original lines, including boundary spaces, are retained as exact evidence.
@@ -18,7 +18,7 @@ validate test archive refresh revise deploy migrate inspect document share write
 
 All items are `needs_review`. An optional final period is removed from the action
 only; evidence is untouched. Lines containing internal sentence punctuation,
-compound/alternative clauses, negation, tentative or conditional markers are
+unsupported compound/alternative clauses, negation, tentative or conditional markers are
 conservatively skipped. Tasks with unresolved demonstratives/pronouns in the
 main clause are skipped. This is a fixed grammar, not general language reasoning.
 
@@ -64,7 +64,7 @@ limited to Friday does not remove a task stated for Monday.
 ## Explicit limitations
 
 - Requests outside the adjacent acceptance policy, ownerless agreed work, indirect commitments,
-  unsupported verbs, and compound tasks are not handled.
+  unsupported verbs, and compounds outside the two-task policy are not handled.
 - Pronoun resolution, sarcasm, quotations, cancellations outside the explicit
   policy, reassignment, and meeting-wide semantic consistency are not understood.
   Unsupported later corrections may still invalidate matched work; human review
@@ -105,3 +105,20 @@ reference rule, not general pronoun resolution. Both original lines and their
 original line separator form one contiguous evidence excerpt. Request deadlines
 are preserved verbatim, without conversion; replies cannot override them.
 Later explicit cancellations use the same task matching policy as other items.
+
+## Two-task promise policy (v4)
+
+A direct first-person promise may contain exactly two complete task clauses
+joined by `and`. Each clause must independently pass the existing single-task
+parser and begin with a supported verb. Both items retain the full original
+line as evidence and the same speaker as owner, in clause order. Reject the
+whole promise if either clause is unsupported; do not return a partial pair.
+Object lists, more than two clauses, pronoun-only second objects, alternatives,
+conditions, dependencies (`after`) and repeated `I will` remain unsupported.
+
+No deadline is shared by inference. A deadline inside the first clause belongs
+only to the first task. If both clauses state deadlines, preserve each locally.
+If only the final clause has a deadline, skip the whole promise because its
+scope may include both tasks. Undated pairs are supported. Compound requests
+and compound negations remain unsupported. A later single-task cancellation
+can remove one matching split item without removing the other.

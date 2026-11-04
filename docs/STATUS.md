@@ -1,6 +1,6 @@
 # Project status
 
-Updated November 3, 2026.
+Updated November 4, 2026.
 
 ## Current product
 
@@ -19,9 +19,9 @@ claimed as a production-ready general meeting extractor.
   JSON parsing. Unknown owner/deadline use genuine null; string-null is rejected.
 - Exact transcript-quote validation and verbatim owner/deadline text-presence
   checks in the model path. These do not establish semantic attribution.
-- Rules v3 grammar, contractions, supported trailing dates, dependency preservation,
+- Rules v4 grammar, contractions, supported trailing dates, dependency preservation,
   original-source evidence, and conservative exclusions. Requests outside the adjacent acceptance policy,
-  ownerless work, compound tasks and broader dialogue interpretation remain limited.
+  ownerless work, unsupported compounds and broader dialogue interpretation remain limited.
   Explicit same-speaker, matching-task cancellations now remove earlier items.
 - Validated local runtime settings, generated-token caps, model error mapping,
   and one active API model extraction per process. Rules requests use no model.
@@ -32,6 +32,16 @@ claimed as a production-ready general meeting extractor.
 
 ## Latest implementation
 
+Rules v4 adds exactly two independently parseable direct-promise clauses joined
+by and. Both retain the full source line and speaker, in clause order. Unsupported
+halves reject the whole pair. Ambiguous final-only dates, dependencies, three-task
+lists, compound requests and compound negations are excluded. Explicit per-clause
+dates remain local; a later single cancellation removes only its matching item.
+233 tests and Ruff pass; no dependencies or model calls added. The v4 quality
+replay remains pending; v3 measurements below do not measure v4.
+
+## Previous implementation
+
 Rules v3 supports adjacent named can/could-you requests followed by the addressed
 speaker's explicit Yes + first-person promise + matching verb + it/them. Both
 original lines form the evidence. Dates and dependencies use the existing parser.
@@ -41,7 +51,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-214 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+233 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -73,7 +83,7 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-Next define a bounded policy for compound-task splitting before implementation,
+Next replay rules v4 on the recorded datasets with unchanged labels,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 

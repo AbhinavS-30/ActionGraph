@@ -8,13 +8,13 @@ from app.schemas import ActionItem, ExtractionResult
 from app.validation import validate_transcript
 
 RULES_SCOPE = (
-    "Rules mode supports one explicit first-person task per speaker-labelled line. "
+    "Rules mode supports bounded one- or two-task first-person promises per speaker-labelled line. "
     "Explicit same-speaker cancellations with matching task wording are applied. "
     "Only adjacent named requests with explicit matching-verb acceptance are supported. "
     "Ownerless work, broader cross-line interpretation and unsupported "
     "phrasing may be missed. Empty output does not prove no commitments exist."
 )
-RULES_VERSION = "3"
+RULES_VERSION = "4"
 COMMITMENT = re.compile(r"(?P<owner>[^:\n]{1,80}):\s+I(?: will|['’]ll) (?P<work>.+)")
 CANCELLATION = re.compile(
     r"(?P<owner>[^:\n]{1,80}):\s+(?:Correction,\s+)?I(?: will not| won['’]t) (?P<work>.+)"
@@ -90,6 +90,22 @@ def _parse_work(work: str) -> tuple[str, str | None] | None:
     return main_work[0].upper() + main_work[1:] + suffix, deadline
 
 
+def _parse_promise(work: str) -> list[tuple[str, str | None]]:
+    """Split only complete two-task clauses with unambiguous local timing."""
+    clauses = re.split(r"\s+and\s+", work, flags=re.IGNORECASE)
+    if len(clauses) == 1:
+        parsed = _parse_work(work)
+        return [parsed] if parsed else []
+    if len(clauses) != 2 or re.search(r"\bafter\b", work, re.IGNORECASE):
+        return []
+    first, second = (_parse_work(clause) for clause in clauses)
+    if first is None or second is None:
+        return []
+    if first[1] is None and second[1] is not None:
+        return []
+    return [first, second]
+
+
 def _task_key(text: str) -> str:
     """Normalize comparison only; never rewrite returned evidence or fields."""
     return " ".join(text.split()).casefold()
@@ -141,11 +157,13 @@ def extract_rule_actions(transcript: str) -> ExtractionResult:
         if match is None:
             continue
         owner = match["owner"].strip()
-        parsed = _parse_work(match["work"])
-        if not owner or owner.casefold() == "null" or parsed is None:
+        if not owner or owner.casefold() == "null":
             continue
-        action, deadline = parsed
         if cancellation:
+            parsed = _parse_work(match["work"])
+            if parsed is None:
+                continue
+            action, deadline = parsed
             items = [
                 item
                 for item in items
@@ -162,12 +180,13 @@ def extract_rule_actions(transcript: str) -> ExtractionResult:
                 )
             ]
             continue
-        item = ActionItem(
-            action=action,
-            owner=owner,
-            deadline=deadline,
-            evidence=original_line,
-        )
-        validate_field_evidence(item)
-        items.append(item)
+        for action, deadline in _parse_promise(match["work"]):
+            item = ActionItem(
+                action=action,
+                owner=owner,
+                deadline=deadline,
+                evidence=original_line,
+            )
+            validate_field_evidence(item)
+            items.append(item)
     return ExtractionResult(items=items)

@@ -40,7 +40,6 @@ def test_dependency_deadline_is_not_borrowed():
         "Ben: I will maybe review the checklist.",
         "Ben: We should send the checklist.",
         "Asha: Ben, could you send the checklist?",
-        "Ben: I will send the checklist and review logs.",
         "Ben: I will send the checklist by 5 pm.",
         "Ben: I will send the checklist on 2026-02-30.",
         "Ben: I will send the checklist. Other work is pending.",
@@ -181,3 +180,51 @@ def test_accepted_request_can_be_cancelled_and_dependency_is_preserved():
     assert item.action == "Review the checklist after Cara sends the build"
     assert item.deadline is None
     assert extract_rule_actions(pair + "\nBen: I won't review the checklist after Cara sends the build.").items == []
+
+
+@pytest.mark.parametrize("promise", ["I will", "I'll", "I’ll"])
+def test_two_task_promise_preserves_full_evidence_and_order(promise):
+    line = f"  Ben: {promise} review the checklist and send the report.  "
+    items = extract_rule_actions(line).items
+    assert [item.action for item in items] == ["Review the checklist", "Send the report"]
+    assert all(item.owner == "Ben" and item.deadline is None for item in items)
+    assert all(item.evidence == line and item.review_status == "needs_review" for item in items)
+
+
+@pytest.mark.parametrize("work,deadlines", [
+    ("review the checklist by Monday and send the report by Friday", ["Monday", "Friday"]),
+    ("review the checklist tomorrow and send the report", ["tomorrow", None]),
+])
+def test_two_tasks_keep_only_locally_stated_deadlines(work, deadlines):
+    assert [i.deadline for i in extract_rule_actions(f"Ben: I will {work}.").items] == deadlines
+
+
+@pytest.mark.parametrize("work", [
+    "review the checklist and send the report by Friday",
+    "review the checklist and send it",
+    "review the checklist and dance outside",
+    "review the checklist and send the report if approved",
+    "review the checklist and not send the report",
+    "review the checklist and send the report at noon",
+    "review the checklist and send the report and archive logs",
+    "review the checklist and I will send the report",
+    "review the checklist or send the report",
+    "review the checklist and the report",
+    "review the checklist after Asha sends notes and send the report",
+    "review the checklist and send the report after Asha sends notes",
+])
+def test_ambiguous_or_partly_unsupported_compound_returns_no_partial_items(work):
+    assert extract_rule_actions(f"Ben: I will {work}.").items == []
+
+
+def test_single_task_cancellation_removes_only_one_split_task():
+    line = "Ben: I will review the checklist and send the report."
+    items = extract_rule_actions(line + "\nBen: I won't review the checklist.").items
+    assert len(items) == 1
+    assert items[0].action == "Send the report"
+    assert items[0].evidence == line
+
+
+def test_compound_cancellation_is_not_interpreted():
+    line = "Ben: I will review the checklist and send the report."
+    assert len(extract_rule_actions(line + "\nBen: I won't review the checklist and send the report.").items) == 2

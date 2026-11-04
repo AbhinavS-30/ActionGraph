@@ -313,3 +313,15 @@ def test_default_rules_returns_request_and_acceptance_evidence():
     assert item["owner"] == "Ben"
     assert item["deadline"] == "Friday"
     assert item["evidence"] == transcript
+
+
+def test_default_rules_splits_two_tasks_without_model_call():
+    def fail(request):
+        pytest.fail("Rules compounds must not call Ollama")
+
+    transcript = "Ben: I will review the checklist and send the report."
+    response = post_extract({"transcript": transcript}, fail, use_default=True)
+    assert response.status_code == 200
+    items = response.json()["items"]
+    assert [item["action"] for item in items] == ["Review the checklist", "Send the report"]
+    assert all(item["evidence"] == transcript for item in items)

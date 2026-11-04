@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 192 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 233 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -285,3 +285,8 @@ public page are deferred until the remaining product-release gates are complete.
 Rules v3 supports the bounded adjacent request/acceptance pairs documented in
 [Rules policy](docs/RULES.md), preserving both source lines as evidence.
 This change passes 214 tests. The [observed-case replay](evals/results/REPORT-rules-v3-c9e5e64.md) finds one additional correct task per dataset, with other outputs unchanged; this is not independent validation.
+
+Rules v4 additionally splits two complete direct-promise tasks under the
+[compound-task policy](docs/RULES.md), retaining full-line evidence and local
+deadlines. Ambiguous or partly unsupported pairs are skipped. 233 tests and Ruff
+pass; dataset replay for this version remains pending.
