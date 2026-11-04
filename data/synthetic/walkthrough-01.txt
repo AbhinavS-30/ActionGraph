@@ -1,0 +1,6 @@
+Maya: I will review the report tomorrow.
+Omar: Maya, could you export the attendance list by Friday?
+Maya: Yes, I'll export it.
+Omar: I will prepare the release notes and upload the package.
+Omar: The package upload is cancelled; retain only the release notes.
+Decision: The access roster will be updated. No owner or date was assigned.

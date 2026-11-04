@@ -177,6 +177,7 @@ The initial demo target is November 3, 2026. It is a delivery target, not a clai
 - `tests/`: automated behavior checks.
 - `data/synthetic/`: example input transcripts.
 - `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); collector and deterministic baseline available; first raw comparison and provisional semantic review available in `evals/results/`.
+- [Engineering walkthrough](docs/WALKTHROUGH.md): data flow, code roles, review/storage behavior, failures and a mixed-case rehearsal.
 - [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
 - [Local release candidate](docs/RELEASE_CANDIDATE.md): verified gates, proposed scope and remaining delivery work.
 - [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.

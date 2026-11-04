@@ -1,0 +1,53 @@
+{
+  "implementation_commit": "351b3a0",
+  "rehearsal_base_commit": "6dbbd7224eac6af6444616a98d8fae9545662772",
+  "transport": "Real loopback HTTP with temporary Uvicorn processes and disposable SQLite",
+  "input_file": "data/synthetic/walkthrough-01.txt",
+  "rules_version": "5",
+  "checks": [
+    {
+      "operation": "create",
+      "status": 201,
+      "revision": 1,
+      "returned_items": 4,
+      "actions": [
+        "Review the report",
+        "Export the attendance list",
+        "Prepare the release notes",
+        "Upload the package"
+      ]
+    },
+    {
+      "operation": "review",
+      "status": 200,
+      "revision": 2,
+      "confirmed": 3,
+      "rejected": 1,
+      "originals_preserved": true
+    },
+    {
+      "operation": "stale_review",
+      "status": 409
+    },
+    {
+      "operation": "get_after_restart",
+      "status": 200,
+      "entire_saved_response_unchanged": true
+    },
+    {
+      "operation": "delete",
+      "status": 204
+    },
+    {
+      "operation": "get_deleted",
+      "status": 404
+    }
+  ],
+  "known_limitations_shown": [
+    "Unrecognized compound-task withdrawal leaves Upload the package proposed until human rejection.",
+    "Ownerless access-roster update is missed; current review cannot add missing tasks."
+  ],
+  "interpretation": "Synthetic illustrative walkthrough, not a new benchmark or independent quality review.",
+  "model_called": false,
+  "persistent_user_data_modified": false
+}

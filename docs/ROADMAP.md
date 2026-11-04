@@ -21,3 +21,8 @@ RELEASE_CANDIDATE.md, RELEASE.md, RULES.md and LIMITS.md for evidence and scope.
 Audio, calendar integration, elaborate dashboards, public inference hosting and
 cross-meeting memory remain outside this delivery scope. A broader capability or
 reliability claim needs separately agreed work and supporting evaluation.
+
+Final mixed-case walkthrough completed and documented in WALKTHROUGH.md, including
+human rejection of an unsupported withdrawal and a missed ownerless task. No
+quality remeasurement or stable release implied. Next stable-readiness decision
+within the disclosed local scope, then approved presentation work.

@@ -78,3 +78,14 @@ Independent human adjudication remains open; no independent-validation claim may
 be made. Public page and recorded demo remain deferred until product readiness,
 followed by a LinkedIn draft; no post will be published automatically. Audio,
 calendar integration, elaborate dashboards and cross-meeting memory stay deferred.
+
+## Final walkthrough rehearsal
+
+A mixed synthetic example ran through real HTTP session create, correction/
+confirmation/rejection, stale update, restart persistence and deletion. The full
+result survived restart; disposable resources were removed. It also exposed an
+unsupported withdrawal requiring human rejection and ownerless work that the
+current review API cannot add. This is illustrative, not a new quality benchmark.
+[Engineering explanation](WALKTHROUGH.md) and [observations](verification/WALKTHROUGH-rc1.json).
+Application code unchanged; candidate tag remains fixed. Next stable-release
+readiness decision within disclosed scope, then presentation after readiness.
