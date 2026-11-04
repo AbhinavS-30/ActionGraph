@@ -86,3 +86,13 @@ A separate new TCP smoke check verified the default rules mode and expanded
 response fields; see `evals/results/REPORT-rules-45bdcb3.md`. Browser interaction
 with the new engine label remains to be rechecked; do not relabel old screenshots
 as verification of the new response shape.
+
+## Current rules TCP check — November 4, 2026
+
+Source 6088aa2, fresh isolated loopback Uvicorn process, HTTPX over TCP: health,
+docs markup and OpenAPI returned 200; accepted request returned one item, two-task
+promise returned two, explicit cancellation returned none. All successes included
+rules engine and limitations; returned items were needs_review with exact evidence.
+Blank input, more than 12,000 characters and unknown engine returned 422. The
+temporary process was stopped after checking. This does not verify Swagger visual
+rendering or browser interaction; those current-version checks remain pending.

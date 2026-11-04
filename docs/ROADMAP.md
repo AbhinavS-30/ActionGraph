@@ -57,3 +57,9 @@ November 4 first frozen-v4 validation recorded: 6 TP / 1 FP / 5 FN on eleven
 labels across fourteen cases. No post-run source or label changes. Broader
 withdrawal still produces a false positive. Next audit local release requirements
 and scope against the report before selecting more implementation work.
+
+November 4 release audit completed in RELEASE.md. 234 tests, Ruff, pip check and
+current rules TCP smoke pass. Latest CI queried is queued. Next close blank
+output-field validation, define local review/correction behavior, then finish
+release verification and packaging before the page/video. No completion date
+or general extraction reliability is established by this audit.

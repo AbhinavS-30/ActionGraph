@@ -82,8 +82,8 @@ changed after inspection. These cases are now observed.
 ## Remaining limits and next task
 
 Rules v3 replay is recorded with original labels and preserved earlier results.
-First frozen-v4 validation is recorded below. Next audit local release requirements
-against the measured failures and remaining verification gaps,
+First frozen-v4 validation and the release audit are recorded. Next close blank
+output-field validation, then define the bounded local review workflow,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -151,3 +151,13 @@ Labels were committed before extraction and not changed afterward. Author knew
 the grammar; review is provisional, not independent or real-meeting validation.
 The set is now observed. 234 tests and Ruff pass.
 [Full report and audit artifacts](../evals/results/REPORT-rules-v4-fresh-486fcb5.md).
+
+## Release audit — November 4
+
+See [readiness audit and ordered work](RELEASE.md). Current verdict: not finished.
+234 tests, Ruff and pip check pass. A fresh isolated Uvicorn TCP check verifies
+health/docs/OpenAPI, rules acceptance/compound/cancellation, and blank/oversized/
+unknown-engine 422. This is not rendered-browser verification. Latest queried CI
+runs through 6088aa2 are queued; no current CI pass is claimed. Clean-install
+verification, current browser interaction, human adjudication, review workflow,
+blank output-field validation and release packaging remain. No page/video built.

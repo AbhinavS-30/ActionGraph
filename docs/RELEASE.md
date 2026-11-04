@@ -45,3 +45,46 @@ page, recorded local demo, and live inference deployment. Do not claim users,
 production operation, broad accuracy, or speedups without evidence. A LinkedIn
 draft may be prepared after the release artifacts are verified; publishing
 requires the user's explicit instruction.
+
+## Readiness audit — November 4, 2026
+
+Audited source `6088aa2`. Verdict: continue implementation; local portfolio
+release is not complete. Public page and recording remain deferred. A small
+scoped demonstration is technically possible, but is not evidence of completion
+or general meeting quality. The original November 3 demo target has passed;
+no replacement delivery date is asserted by this audit.
+
+| Gate | Evidence and current state | Remaining work |
+| --- | --- | --- |
+| Local API and failures | Implemented; 234 tests, Ruff app/tests/evals and pip check pass | Keep checks passing for subsequent changes. |
+| Current TCP behavior | Fresh isolated Uvicorn on loopback: health/docs/OpenAPI 200; accepted request 1 item, compound 2, cancellation 0; blank/overlong/unknown engine 422 | Recheck browser Try it out with the current response fields before recording. TCP markup does not prove rendered interaction. |
+| Source evidence and contract | Exact quotes, nullable fields, text-presence checks and needs_review enforced in extraction | Action/evidence whitespace-only schema values are still possible; close this validation gap. Review transport/output limits for local scope. |
+| Semantic quality | First frozen-v4 run: 6 TP, 1 FP, 5 FN on eleven labels; full artifacts preserved | Withdrawal outside grammar remains wrong. Explicitly settle acceptable product scope; do not present this as general accurate meeting extraction. |
+| Human review | Items marked needs_review; no correction, confirmation, or persistence interface | Define and implement a bounded local review workflow if releasing the intended reviewable product. Schema allowing confirmed is not a workflow. |
+| Evaluation adjudication | Labels frozen before first runs; provisional Codex pairings disclosed | Independent human review remains pending. It cannot be replaced by more schema tests. |
+| CI | Latest queried runs for aa3c999, 12cc5ec and 6088aa2 are queued | Obtain completed successful CI for release source. Queued is neither success nor failure; cause not diagnosed. |
+| Installation | Pinned dependencies and CI install step exist; current venv pip check passes | Verify a clean install on Python 3.12; current environment health does not prove reproducible installation. |
+| Release packaging | Setup, architecture, scope and evaluation docs exist | Reconcile stale README phase/concurrency/example descriptions, create versioned release notes, verify synthetic demo sequence. No tag/release created. |
+| Presentation | Public repository exists; approved public page and local video planned | After product gates, build page and record current workflow, then prepare LinkedIn draft. Do not publish automatically. |
+
+CI observations: [6088aa2 run](https://github.com/AbhinavS-30/ActionGraph/actions/runs/41878439233),
+[12cc5ec run](https://github.com/AbhinavS-30/ActionGraph/actions/runs/41877959140),
+[aa3c999 run](https://github.com/AbhinavS-30/ActionGraph/actions/runs/41877641473).
+These are snapshots of queued state, not claims about their later outcome.
+
+### Recommended implementation order
+
+1. Close blank output-field validation with focused parser/API failure tests.
+2. Define a local human-review contract: how proposed values are edited, rejected
+   or confirmed, and what is stored. Preserve original evidence and distinguish
+   human edits from extraction. Implement only after that policy is settled.
+3. Address withdrawal behavior under an explicit bounded policy, and decide
+   whether missing forms stay disclosed limitations. Preserve original scores;
+   any tuning now uses observed cases.
+4. Complete clean-install, current browser, CI, resource-limit and documentation
+   verification; reconcile audit status and assemble a versioned local release.
+5. Build the approved project page and record the demo after product readiness.
+
+No new dependency, service, model download, public endpoint, website or recording
+was introduced by this audit. Production hosting controls in this document remain
+future requirements, not additional blockers for a loopback-only portfolio demo.
