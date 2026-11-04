@@ -327,4 +327,4 @@ describe existing behavior; they do not change statuses or extraction quality.
 Rules v5 adds the bounded adjacent explicit withdrawal policy in docs/RULES.md.
 It requires the same speaker, one preceding supported promise, and a matching
 reference kind. Broader withdrawals remain unsupported. 322 tests and Ruff pass;
-updated observed-case replay is pending. Historical quality reports are unchanged.
+[Observed-case replay](evals/results/REPORT-rules-v5-fa37f4e.md) removes the targeted withdrawal false positive, with all other outputs unchanged. Historical first-run reports are preserved; broader semantic limits remain.

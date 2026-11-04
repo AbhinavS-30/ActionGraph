@@ -103,3 +103,7 @@ historical labels/reports. Remaining local resource/release gates stay open.
 November 4 rules v5 bounded adjacent explicit withdrawal implemented under the
 policy in RULES.md; 322 tests and Ruff pass. Next replay the four observed sets
 without changing labels or historical reports. No general paraphrase claim.
+
+Rules v5 replay complete: only targeted withdrawal output changed across four
+observed sets; first frozen-v4 result preserved. Five misses remain on that set.
+Next reconcile local resource-limit and release scope before presentation.

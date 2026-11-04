@@ -84,8 +84,8 @@ changed after inspection. These cases are now observed.
 Rules v3 replay is recorded with original labels and preserved earlier results.
 First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
 Opt-in saved rules sessions are now implemented under docs/STORAGE.md.
-Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Next define bounded
-withdrawal handling for the recorded false positive and finish remaining release checks,
+Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Bounded withdrawal handling and its replay are complete. Next reconcile local
+resource limits and remaining release scope,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -272,5 +272,16 @@ supported same-speaker promise with matching verb. It removes matching same-date
 active tasks, preserves other tasks/dates/speakers and allows recommitment. No
 intervening lines, compound antecedents, mismatched nouns or conditional/quoted
 withdrawals resolved. See RULES.md. 322 tests and Ruff pass; no dependencies added.
-Replay against original observed labels is pending. Original v4 first validation
+Replay against original observed labels is recorded below. Original v4 first validation
 remains preserved; this is targeted development work, not independent validation.
+
+## Rules v5 replay completed
+
+Clean source fa37f4e on all four observed datasets: only withdrawn v4-check-13
+rules task removed; all other rules/baseline outputs unchanged. Fourteen-case
+set now 6 TP / 0 FP / 5 FN; recall still 6/11. Other sets remain 7/0/1, 7/0/1,
+7/0/2. All 46 rules attempts succeeded without model calls. Labels unchanged;
+original v4 failure preserved. This is targeted regression evidence, not fresh
+validation or a general zero-error claim. [Report](../evals/results/REPORT-rules-v5-fa37f4e.md).
+Next reconcile local resource-limit and release scope; semantic misses and
+independent human adjudication remain open.
