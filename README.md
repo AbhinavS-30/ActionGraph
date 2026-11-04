@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 339 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 346 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -333,3 +333,8 @@ reference kind. Broader withdrawals remain unsupported. 322 tests and Ruff pass;
 HTTP requests now have a 2 MiB raw-body cap, including streamed bodies. Oversize
 returns 413 before endpoint work; the 12,000-character transcript rule still
 returns 422. [Resource limits and remaining gaps](docs/LIMITS.md).
+
+Ollama generation envelopes are streamed into a bounded 1 MiB buffer. Oversized
+or compressed upstream envelopes fail with 502 through the API; no partial
+items are returned. This is separate from the 2 MiB incoming request cap. See
+[resource policy](docs/LIMITS.md) for scope and remaining duration/output limits.

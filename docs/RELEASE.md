@@ -151,3 +151,12 @@ preserved. Local resource policy and independent review remain open.
 fixed/chunked Uvicorn smoke passes. LIMITS.md documents byte/character distinction
 and remaining upstream-response, total-duration, concurrency and disk limits.
 Next bound upstream response buffering; no public hosting readiness implied.
+
+### Audit follow-up: generation response buffering bounded
+
+Ollama generation envelopes now use bounded 1 MiB identity-only streaming, with
+explicit failure/response close and API 502 on oversize. Evaluation capture shares
+the cap. 346 tests/Ruff pass; no dependency/model download or quality remeasurement.
+Remaining total-duration/API-output/disk/distributed boundaries are disclosed in
+LIMITS.md. Next reconcile the local portfolio release checklist and semantic scope
+instead of implying these caps establish production readiness.

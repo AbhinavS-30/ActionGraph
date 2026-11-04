@@ -199,3 +199,15 @@ trusted to exempt actual counting. Disconnects do not run routes. Lifespan and
 other non-HTTP scopes pass through. Existing field validation and model/storage
 errors are unchanged. LIMITS.md distinguishes transport buffering, char count,
 streamed uploads and remaining timeout/output/concurrency gaps.
+
+## Bounded upstream generation envelope
+
+The Ollama client opens a streaming response, checks HTTP status, rejects
+non-identity content encoding, then reads through BoundedResponseStream before
+JSON/envelope validation. A 1 MiB cap covers complete response bytes; announced
+length may reject earlier but never exempts actual counting. Oversize is an
+OllamaResponseError, closes upstream response, fails the whole API result with
+502 and releases its model slot. Evaluation raw capture shares this reader;
+partial/oversize raw bodies are not saved as successful results. Existing
+HTTP/timeout propagation remains. Read LIMITS.md for transport/preloaded-hook
+limits and distinction from request, token and wall-clock boundaries.

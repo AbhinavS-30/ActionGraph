@@ -155,3 +155,98 @@ def test_invalid_generation_limit_never_calls_ollama(limit):
         pytest.raises(ValueError, match="num_predict"),
     ):
         generate_text("Hello", client=client, num_predict=limit)
+
+
+class TrackingStream(httpx.SyncByteStream):
+    def __init__(self, chunks):
+        self.chunks = chunks
+        self.closed = False
+        self.consumed = 0
+
+    def __iter__(self):
+        for chunk in self.chunks:
+            self.consumed += 1
+            yield chunk
+
+    def close(self):
+        self.closed = True
+
+
+@pytest.mark.parametrize("headers", [{}, {"Content-Length": "1"}])
+def test_oversized_stream_stops_reading_and_closes(headers, monkeypatch):
+    monkeypatch.setattr("app.ollama.MAX_OLLAMA_RESPONSE_BYTES", 8)
+    stream = TrackingStream([b"12345", b"67890", b"never read"])
+
+    def handler(request):
+        assert request.headers["Accept-Encoding"] == "identity"
+        return httpx.Response(200, headers=headers, stream=stream)
+
+    with pytest.raises(OllamaResponseError, match="limit"), httpx.Client(
+        base_url="http://ollama.test", transport=httpx.MockTransport(handler)
+    ) as client:
+        generate_text("Hello", client=client)
+    assert stream.closed and stream.consumed == 2
+
+
+def test_announced_oversize_rejected_before_body_read(monkeypatch):
+    monkeypatch.setattr("app.ollama.MAX_OLLAMA_RESPONSE_BYTES", 8)
+    stream = TrackingStream([b"never read"])
+    with pytest.raises(OllamaResponseError), httpx.Client(
+        base_url="http://ollama.test",
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200, headers={"Content-Length": "9" * 5000}, stream=stream
+            )
+        ),
+    ) as client:
+        generate_text("Hello", client=client)
+    assert stream.closed and stream.consumed == 0
+
+
+def test_exact_response_boundary_preserves_text_and_closes(monkeypatch):
+    body = json.dumps({"done": True, "response": " Hello! "}).encode()
+    monkeypatch.setattr("app.ollama.MAX_OLLAMA_RESPONSE_BYTES", len(body))
+    stream = TrackingStream([body[:7], body[7:]])
+    with httpx.Client(
+        base_url="http://ollama.test",
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, stream=stream)
+        ),
+    ) as client:
+        assert generate_text("Hello", client=client) == " Hello! "
+    assert stream.closed
+
+
+def test_compressed_response_rejected_without_decompression():
+    stream = TrackingStream([b"not even valid gzip"])
+    with pytest.raises(OllamaResponseError, match="Compressed"), httpx.Client(
+        base_url="http://ollama.test",
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(
+                200, headers={"Content-Encoding": "gzip"}, stream=stream
+            )
+        ),
+    ) as client:
+        generate_text("Hello", client=client)
+    assert stream.closed and stream.consumed == 0
+
+
+def test_bounded_eval_capture_remains_compatible_with_generation():
+    from app.ollama import read_bounded_response
+
+    snapshots = []
+
+    def capture(response):
+        snapshots.append(read_bounded_response(response))
+
+    body = json.dumps({"done": True, "response": "Hello"}).encode()
+    stream = TrackingStream([body])
+    with httpx.Client(
+        base_url="http://ollama.test",
+        transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, stream=stream)
+        ),
+        event_hooks={"response": [capture]},
+    ) as client:
+        assert generate_text("Hello", client=client) == "Hello"
+    assert snapshots == [body] and stream.closed

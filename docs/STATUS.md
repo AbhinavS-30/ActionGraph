@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-339 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+346 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -84,14 +84,14 @@ changed after inspection. These cases are now observed.
 Rules v3 replay is recorded with original labels and preserved earlier results.
 First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
 Opt-in saved rules sessions are now implemented under docs/STORAGE.md.
-Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Bounded withdrawal handling and its replay are complete. A 2 MiB raw request-body cap is implemented. Next bound upstream response
-buffering and reconcile remaining release scope,
+Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Bounded withdrawal handling and its replay are complete. A 2 MiB raw request-body cap is implemented. Upstream generation buffering is now bounded. Next reconcile the remaining
+local-release scope and checks,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
 
 Real-meeting quality, independent human evaluation, cross-line semantic consistency,
-upstream response-byte limits, total-duration limits and distributed concurrency
+API output-byte limits, total-duration limits and distributed concurrency
 are not established. Optional saved rules sessions and stateless caller-directed confirmation are available. Audio,
 calendar integration, cross-meeting memory and elaborate dashboards remain deferred.
 See `docs/RELEASE.md` and `docs/RULES.md` for release requirements and exact scope.
@@ -296,3 +296,15 @@ documented globally. 339 tests and Ruff pass. Actual loopback Uvicorn returns
 No deps added. [Policy, exact scope and gaps](LIMITS.md). Next bound upstream
 Ollama response buffering; total duration/concurrency/disk growth remain distinct
 limits, and extraction-quality findings are unchanged.
+
+## Ollama generation buffering bounded
+
+Shared generation client streams and counts at most 1 MiB of identity-encoded
+envelope bytes before parsing, rejects compressed envelopes, and closes response
+on all paths. Oversize maps to API 502 with no partial result; slot released.
+Eval capture uses the same reader, avoiding pre-read bypass. 346 tests and Ruff
+pass, with streamed boundaries/close, encoding, capture compatibility and API
+slot-reuse coverage. No real model run or new quality score. Historical reports
+preserved. LIMITS.md lists the remaining total-duration/API-output/disk/distributed
+gaps. Next reconcile the local-release checklist and quality scope before
+packaging; presentation still deferred. No dependencies added.

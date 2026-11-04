@@ -9,6 +9,48 @@ class OllamaResponseError(ValueError):
     """Ollama returned an invalid or incomplete generation envelope."""
 
 
+MAX_OLLAMA_RESPONSE_BYTES = 1024 * 1024
+
+
+class BoundedResponseStream(httpx.SyncByteStream):
+    """Stop buffering at the envelope byte cap; close the underlying stream."""
+
+    def __init__(self, stream: httpx.SyncByteStream):
+        self.stream = stream
+
+    def __iter__(self):
+        total = 0
+        for chunk in self.stream:
+            total += len(chunk)
+            if total > MAX_OLLAMA_RESPONSE_BYTES:
+                raise OllamaResponseError("Ollama response exceeds the 1 MiB limit.")
+            yield chunk
+
+    def close(self):
+        self.stream.close()
+
+
+def read_bounded_response(response: httpx.Response) -> bytes:
+    """Read an identity-encoded envelope with a cap, also usable by eval capture."""
+    if response.headers.get("content-encoding", "identity").strip().lower() not in {
+        "",
+        "identity",
+    }:
+        raise OllamaResponseError("Compressed Ollama responses are unsupported.")
+    length = response.headers.get("content-length", "")
+    if length.isascii() and length.isdigit():
+        size = length.lstrip("0") or "0"
+        cap = str(MAX_OLLAMA_RESPONSE_BYTES)
+        if len(size) > len(cap) or (len(size) == len(cap) and size > cap):
+            raise OllamaResponseError("Ollama response exceeds the 1 MiB limit.")
+    if response.is_stream_consumed:
+        if len(response.content) > MAX_OLLAMA_RESPONSE_BYTES:
+            raise OllamaResponseError("Ollama response exceeds the 1 MiB limit.")
+        return response.content
+    response.stream = BoundedResponseStream(response.stream)
+    return response.read()
+
+
 def generate_text(
     prompt: str,
     *,
@@ -44,12 +86,15 @@ def generate_text(
     }
     if response_schema is not None:
         payload["format"] = response_schema
-    response = client.post("/api/generate", json=payload)
-    response.raise_for_status()
-    try:
-        data = response.json()
-    except ValueError as exc:
-        raise OllamaResponseError("Ollama returned invalid JSON.") from exc
+    with client.stream(
+        "POST", "/api/generate", json=payload, headers={"Accept-Encoding": "identity"}
+    ) as response:
+        response.raise_for_status()
+        read_bounded_response(response)
+        try:
+            data = response.json()
+        except ValueError as exc:
+            raise OllamaResponseError("Ollama returned invalid JSON.") from exc
 
     if (
         not isinstance(data, dict)

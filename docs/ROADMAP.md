@@ -112,3 +112,8 @@ November 4 pre-parse raw HTTP body cap implemented at 2 MiB, including streamed
 uploads; returns documented 413 before endpoint work. 339 tests/Ruff and actual
 fixed/chunked TCP smoke pass. Next bound upstream response buffering under an
 explicit policy; total duration and other limits remain separate.
+
+November 4 Ollama generation envelope cap implemented at 1 MiB with bounded
+streaming, compressed-response rejection, close-on-failure and shared eval capture.
+346 tests and Ruff pass; no model quality run. Next reconcile local-release
+readiness and accepted scope; remaining limits disclosed in LIMITS.md.

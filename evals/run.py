@@ -13,6 +13,7 @@ import httpx
 
 from app.config import get_settings
 from app.extraction import extract_actions
+from app.ollama import read_bounded_response
 from app.prompts import EXTRACTION_INSTRUCTIONS
 from app.rules import RULES_VERSION, extract_rule_actions
 from evals.baseline import extract_baseline
@@ -144,7 +145,7 @@ def main():
             raw_responses = []
 
             def capture(response):
-                response.read()
+                read_bounded_response(response)
                 raw_responses.append(
                     {"http_status": response.status_code, "body": response.text}
                 )

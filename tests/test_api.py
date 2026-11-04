@@ -348,3 +348,21 @@ def test_adjacent_withdrawal_returns_no_task_without_model_call():
     response=post_extract({'transcript':source},fail,use_default=True)
     assert response.status_code==200
     assert response.json()['items']==[]
+
+
+def test_oversized_model_response_returns_502_then_releases_slot(monkeypatch):
+    monkeypatch.setattr("app.ollama.MAX_OLLAMA_RESPONSE_BYTES", 32)
+    response = post_extract(
+        {"transcript": "Maya: Hello."},
+        lambda request: httpx.Response(200, content=b"x" * 33),
+    )
+    assert response.status_code == 502
+    assert "items" not in response.json()
+    monkeypatch.setattr("app.ollama.MAX_OLLAMA_RESPONSE_BYTES", 1024)
+    response = post_extract(
+        {"transcript": "Maya: Hello."},
+        lambda request: httpx.Response(
+            200, json={"done": True, "response": '{"items": []}'}
+        ),
+    )
+    assert response.status_code == 200
