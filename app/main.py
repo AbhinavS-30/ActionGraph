@@ -12,6 +12,13 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
+from app.api_docs import (
+    CONFLICT,
+    EXTRACTION_ERRORS,
+    NOT_FOUND,
+    SAVED_VALIDATION,
+    STORAGE_ERRORS,
+)
 from app.config import Settings, get_settings
 from app.extraction import UnsupportedEvidenceError, extract_actions
 from app.ollama import OllamaResponseError
@@ -66,7 +73,7 @@ def get_ollama_client(
         yield client
 
 
-@app.post("/extract", response_model=ExtractionResponse)
+@app.post("/extract", response_model=ExtractionResponse, responses=EXTRACTION_ERRORS)
 def extract(
     request: ExtractionRequest,
     client: Annotated[httpx.Client | None, Depends(get_ollama_client)],
@@ -147,21 +154,34 @@ async def storage_error_handler(request: Request, exc: StoreError):
     return JSONResponse(status_code=exc.status, content={"detail": exc.message})
 
 
-@app.post("/sessions", response_model=SavedSession, status_code=201)
+@app.post(
+    "/sessions",
+    response_model=SavedSession,
+    status_code=201,
+    responses={**STORAGE_ERRORS, **SAVED_VALIDATION},
+)
 def create_session(
     request: SessionCreate, store: Annotated[SessionStore, Depends(get_session_store)]
 ):
     return store.create(request)
 
 
-@app.get("/sessions/{session_id}", response_model=SavedSession)
+@app.get(
+    "/sessions/{session_id}",
+    response_model=SavedSession,
+    responses={**STORAGE_ERRORS, **NOT_FOUND},
+)
 def get_session(
     session_id: UUID, store: Annotated[SessionStore, Depends(get_session_store)]
 ):
     return store.get(session_id)
 
 
-@app.put("/sessions/{session_id}/review", response_model=SavedSession)
+@app.put(
+    "/sessions/{session_id}/review",
+    response_model=SavedSession,
+    responses={**STORAGE_ERRORS, **NOT_FOUND, **CONFLICT, **SAVED_VALIDATION},
+)
 def review_session(
     session_id: UUID,
     request: SavedReviewRequest,
@@ -170,7 +190,11 @@ def review_session(
     return store.review(session_id, request)
 
 
-@app.delete("/sessions/{session_id}", status_code=204)
+@app.delete(
+    "/sessions/{session_id}",
+    status_code=204,
+    responses={**STORAGE_ERRORS, **NOT_FOUND, **CONFLICT},
+)
 def delete_session(
     session_id: UUID,
     expected_revision: Annotated[int, Query(ge=1)],

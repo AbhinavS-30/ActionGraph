@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-303 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+305 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -84,8 +84,8 @@ changed after inspection. These cases are now observed.
 Rules v3 replay is recorded with original labels and preserved earlier results.
 First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
 Opt-in saved rules sessions are now implemented under docs/STORAGE.md.
-Saved-session browser interaction is now verified. Next document custom API
-error responses in OpenAPI and finish the remaining release checks,
+Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Next define bounded
+withdrawal handling for the recorded false positive and finish remaining release checks,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
@@ -251,3 +251,15 @@ changed: last checks remain 303 passing, Ruff, clean install and storage CI pass
 Next fix Swagger's Undocumented Error presentation by declaring existing custom
 responses, then finish remaining resource/semantic release checks. Page/video
 and independent human quality adjudication remain pending.
+
+## OpenAPI application errors documented
+
+Existing extract 502/503/504 and saved-session 404/409/500/503 responses now have
+JSON error models and endpoint-specific descriptions in generated OpenAPI. Saved
+422 includes both request-validation issue lists and application string details;
+automatic validation docs remain on other routes. Busy model slot Retry-After
+header described; delete success remains body-free 204. Runtime behavior unchanged.
+305 tests and Ruff pass, including schema declarations and observed error shapes.
+Rendered Swagger for these new declarations has not been rechecked. No new
+dependency or quality measurement. Next define bounded withdrawal handling for
+the known semantic false positive; preserve the original evaluation evidence.

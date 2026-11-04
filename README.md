@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 303 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 305 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -317,3 +317,9 @@ a server-generated proposal snapshot; GET /sessions/{id} retrieves it; PUT
 /sessions/{id}/review saves revision-checked decisions; DELETE removes the session
 and latest review. Stale changes return 409. No authentication or full review
 history is provided. See [storage setup and policy](docs/STORAGE.md).
+
+Swagger now declares existing application errors: experimental extraction
+502/503/504 and saved-session 404/409/422/500/503 where applicable. Validation
+422 may contain a list of request issues; stored-source review errors use a
+string detail. Busy model-slot 503 may include Retry-After. These declarations
+describe existing behavior; they do not change statuses or extraction quality.

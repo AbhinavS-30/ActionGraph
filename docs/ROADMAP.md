@@ -93,3 +93,9 @@ current visual interaction remains pending. No public presentation started.
 November 4 saved-session browser sequence completed through user screenshots.
 CI and clean install passed; isolated test server stopped. Next declare existing
 custom API errors in OpenAPI and finish remaining resource/semantic release gates.
+
+November 4 custom application error responses declared in OpenAPI: model errors,
+storage missing/conflict/failure/unavailable, saved 422 shapes and busy model
+Retry-After. 305 tests and Ruff pass. Runtime behavior unchanged. Next define
+bounded withdrawal handling against the observed false positive without changing
+historical labels/reports. Remaining local resource/release gates stay open.

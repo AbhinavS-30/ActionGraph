@@ -134,3 +134,12 @@ Storage source CI and clean installation passed. Port-8001 test server stopped.
 Custom error declarations in Swagger, local resource policy, semantic scope and
 independent adjudication remain separate work before release packaging; no
 public page or video created.
+
+### Audit follow-up: custom OpenAPI responses documented
+
+The existing saved-session and experimental model errors are now declared with
+JSON models in OpenAPI, including 404/409 and saved-review 422 string/list shapes.
+305 tests and Ruff pass. No runtime/status behavior changed, and the updated
+Swagger rendering has not been visually rechecked. Next quality work is a bounded
+withdrawal policy addressing the recorded false positive; original metrics remain
+preserved. Local resource policy and independent review remain open.

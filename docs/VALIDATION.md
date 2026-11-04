@@ -166,3 +166,15 @@ store 503; stale version 409; missing UUID 404; invalid inputs/reviews 422; busy
 SQLite 503; other storage errors sanitized 500. Original snapshots and stable IDs
 survive reopening/restarts. No new dependencies, automatic retries or model calls.
 See STORAGE.md for retention, latest-only review and access limitations.
+
+## OpenAPI error documentation
+
+Application errors are declared separately from runtime handlers in api_docs.py.
+ErrorResponse has string detail. Saved-session 422 uses ReviewValidationResponse
+with string or list-of-issue detail because both custom review checks and FastAPI
+request validation can emit it. Extraction/service and storage statuses are
+listed only on applicable routes, with model-busy Retry-After documented. Other
+422 responses retain FastAPI validation schemas. Tests check declared codes and
+models against representative actual responses and preserve no-content 204.
+Declarations do not validate semantics, change handler behavior or prove browser
+rendering. No errors are transformed into successful responses.
