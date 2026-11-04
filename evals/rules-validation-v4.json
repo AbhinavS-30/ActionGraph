@@ -1,0 +1,214 @@
+[
+  {
+    "id": "v4-check-01",
+    "category": "explicit",
+    "transcript": "Ravi: I’ll document the recovery procedure by Thursday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Document the recovery procedure",
+          "owner": "Ravi",
+          "deadline": "Thursday",
+          "evidence": "Ravi: I’ll document the recovery procedure by Thursday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Speaker owns explicit commitment; relative deadline stays verbatim."
+  },
+  {
+    "id": "v4-check-02",
+    "category": "accepted_request",
+    "transcript": "Leah: Soren, could you validate the export manifest tomorrow?\nSoren: Yes, I will validate it.",
+    "expected": {
+      "items": [
+        {
+          "action": "Validate the export manifest",
+          "owner": "Soren",
+          "deadline": "tomorrow",
+          "evidence": "Leah: Soren, could you validate the export manifest tomorrow?\nSoren: Yes, I will validate it.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Named request plus explicit acceptance establishes ownership and task."
+  },
+  {
+    "id": "v4-check-03",
+    "category": "compound_local_dates",
+    "transcript": "Leah: I will inspect the fixture by Monday and archive the test records by Wednesday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Inspect the fixture",
+          "owner": "Leah",
+          "deadline": "Monday",
+          "evidence": "Leah: I will inspect the fixture by Monday and archive the test records by Wednesday.",
+          "review_status": "needs_review"
+        },
+        {
+          "action": "Archive the test records",
+          "owner": "Leah",
+          "deadline": "Wednesday",
+          "evidence": "Leah: I will inspect the fixture by Monday and archive the test records by Wednesday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Two complete clauses with separately stated deadlines."
+  },
+  {
+    "id": "v4-check-04",
+    "category": "explicit_cancellation",
+    "transcript": "Ravi: I will upload the onboarding guide tomorrow.\nRavi: I won’t upload the onboarding guide.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Later explicit negation cancels the earlier task."
+  },
+  {
+    "id": "v4-check-05",
+    "category": "recommitment",
+    "transcript": "Soren: I will email Leah the migration checklist by Monday.\nSoren: I will not email Leah the migration checklist.\nSoren: I will email Leah the migration checklist by Friday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Email Leah the migration checklist",
+          "owner": "Soren",
+          "deadline": "Friday",
+          "evidence": "Soren: I will email Leah the migration checklist by Friday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Cancellation clears earlier commitment; later promise establishes a new one."
+  },
+  {
+    "id": "v4-check-06",
+    "category": "dependency",
+    "transcript": "Leah: I will test the restore procedure after Ravi supplies the snapshot by Tuesday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Test the restore procedure after Ravi supplies the snapshot by Tuesday",
+          "owner": "Leah",
+          "deadline": null,
+          "evidence": "Leah: I will test the restore procedure after Ravi supplies the snapshot by Tuesday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Snapshot due date is a prerequisite date, not the task deadline."
+  },
+  {
+    "id": "v4-check-07",
+    "category": "ownerless",
+    "transcript": "Decision: The access roster will be updated. No owner or date was assigned.",
+    "expected": {
+      "items": [
+        {
+          "action": "Update the access roster",
+          "owner": null,
+          "deadline": null,
+          "evidence": "Decision: The access roster will be updated. No owner or date was assigned.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Agreed work is genuine despite missing assignment."
+  },
+  {
+    "id": "v4-check-08",
+    "category": "clock_and_verb",
+    "transcript": "Ravi: I will deliver the rollout briefing at 15:30.",
+    "expected": {
+      "items": [
+        {
+          "action": "Deliver the rollout briefing",
+          "owner": "Ravi",
+          "deadline": "15:30",
+          "evidence": "Ravi: I will deliver the rollout briefing at 15:30.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Explicit work with a clock deadline remains a label even outside grammar."
+  },
+  {
+    "id": "v4-check-09",
+    "category": "object_list",
+    "transcript": "Soren: I will review the invoice and the receipt.",
+    "expected": {
+      "items": [
+        {
+          "action": "Review the invoice and the receipt",
+          "owner": "Soren",
+          "deadline": null,
+          "evidence": "Soren: I will review the invoice and the receipt.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "One review task with two objects, not two verb clauses."
+  },
+  {
+    "id": "v4-check-10",
+    "category": "explicit_shared_date",
+    "transcript": "Leah: I will review the changelog and publish the bulletin, both by Friday.",
+    "expected": {
+      "items": [
+        {
+          "action": "Review the changelog",
+          "owner": "Leah",
+          "deadline": "Friday",
+          "evidence": "Leah: I will review the changelog and publish the bulletin, both by Friday.",
+          "review_status": "needs_review"
+        },
+        {
+          "action": "Publish the bulletin",
+          "owner": "Leah",
+          "deadline": "Friday",
+          "evidence": "Leah: I will review the changelog and publish the bulletin, both by Friday.",
+          "review_status": "needs_review"
+        }
+      ]
+    },
+    "rationale": "Both explicitly scopes Friday to the two tasks; not ambiguous."
+  },
+  {
+    "id": "v4-check-11",
+    "category": "unanswered",
+    "transcript": "Ravi: Leah, can you inspect the fixture?\nSoren: The room closes at six.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Unrelated reply does not accept the request."
+  },
+  {
+    "id": "v4-check-12",
+    "category": "negation",
+    "transcript": "Soren: I will not migrate the archive.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Explicit refusal is not promised work."
+  },
+  {
+    "id": "v4-check-13",
+    "category": "paraphrased_cancellation",
+    "transcript": "Ravi: I will publish the onboarding guide tomorrow.\nRavi: Cancel that publication; I am withdrawing the commitment.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Explicit withdrawal invalidates promise despite unsupported cancellation wording."
+  },
+  {
+    "id": "v4-check-14",
+    "category": "refused_request",
+    "transcript": "Leah: Soren, could you export the billing ledger?\nSoren: No, I cannot take that task.",
+    "expected": {
+      "items": []
+    },
+    "rationale": "Named request is explicitly declined."
+  }
+]

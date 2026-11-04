@@ -45,7 +45,7 @@ def main():
     parser.add_argument("--baseline-only", action="store_true")
     parser.add_argument(
         "--dataset",
-        choices=["development", "validation", "rules-validation"],
+        choices=["development", "validation", "rules-validation", "rules-v4-validation"],
         default="development",
     )
     parser.add_argument(
@@ -59,6 +59,7 @@ def main():
         "development": "cases.json",
         "validation": "validation-cases.json",
         "rules-validation": "rules-validation-v1.json",
+        "rules-v4-validation": "rules-validation-v4.json",
     }[args.dataset]
     dataset = (root / "evals" / dataset_name).read_bytes()
     cases = json.loads(dataset)

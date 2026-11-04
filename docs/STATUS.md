@@ -128,3 +128,13 @@ to 7 TP, 0 FP, 2 FN. All paired rule items are fully correct under provisional
 review. All 32 rules attempts succeeded without model calls. These are known-case
 regression results, not independent validation. Ownerless work and unsupported
 verb/time remain missed. [Report and artifacts](../evals/results/REPORT-rules-v4-aa3c999.md).
+
+## Frozen v4 validation plan
+
+Fourteen new synthetic cases with eleven labeled tasks are fixed before the
+first extraction run. Source app/rules.py remains unchanged. Cases include
+supported commitments, acceptance, compound dates and cancellation, plus genuine
+out-of-scope work and broader withdrawal wording. Author knows the grammar and
+prior failures; this is not independent or blind evaluation. Preserve all first
+outputs and labels, score all cases under the existing rubric, and do not tune
+the extractor during this run. Collection choice: rules-v4-validation.

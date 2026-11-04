@@ -234,3 +234,13 @@ The [first result](results/REPORT-rules-validation-042cf19.md) is preserved with
 later-cancellation false positive and five missed labels. Commit source and labels before
 execution; afterward these cases are observed and must not be called untouched
 if tuning on their outcomes.
+
+## Frozen rules v4 validation
+
+`rules-validation-v4.json` contains fourteen new synthetic cases and eleven
+labeled tasks fixed before collection. The unchanged v4 extractor is evaluated
+on all cases, including out-of-scope positives and paraphrased withdrawal.
+Authoring used implementation knowledge; this is not independent human validation.
+No post-run label or source tuning is permitted for this first result.
+Command: `.venv/bin/python -m evals.run --contract rules --dataset rules-v4-validation --output OUTPUT`.
+The collector now supports four dataset choices; earlier two-choice wording is historical.

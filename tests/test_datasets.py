@@ -15,6 +15,7 @@ from app.validation import validate_transcript
         ("cases.json", 10),
         ("validation-cases.json", 10),
         ("rules-validation-v1.json", 12),
+        ("rules-validation-v4.json", 14),
     ],
 )
 def test_frozen_labels_have_valid_inputs_contract_and_evidence(filename, count):
