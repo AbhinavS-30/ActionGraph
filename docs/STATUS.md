@@ -50,7 +50,7 @@ No dependencies added. The v3 replay is recorded below; earlier results remain h
 
 ## Current verification
 
-322 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
+339 tests pass locally with `.venv/bin/python -m pytest`; Ruff passes with
 `.venv/bin/python -m ruff check app tests evals`. Unit/fixture checks are not
 extraction-quality measurements. No new dependencies or model downloads were added.
 
@@ -84,14 +84,14 @@ changed after inspection. These cases are now observed.
 Rules v3 replay is recorded with original labels and preserved earlier results.
 First frozen-v4 validation and the release audit are recorded. Blank output-field validation is complete. The stateless extract-to-review TCP verification and storage policy are complete.
 Opt-in saved rules sessions are now implemented under docs/STORAGE.md.
-Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Bounded withdrawal handling and its replay are complete. Next reconcile local
-resource limits and remaining release scope,
+Saved-session browser interaction is now verified. Custom application errors are now declared in OpenAPI. Bounded withdrawal handling and its replay are complete. A 2 MiB raw request-body cap is implemented. Next bound upstream response
+buffering and reconcile remaining release scope,
 then address the remaining agreed release gates. The user deferred public page
 work and demo recording until the product is ready; neither is in progress.
 
 
 Real-meeting quality, independent human evaluation, cross-line semantic consistency,
-raw HTTP body/response byte limits, total-duration limits and distributed concurrency
+upstream response-byte limits, total-duration limits and distributed concurrency
 are not established. Optional saved rules sessions and stateless caller-directed confirmation are available. Audio,
 calendar integration, cross-meeting memory and elaborate dashboards remain deferred.
 See `docs/RELEASE.md` and `docs/RULES.md` for release requirements and exact scope.
@@ -285,3 +285,14 @@ original v4 failure preserved. This is targeted regression evidence, not fresh
 validation or a general zero-error claim. [Report](../evals/results/REPORT-rules-v5-fa37f4e.md).
 Next reconcile local resource-limit and release scope; semantic misses and
 independent human adjudication remain open.
+
+## Raw HTTP request limit implemented
+
+All HTTP routes now reject bodies over 2 MiB with 413 before parsing/dependencies.
+Content-Length early rejection plus actual byte counting covers streamed or
+misleading-header requests; admitted source bytes stay unchanged. OpenAPI 413
+documented globally. 339 tests and Ruff pass. Actual loopback Uvicorn returns
+413 for fixed/chunked oversized uploads and 200 for subsequent normal extraction.
+No deps added. [Policy, exact scope and gaps](LIMITS.md). Next bound upstream
+Ollama response buffering; total duration/concurrency/disk growth remain distinct
+limits, and extraction-quality findings are unchanged.

@@ -122,7 +122,7 @@ Unit tests use simulated HTTP responses and do not require Ollama. Calling the s
 .venv/bin/python -m ruff check app tests
 ```
 
-The current suite contains 322 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+The current suite contains 339 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
 
 GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
 The workflow also lints `evals/` and has a ten-minute job timeout. These automated
@@ -219,8 +219,9 @@ environment variables are ignored for local Ollama requests. No new dependencies
 were added.
 
 Transcripts are limited to 12,000 Python characters before trimming; the original
-text is preserved for evidence checks. This is not a raw HTTP body-size limit or
-a concurrency limit. Generation requests include `options.num_predict`. A response
+text is preserved for evidence checks. Separately, the HTTP layer caps raw request bodies at 2 MiB before JSON parsing
+and returns 413 above that limit. Neither transcript length nor body size bounds
+total request duration. See docs/LIMITS.md. Generation requests include `options.num_predict`. A response
 with `done_reason=length` is rejected as incomplete even if its text happens to
 parse. Raising a token limit does not guarantee complete or correct extraction.
 The new generation limit changes runtime settings; earlier reports retain the
@@ -328,3 +329,7 @@ Rules v5 adds the bounded adjacent explicit withdrawal policy in docs/RULES.md.
 It requires the same speaker, one preceding supported promise, and a matching
 reference kind. Broader withdrawals remain unsupported. 322 tests and Ruff pass;
 [Observed-case replay](evals/results/REPORT-rules-v5-fa37f4e.md) removes the targeted withdrawal false positive, with all other outputs unchanged. Historical first-run reports are preserved; broader semantic limits remain.
+
+HTTP requests now have a 2 MiB raw-body cap, including streamed bodies. Oversize
+returns 413 before endpoint work; the 12,000-character transcript rule still
+returns 422. [Resource limits and remaining gaps](docs/LIMITS.md).

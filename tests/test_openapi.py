@@ -35,6 +35,7 @@ def test_openapi_declares_existing_errors_and_keeps_validation_and_no_content():
     }
     for (path, method), statuses in expected.items():
         responses = schema["paths"][path][method]["responses"]
+        statuses = statuses | {"413"}
         assert set(responses) == statuses
         for status in statuses - {"200", "201", "204", "422"}:
             assert responses[status]["content"]["application/json"]["schema"][

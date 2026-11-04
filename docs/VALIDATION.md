@@ -189,3 +189,13 @@ evidence. Other references are skipped. This does not rewrite earlier saved
 sessions or reviewed decisions; newly created sessions record rules_version=5.
 See RULES.md for scope and exclusions. Original evaluation artifacts remain valid
 for their recorded revisions; new replay is observed-case regression evidence.
+
+## Raw HTTP body boundary
+
+RequestBodyLimit is pure ASGI middleware, running before FastAPI parsing and
+dependencies. It rejects announced or actual bodies above 2 MiB with 413, buffers
+only within the cap, and replays unchanged accepted bytes. Content-Length is not
+trusted to exempt actual counting. Disconnects do not run routes. Lifespan and
+other non-HTTP scopes pass through. Existing field validation and model/storage
+errors are unchanged. LIMITS.md distinguishes transport buffering, char count,
+streamed uploads and remaining timeout/output/concurrency gaps.

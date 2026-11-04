@@ -18,7 +18,9 @@ from app.api_docs import (
     NOT_FOUND,
     SAVED_VALIDATION,
     STORAGE_ERRORS,
+    ErrorResponse,
 )
+from app.body_limit import RequestBodyLimit
 from app.config import Settings, get_settings
 from app.extraction import UnsupportedEvidenceError, extract_actions
 from app.ollama import OllamaResponseError
@@ -43,7 +45,18 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="ActionGraph", version="0.1.0", lifespan=lifespan)
+app = FastAPI(
+    title="ActionGraph",
+    version="0.1.0",
+    lifespan=lifespan,
+    responses={
+        413: {
+            "model": ErrorResponse,
+            "description": "Raw HTTP request body exceeds 2 MiB. Send a smaller batch; no endpoint processing occurred.",
+        }
+    },
+)
+app.add_middleware(RequestBodyLimit)
 extraction_slot = BoundedSemaphore(1)
 
 

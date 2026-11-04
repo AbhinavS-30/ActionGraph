@@ -107,3 +107,8 @@ without changing labels or historical reports. No general paraphrase claim.
 Rules v5 replay complete: only targeted withdrawal output changed across four
 observed sets; first frozen-v4 result preserved. Five misses remain on that set.
 Next reconcile local resource-limit and release scope before presentation.
+
+November 4 pre-parse raw HTTP body cap implemented at 2 MiB, including streamed
+uploads; returns documented 413 before endpoint work. 339 tests/Ruff and actual
+fixed/chunked TCP smoke pass. Next bound upstream response buffering under an
+explicit policy; total duration and other limits remain separate.

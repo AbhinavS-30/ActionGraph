@@ -143,3 +143,11 @@ JSON models in OpenAPI, including 404/409 and saved-review 422 string/list shape
 Swagger rendering has not been visually rechecked. Next quality work is a bounded
 withdrawal policy addressing the recorded false positive; original metrics remain
 preserved. Local resource policy and independent review remain open.
+
+### Audit follow-up: raw request size bounded
+
+2 MiB pre-parse HTTP body cap implemented with actual streamed-byte counting,
+413 declaration and rejection before endpoint work. 339 tests/Ruff pass; actual
+fixed/chunked Uvicorn smoke passes. LIMITS.md documents byte/character distinction
+and remaining upstream-response, total-duration, concurrency and disk limits.
+Next bound upstream response buffering; no public hosting readiness implied.
