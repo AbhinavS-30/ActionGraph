@@ -228,3 +228,11 @@ Swagger interaction remains unverified. [Evidence](verification/RELEASE-252c776.
 and [isolated manual browser procedure](SWAGGER_CHECK.md). No user database
 modified; no page/video created. Next complete browser/CI verification and
 resolve local resource/semantic release scope.
+
+## Current CI follow-up
+
+Storage source 252c776 GitHub test check now completed successfully (run
+41880913838, job 126752847840). Earlier queued entries are historical. Browser
+automation remains unavailable and native Chrome reports noWindowsAvailable.
+An isolated disposable server on port 8001 is ready for user-assisted Swagger
+checks; health/docs/OpenAPI 200 is confirmed, visual execution still pending.

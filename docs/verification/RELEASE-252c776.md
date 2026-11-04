@@ -45,3 +45,12 @@ Complete current rendered Swagger workflow and current CI. Reconcile local
 resource-limit policy, known semantic false positives/misses and independent
 human review before versioned release messaging. Page/video remain deferred.
 Clean install and TCP persistence do not close these separate gates.
+
+## CI follow-up — passed
+
+On recheck, the exact 252c776 test check is completed with conclusion=success:
+https://github.com/AbhinavS-30/ActionGraph/actions/runs/41880913838/job/126752847840
+The queued observation above is historical. Current browser automation remains
+unavailable; native Chrome additionally reports noWindowsAvailable. A disposable
+loopback server was started on port 8001 for user-assisted Swagger verification.
+Health/docs/OpenAPI return 200; that does not establish rendered interaction.
