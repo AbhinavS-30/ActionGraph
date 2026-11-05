@@ -1,6 +1,6 @@
 # Project status
 
-Updated November 4, 2026. Implementation checkpoint: `351b3a0`.
+Updated November 5, 2026. Implementation checkpoint: `351b3a0`.
 
 ## Current product
 
@@ -89,3 +89,12 @@ current review API cannot add. This is illustrative, not a new quality benchmark
 [Engineering explanation](WALKTHROUGH.md) and [observations](verification/WALKTHROUGH-rc1.json).
 Application code unchanged; candidate tag remains fixed. Next stable-release
 readiness decision within disclosed scope, then presentation after readiness.
+
+## Portfolio README and recording preparation — November 5
+
+README rewritten with product overview, CI badge, extraction flowchart, saved
+session sequence diagram, reproducible setup, API/error reference, measured
+results and explicit limitations. RECORDING.md supplies a 2–3 minute storyboard
+with actual request bodies and a known omission to show. No video, page or
+LinkedIn post created/published. App behavior and fixed rc.1 tag unchanged.
+Next record and review the local demo, then prepare the LinkedIn draft.

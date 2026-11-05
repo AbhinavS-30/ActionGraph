@@ -26,3 +26,8 @@ Final mixed-case walkthrough completed and documented in WALKTHROUGH.md, includi
 human rejection of an unsupported withdrawal and a missed ownerless task. No
 quality remeasurement or stable release implied. Next stable-readiness decision
 within the disclosed local scope, then approved presentation work.
+
+November 5: user requested portfolio README refresh and plans to record before
+LinkedIn sharing. README and RECORDING.md now support that sequence. App/tag
+unchanged; no recording, public page or post exists yet. Next local recording
+and review, then draft LinkedIn text with measured limits disclosed.

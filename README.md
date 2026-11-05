@@ -1,342 +1,271 @@
 # ActionGraph
 
-Evidence-backed action items from meeting transcripts, designed for local inference and human review.
+**Turn supported meeting commitments into action items you can inspect, correct, and save.**
 
-ActionGraph aims to turn meeting discussion into a structured list of commitments: what needs to happen, who owns it, when it is due, and the exact words supporting it. Unknown owners and deadlines remain explicit rather than being guessed.
+[![ActionGraph checks](https://github.com/AbhinavS-30/ActionGraph/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/AbhinavS-30/ActionGraph/actions/workflows/tests.yml)
 
-**Development status:** the local API defaults to an explicitly limited rule-based demo engine; experimental local Ollama extraction remains opt-in. Responses identify the engine and scope limits. Tests, source-evidence checks, CI, and synthetic evaluations are implemented. Broad meeting understanding and production readiness are not claimed.
+[Release candidate v0.1.0-rc.1](https://github.com/AbhinavS-30/ActionGraph/tree/v0.1.0-rc.1) · [Engineering walkthrough](docs/WALKTHROUGH.md) · [Evaluation evidence](#evaluation) · [Recording guide](docs/RECORDING.md)
 
-## Intended application
+ActionGraph is a local FastAPI application that proposes structured action items
+from text transcripts, attaches exact source evidence, and supports explicit
+human review. Optional SQLite sessions preserve original proposals alongside the
+latest reviewed results, with revision checks to prevent stale updates.
 
-The local API accepts a text transcript and returns proposed action items for review. FastAPI's interactive API page provides the initial submission interface. Each item will include an action, nullable owner and deadline, supporting evidence, and review status. A custom dashboard is outside the initial scope.
+**Status:** verified local release candidate. Rules v5 is the default;
+local Ollama `llama3.2:3b` is explicitly experimental. This is an engineering
+portfolio project with measured limitations, not a production service or a claim
+of general meeting-understanding accuracy. The public demo video and project page
+have not been published.
+
+## What you can do
+
+- Extract supported promises and adjacent accepted requests into action, owner,
+  deadline, evidence, and review status.
+- Inspect exact transcript quotes; preserve unknown values as genuine `null`.
+- Confirm, correct, or reject proposals without overwriting the original snapshot.
+- Save rules-generated sessions locally and retrieve them after restarting.
+- Reject stale review updates and deletes using revision numbers.
+- Compare the product engine with a preserved baseline and experimental local
+  inference using reproducible synthetic evaluation artifacts.
+
+The initial interface is **Swagger UI**. Default rules mode needs no model
+service, paid API, or cloud inference.
 
 ## Architecture
 
-The API selects rules by default or experimental local inference explicitly, then returns proposed items for review. Stateless human review is available through POST /review; optional local saved sessions are available.
+Extraction keeps generation, validation, and review as separate responsibilities:
 
 ```mermaid
 flowchart TD
-    A[Text transcript] --> B[Input validation: implemented]
-    B --> R{Engine}
-    R --> Q[Rules: default, limited grammar]
-    R --> C[Ollama: experimental]
-    Q --> F
-    C --> D[JSON parsing: implemented]
-    D --> E[Pydantic output validation: implemented]
-    E --> F[Exact evidence check: implemented]
-    A --> F
-    F --> G[Reviewable API response: implemented]
-    G --> H[Human review]
-    B -. invalid input .-> X[HTTP error responses: implemented]
-    C -. unavailable model .-> X
-    D -. malformed JSON .-> X
-    E -. invalid fields .-> X
-    F -. unsupported quote .-> Y[Fail entire extraction: implemented]
+    T[Text transcript] --> I[Raw body and input validation]
+    I --> E{POST /extract: engine selection}
+    E -->|Default| R[Rules v5: bounded grammar]
+    E -->|Explicit experimental mode| O[Local Ollama llama3.2:3b]
+    O --> P[Bounded envelope read and JSON parsing]
+    R --> V[Schema and source-evidence checks]
+    P --> V
+    T -. original source .-> V
+    V --> A[Proposed items: needs_review]
+    A --> H[POST /review: confirm, correct, reject]
+    H --> C[Separate reviewed copies and preserved originals]
+    I -. invalid input .-> X[Explicit HTTP error]
+    P -. invalid upstream output .-> X
+    V -. unsupported source text .-> X
 ```
 
-| Step | Purpose and design choice |
-| --- | --- |
-| Input validation | Reject non-string and blank input before further processing. Trim outside whitespace while retaining internal text. |
-| Local inference | A standalone client requests text from local Ollama with `llama3.2:3b`. Extraction rules and a prompt builder exist; one structured-output smoke example passed; a first development comparison found semantic errors; see the evaluation report. |
-| JSON parsing | Convert response text into Python data. Reject malformed JSON rather than silently repairing it. |
-| Output validation | Require a consistent structure and field types so downstream code can work with predictable data. |
-| Evidence matching | Check quote presence against the original transcript. Preserve spelling, case, spacing, and punctuation. Reject blank evidence as a match. |
-| Human review | Keep interpretation open to correction: an exact quote can still be assigned to the wrong action, owner, or deadline. |
+Persistence is an explicit, separate **rules-only** workflow. Stateless extraction
+and review do not automatically save data:
 
-## Output contract
-
-An illustrative inner ExtractionResult payload follows. POST /extract additionally returns engine and limitations. This example demonstrates the contract, not measured extraction quality.
-
-```json
-{
-  "items": [
-    {
-      "action": "Send the API specification",
-      "owner": "Maya",
-      "deadline": "Friday",
-      "evidence": "Maya: I will send the API specification by Friday.",
-      "review_status": "needs_review"
-    }
-  ]
-}
+```mermaid
+sequenceDiagram
+    actor User
+    participant API as FastAPI
+    participant Rules as Rules v5
+    participant DB as Local SQLite
+    User->>API: POST /sessions with transcript
+    API->>Rules: Extract proposals
+    Rules-->>API: Original needs_review items
+    API->>DB: Save transcript, stable IDs, originals, revision 1
+    API-->>User: 201: session ID and revision
+    User->>API: PUT review with expected_revision 1
+    API->>DB: Begin write transaction and check revision
+    API->>API: Validate complete review against stored source
+    API->>DB: Save latest review and increment revision atomically
+    API-->>User: 200: revision 2; originals preserved
+    User->>API: Repeat update expecting revision 1
+    API-->>User: 409 Conflict; saved state unchanged
 ```
 
-| Field | Meaning and current rules |
-| --- | --- |
-| `items` | Required list of action items; an empty list is allowed. |
-| `action` | Required string with at least one character describing the work. |
-| `owner` | Required field containing a string or `null` when unknown. |
-| `deadline` | Required field containing a string or `null` when unspecified. Date normalization is not implemented. |
-| `evidence` | Required string with at least one character. The separate evidence helper rejects whitespace-only quotes and checks exact presence. |
-| `review_status` | `needs_review` by default, or `confirmed`. Stateless confirmation is available through POST /review; see docs/REVIEW.md. |
+A matching quote establishes **text presence**, not correct interpretation.
+A confirmed item records the caller's decision, not proof of correctness or
+completion of the work. See [review policy](docs/REVIEW.md).
 
-Unexpected fields within an action item are rejected. Owner and deadline reject the string placeholder `"null"` (including case and surrounding-whitespace variants); unknown values must use JSON `null`. All action/evidence strings and non-null owner/deadline strings must contain a character remaining after Python str.strip(); blank strings are rejected without rewriting valid text. Schema validity does not establish extraction correctness, and the parser does not invoke evidence checks automatically. The connected extraction function additionally requires non-null owner/deadline text to occur verbatim at word boundaries in item evidence. This rejects absent or partial-name values but does not prove correct attribution.
+## Quick start
 
-## Available components
-
-| Component | Location | Current behavior |
-| --- | --- | --- |
-| HTTP health endpoint | `app/main.py` | `GET /health` reports the function and extraction API as available; this is not a model readiness check. |
-| Transcript validator | `app/validation.py` | Returns trimmed text; raises `TypeError` for non-string input and `ValueError` for blank input. |
-| Output models | `app/schemas.py` | Defines `ActionItem` and the enclosing `ExtractionResult`. |
-| Response parser | `app/parsing.py` | Parses JSON, then validates the output contract. Malformed text raises `JSONDecodeError`; schema mismatches raise `ValidationError`. |
-| Ollama text client | `app/ollama.py` | Sends nonstreaming generation requests with an optional JSON schema; returns response text and preserves connection, timeout, and HTTP failures. Rejects invalid response envelopes. |
-| Extraction function | `app/extraction.py` | Connects prompt, model, parser, and evidence checks; fails the entire result on unsupported evidence and returns items as `needs_review`. |
-| Evidence checker | `app/evidence.py` | Returns a boolean for exact quote presence. Invalid input types and invalid transcripts raise errors. |
-
-## Run locally
-
-Prerequisite: Python 3.12. Default rules mode does not need Ollama. Run commands from the repository root.
-
-For a new checkout, create an isolated Python environment and install pinned dependencies:
+Requirements: **Python 3.12** and Git. Run these commands in a terminal:
 
 ```bash
+git clone https://github.com/AbhinavS-30/ActionGraph.git
+cd ActionGraph
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.lock.txt
-```
-
-Run the current API:
-
-```bash
 .venv/bin/python -m uvicorn app.main:app --reload
 ```
 
-Open the [interactive API documentation](http://127.0.0.1:8000/docs). Expand `POST /extract`, select **Try it out**, enter a transcript request, and execute.
+Open **[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)**. Expand
+`POST /extract`, select **Try it out**, enter a transcript, and click **Execute**.
+Keep the server on loopback with one worker. Use synthetic/public text only.
+Swagger loads its UI assets from its configured CDN.
 
 ```bash
-curl http://127.0.0.1:8000/health
+curl -X POST http://127.0.0.1:8000/extract \
+  -H 'Content-Type: application/json' \
+  -d '{"transcript":"Maya: I will review the report tomorrow."}'
 ```
 
-Expected response:
+The response contains `items`, `engine`, and `limitations`. The illustrative item
+below shows the inner item contract:
 
 ```json
-{"status": "ok", "extraction": "function_available", "extraction_api": "available", "default_engine": "rules"}
+{
+  "action": "Review the report",
+  "owner": "Maya",
+  "deadline": "tomorrow",
+  "evidence": "Maya: I will review the report tomorrow.",
+  "review_status": "needs_review"
+}
 ```
 
-Unit tests use simulated HTTP responses and do not require Ollama. Calling the standalone model client requires a running local Ollama service and the installed `llama3.2:3b` model. The caller supplies an HTTPX client. The API loads validated exported settings at startup, defaults to local Ollama, and uses a 60-second HTTPX timeout for network operations. This is not a total generation deadline. No paid inference API is required by the planned architecture.
+Unknown owners/deadlines use JSON `null`, never the string `"null"`. Blank fields
+and unexpected action-item fields are rejected. Relative dates remain exactly
+stated; calendar-date conversion is not implemented. Review every returned item
+and inspect the transcript for omissions.
+
+### Optional saved sessions
+
+Stop the server, choose an absolute database path in an existing writable
+directory, then export it and restart. For a disposable demonstration:
+
+```bash
+actiongraph_demo_dir=$(mktemp -d /tmp/actiongraph-demo.XXXXXX)
+export ACTIONGRAPH_DB_PATH="$actiongraph_demo_dir/sessions.sqlite3"
+.venv/bin/python -m uvicorn app.main:app --reload
+```
+
+1. `POST /sessions` with the transcript above. Copy the returned session `id`.
+2. `PUT /sessions/{id}/review` with:
+
+   ```json
+   {
+     "expected_revision": 1,
+     "decisions": [{"proposal_index": 0, "decision": "confirm"}]
+   }
+   ```
+
+3. `GET /sessions/{id}` returns revision 2, original `needs_review` proposals,
+   and a separate confirmed entry in `latest_review`.
+4. Reusing revision 1 returns **409**. Restarting with the same database retains
+   the saved state. Deletion requires the current revision.
+
+Storage is disabled unless `ACTIONGRAPH_DB_PATH` is set. It retains originals
+and the **latest** review, not full review history. No authentication, listing,
+automatic backup, or TTL is provided. Database files are ignored by Git.
+Read the [storage and deletion policy](docs/STORAGE.md) before using persistence.
+
+### Experimental local inference
+
+With local Ollama running and `llama3.2:3b` already installed, explicitly send:
+
+```json
+{"transcript":"Maya: I will review the report tomorrow.","engine":"ollama"}
+```
+
+The application does not download models. Experimental inference failures remain
+failures; there is no silent fallback to rules. Saved-session creation is rules-only.
+
+## API reference
+
+| Endpoint | Purpose | Success |
+| --- | --- | --- |
+| `GET /health` | Application capabilities; not model readiness | 200 |
+| `POST /extract` | Propose items without saving | 200 |
+| `POST /review` | Review caller-supplied proposals without saving | 200 |
+| `POST /sessions` | Extract and explicitly save a rules session | 201 |
+| `GET /sessions/{id}` | Retrieve originals, metadata, and latest review | 200 |
+| `PUT /sessions/{id}/review` | Save a complete revision-checked review | 200 |
+| `DELETE /sessions/{id}?expected_revision=N` | Delete the session and latest review | 204 |
+
+| Error | Meaning |
+| --- | --- |
+| 413 | Raw HTTP body exceeds 2 MiB |
+| 422 | Invalid input, incomplete review, or unsupported correction |
+| 404 | Saved session missing or deleted |
+| 409 | Expected revision is stale; reload before changing data |
+| 502 | Experimental upstream/output failure; no partial items returned |
+| 503 | Model/storage unavailable, disabled, or busy |
+| 504 | Ollama network operation timed out |
+| 500 | Sanitized local storage failure |
+
+## Engineering decisions
+
+| Decision | Why it matters |
+| --- | --- |
+| Rules default; model explicitly experimental | Evaluation found the local model less reliable than the baseline on the recorded validation run. The product scope follows the evidence. |
+| Exact quotes and nullable unknowns | Callers can inspect the source instead of receiving guessed fields without traceability. |
+| Originals separate from reviewed copies | Human changes remain visible without rewriting what extraction proposed. |
+| Atomic SQLite writes and revision checks | Invalid batches roll back; stale requests cannot overwrite newer saved reviews. |
+| Bounded request and generation buffering | Reject oversized input/output explicitly before unbounded application buffering. |
+| Preserved failed experiments and first-run results | Later tuning does not replace the original evidence or become independent validation. |
+
+## Evaluation
+
+The datasets are synthetic, and semantic scoring is **provisional Codex review**.
+Independent human adjudication and real-meeting accuracy are not established.
+A true positive (TP) is a matched task; a false positive (FP) is an extra task;
+a false negative (FN) is a missed labeled task.
+
+| Recorded run | TP / FP / FN | Interpretation |
+| --- | --- | --- |
+| [First model validation](evals/results/REPORT-validation-d21e6b6.md) | 2 / 2 / 6 | Only 5/10 calls succeeded; the simple baseline exceeded the model. |
+| [First frozen-v4 rules validation](evals/results/REPORT-rules-v4-fresh-486fcb5.md) | 6 / 1 / 5 | 14 cases, 11 labeled tasks; a withdrawn promise was returned. Labels fixed before extraction, author knew the implementation. |
+| [Rules v5 replay on that observed set](evals/results/REPORT-rules-v5-fa37f4e.md) | 6 / 0 / 5 | Targeted withdrawal fix; five misses remain. This is development regression evidence, not a fresh validation result. |
+
+Raw attempts, dataset hashes, source revisions, pairings, and timing limitations
+are preserved in [evals/results](evals/results). Run collection from a Git checkout;
+see the [evaluation guide](evals/README.md). Do not interpret successful schema or
+quote checks as semantic accuracy, or these small runs as general performance.
 
 ## Verification
 
 ```bash
 .venv/bin/python -m pytest
-.venv/bin/python -m ruff check app tests
+.venv/bin/python -m ruff check app tests evals
 ```
 
-The current suite contains 346 passing test cases covering the health response, output contract, transcript validation, JSON parsing, exact evidence matching, and Ollama client failure handling. This is a correctness check of these components, not a measurement of model accuracy.
+**346 tests and Ruff pass** at the verified implementation checkpoint. GitHub CI
+runs Python 3.12 tests and Ruff without downloading or running Ollama. Candidate
+verification also covers a separate pinned environment, extracted-package tests,
+real HTTP persistence/restart/conflict/deletion checks, and user-assisted Swagger
+screenshots. See the [candidate verification record](docs/verification/CANDIDATE-70cf9d4.md)
+and [completed browser checklist](docs/SWAGGER_CHECK.md). Tests verify implementation
+behavior; they are not extraction-quality measurements.
 
-GitHub Actions runs Python 3.12 tests and Ruff on pushes and pull requests.
-The workflow also lints `evals/` and has a ten-minute job timeout. These automated
-checks use simulated model responses; they do not download or run Ollama.
+## Limits and scope
 
-## Delivery phases
+- The fixed grammar can miss ownerless work, unsupported verbs/times, object lists,
+  shared deadlines, and broader dialogue. Empty output does not mean no work exists.
+- Unsupported withdrawals can leave unwanted proposals. Human review can correct
+  or reject proposals, but cannot currently add a missed task.
+- Input: 12,000 transcript characters and 2 MiB raw HTTP body. Ollama generation
+  envelope: 1 MiB, identity encoding only. Oversized envelopes fail with 502.
+- Model timeout is per network operation; there is no hard total-duration limit.
+  API output-byte, disk quota, and distributed concurrency limits are not established.
+- This is a loopback-only tool with no authentication or public inference deployment.
+  Saved-session IDs are not authorization; deletion is not secure filesystem erasure.
+- Audio, calendar integration, elaborate dashboards, and cross-meeting memory
+  are outside this release scope.
 
-| Phase | Status | Deliverable and completion criteria |
-| --- | --- | --- |
-| 1. Validation foundation | Implemented as standalone components | Validated input, structured output contract, response parser, evidence helper, and focused tests. |
-| 2. Local model integration | Implemented; experimental quality limitations measured | Ollama request handling, extraction instructions, structured response handling, timeouts, and model-unavailability tests. |
-| 3. Connected extraction service | Python function implemented; first development comparison available | Connect the components; enforce the agreed ambiguous commitment, relative-date, and unsupported-evidence policies; preserve review needs without inventing values. |
-| 4. Usable MVP | Local API/review/storage implemented; user-assisted browser flow verified | Extraction endpoint, documented request/response examples, and actionable error responses through the local API interface. |
-| 5. Evaluation and demonstration | First development comparison recorded; human adjudication pending | Labeled synthetic transcripts, a documented matching rubric, measured errors and latency, reproducible demo, and disclosed limitations. |
+Exact policies: [rules](docs/RULES.md) · [review](docs/REVIEW.md) ·
+[storage](docs/STORAGE.md) · [resource limits](docs/LIMITS.md).
 
-The initial demo target is November 3, 2026. It is a delivery target, not a claim of completion.
+## Demo and project guide
 
-## Terminology
+The [mixed-case walkthrough](docs/WALKTHROUGH.md) explains data flow and code
+syntax and includes a rehearsed success/failure example. A video has **not** yet
+been recorded. Follow the [recording storyboard](docs/RECORDING.md) for a concise
+local demo before sharing the project on LinkedIn.
 
-| Term | Meaning in ActionGraph |
+| Location | Contents |
 | --- | --- |
-| Transcript | Text recording who said what during a meeting. |
-| Action item | Proposed work supported by a commitment in the discussion. |
-| Dependency | Something that must happen first; it does not necessarily establish a deadline. |
-| JSON | A text format for objects, lists, strings, numbers, and values such as `null`. |
-| Parsing | Converting JSON text into Python values; JSON `null` becomes Python `None`. |
-| Schema | The contract defining required fields, allowed types, and constraints. |
-| Validation | Checking input or output against explicit rules. |
-| Evidence | An exact excerpt supporting a proposed item. |
-| Inference | Running a model to generate a proposed result from input. |
-| API / endpoint | A program interface / a particular route that accepts requests or returns responses. |
-| FastAPI / Uvicorn | The Python API framework / the server that runs it locally. |
-| Pydantic | The library enforcing the structured output contract. |
-| pytest / Ruff | Tools for automated tests / Python code checks and formatting. |
-| Ollama | The planned local model runtime; `llama3.2:3b` is the selected model. |
-| Precision / recall | Planned evaluation measures: how many proposed items are correct / how many labeled items were found. Both require a defined matching rubric. |
-| Latency | Measured time to produce a result; first-run timings are in the evaluation report. |
+| `app/` | API, contracts, engines, source checks, review, and storage |
+| `tests/` | Automated behavior and failure-path checks |
+| `data/synthetic/` | Publicly shareable demonstration transcripts |
+| `evals/` | Labels, preserved baseline, collection tooling, and results |
+| [Status](docs/STATUS.md) | Current capabilities, evidence, and remaining delivery work |
+| [Release candidate](docs/RELEASE_CANDIDATE.md) | Verified scope and limitations |
+| [Release notes](docs/RELEASE_NOTES.md) | Draft stable-release notes and candidate provenance |
+| [Validation design](docs/VALIDATION.md) | Contracts and failure behavior |
+| [Roadmap](docs/ROADMAP.md) | Delivery scope and next steps |
 
-## Scope and limitations
-
-- Use synthetic or public transcripts only. The supplied example is in `data/synthetic/meeting-01.txt`.
-- A reusable extraction function connects model generation, parsing, and evidence checks; the local extraction endpoint is available; opt-in local review persistence is implemented.
-- A [first development comparison](evals/results/REPORT-8dc8253.md) records provisional task scores and measured durations. It is one ten-case synthetic run reviewed by Codex, not a real-world accuracy claim.
-- Exact evidence matching proves quote presence, not interpretation, attribution, or completeness.
-- The initial policy excludes ambiguous commitments and unanswered requests and preserves relative deadline wording; date conversion is deferred. See [validation design](docs/VALIDATION.md).
-- Audio transcription, calendar integrations, cross-meeting memory, and elaborate dashboards are deferred.
-- Keep secrets, virtual environments, model weights, and private data out of version control.
-
-## Repository guide
-
-- `app/`: API and processing components.
-- `tests/`: automated behavior checks.
-- `data/synthetic/`: example input transcripts.
-- `evals/`: ten labeled synthetic development cases and a [matching rubric](evals/README.md); collector and deterministic baseline available; first raw comparison and provisional semantic review available in `evals/results/`.
-- [Engineering walkthrough](docs/WALKTHROUGH.md): data flow, code roles, review/storage behavior, failures and a mixed-case rehearsal.
-- [Project status](docs/STATUS.md): implemented capabilities, checks, and current limitations.
-- [Local release candidate](docs/RELEASE_CANDIDATE.md): verified gates, proposed scope and remaining delivery work.
-- [Roadmap](docs/ROADMAP.md): delivery phases and acceptance criteria.
-- [Validation design](docs/VALIDATION.md): component responsibilities and failure behavior.
-- [Local demo](docs/DEMO.md): presentation sequence, observed TCP smoke check, and user-verified browser success/rejection paths.
-
-## Extraction request and failures
-
-Start Uvicorn using the command above. Rules mode needs no model service. To opt into experimental inference, start Ollama with `llama3.2:3b` installed and send `"engine": "ollama"`. No model downloads are performed by this application. Defaults are `http://127.0.0.1:11434` and `llama3.2:3b`. Exported environment overrides are supported; `.env` files are not read automatically. Restart the API after changing settings.
-
-```bash
-curl -X POST http://127.0.0.1:8000/extract \
-  -H 'Content-Type: application/json' \
-  -d '{"transcript":"Maya: I will send the report tomorrow."}'
-```
-
-The response uses the `items` contract above; model output can vary, and every item requires review. Unknown values remain null. Unsupported evidence fails the whole extraction.
-
-| HTTP status | Meaning and next action |
-| --- | --- |
-| 200 | Proposed items returned; inspect them for correctness and omissions. |
-| 422 | Missing, non-string, blank, or over-12,000-character transcript, malformed request JSON, or extra request fields; correct the request. |
-| 503 | Ollama unreachable, model unavailable, or another extraction running; inspect the detail and retry as directed. |
-| 504 | Ollama timed out; retry with a shorter transcript. |
-| 502 | Upstream HTTP failure, invalid output, unsupported evidence, or owner/deadline text absent from evidence; inspect input and Ollama, then retry and review. |
-
-There are no automatic retries or authentication. Saved sessions require explicit storage configuration. POST /review supports stateless caller-directed confirmation. Run this initial API locally.
-
-## Local runtime configuration
-
-| Exported variable | Default | Validation |
-| --- | --- | --- |
-| `OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | HTTP loopback origin only; no credentials, path, query, or fragment |
-| `OLLAMA_MODEL` | `llama3.2:3b` | Nonblank installed model name; no automatic downloads |
-| `OLLAMA_TIMEOUT_SECONDS` | `60` | Greater than zero, at most 120 seconds per network operation |
-| `OLLAMA_NUM_PREDICT` | `1024` | Integer from 1 through 4096; maximum generated tokens |
-
-Example: `export OLLAMA_TIMEOUT_SECONDS=30` before launching Uvicorn. Invalid
-settings prevent application startup. Settings are cached until restart; proxy
-environment variables are ignored for local Ollama requests. No new dependencies
-were added.
-
-Transcripts are limited to 12,000 Python characters before trimming; the original
-text is preserved for evidence checks. Separately, the HTTP layer caps raw request bodies at 2 MiB before JSON parsing
-and returns 413 above that limit. Neither transcript length nor body size bounds
-total request duration. See docs/LIMITS.md. Generation requests include `options.num_predict`. A response
-with `done_reason=length` is rejected as incomplete even if its text happens to
-parse. Raising a token limit does not guarantee complete or correct extraction.
-The new generation limit changes runtime settings; earlier reports retain the
-settings actually used in their recorded source revisions.
-
-## Local concurrency behavior
-
-Run one Uvicorn worker for the demo (the documented command does this). Each API
-process admits one experimental Ollama extraction at a time. An overlapping valid Ollama request receives
-HTTP 503 with `Retry-After: 1` and no model invocation; the client should retry
-after the active extraction finishes. No request queue or automatic retry exists.
-The slot is released on success and failure; health requests remain available.
-Rules extraction, stateless review and saved-session operations do not use this
-model slot. SQLite writes have their own transaction/lock behavior.
-This process-local guard does not coordinate multiple workers, the evaluation
-runner, or other applications using Ollama. It is not a distributed rate limiter
-or a complete public-service overload control.
-
-The [strict-contract comparison](evals/results/REPORT-b7bf4c4.md) completed only
-4/10 model calls successfully: six outputs were rejected for string-null fields.
-Its 100% delivered task precision must be read alongside 62.5% task recall and
-that failure rate. Validation prevents invalid delivery; it does not establish
-reliable extraction. These remain provisional Codex-reviewed development results.
-
-A [JSON-null prompt experiment](evals/results/REPORT-fcc91ec.md) reduced some
-validation failures in one run but worsened delivered task scores and leaked a
-prompt example. That prompt candidate was not adopted; the preceding prompt was
-restored. Failed experiments remain available for inspection.
-
-The [first fresh-set validation](evals/results/REPORT-validation-d21e6b6.md)
-completed 5/10 model calls and delivered two correct task matches, two extra tasks,
-and six missed labels. The baseline outperformed the model in that run. This
-project currently demonstrates a local extraction system and transparent
-evaluation; it is not a production-ready commitment extractor.
-
-## Default demo engine
-
-`POST /extract` now defaults to `engine: rules`. Successful responses contain
-`items`, `engine`, and `limitations`. The rules support a narrow first-person
-commitment grammar and stated date forms; see [exact scope and API migration](docs/RULES.md).
-Unsupported forms may be missed, including requests outside the adjacent acceptance policy and ownerless work.
-An empty result is not a completeness claim. This mode is separate from the
-unchanged evaluation baseline. No model call or automatic fallback occurs.
-
-Use `engine: ollama` explicitly for the experimental model path. Earlier model
-reports describe their recorded revisions and do not measure this new rules mode.
-
-The [rules v1 known-case report](evals/results/REPORT-rules-45bdcb3.md) records
-six fully correct items out of eight labels on each known synthetic set, no extra
-tasks, and explicit misses for accepted requests and ownerless work. These sets
-were inspected during development; these are not held-out accuracy estimates.
-
-The [first rules-focused validation](evals/results/REPORT-rules-validation-042cf19.md)
-returned 4 correct tasks, 1 cancelled-task false positive and 5 misses across
-nine labeled tasks in twelve new synthetic cases. This exposes the cross-line
-cancellation limit and prevents interpreting the earlier known-case results as
-general accuracy. See the report for denominators and provisional review notes.
-
-Rules v2 additionally applies [explicit cancellation matching](docs/RULES.md)
-for later same-speaker negations of the same task. This is not general dialogue
-understanding; historical v1 reports remain unchanged. The recorded demo and
-public page are deferred until the remaining product-release gates are complete.
-
-Rules v3 supports the bounded adjacent request/acceptance pairs documented in
-[Rules policy](docs/RULES.md), preserving both source lines as evidence.
-This change passes 214 tests. The [observed-case replay](evals/results/REPORT-rules-v3-c9e5e64.md) finds one additional correct task per dataset, with other outputs unchanged; this is not independent validation.
-
-Rules v4 additionally splits two complete direct-promise tasks under the
-[compound-task policy](docs/RULES.md), retaining full-line evidence and local
-deadlines. Ambiguous or partly unsupported pairs are skipped. 233 tests and Ruff
-pass. The [v4 replay](evals/results/REPORT-rules-v4-aa3c999.md) recovers two compound tasks; other outputs are unchanged. These are known-case results.
-
-The [first frozen-v4 validation](evals/results/REPORT-rules-v4-fresh-486fcb5.md)
-finds 6 correct tasks, 1 withdrawn-task false positive and 5 misses across eleven
-labels. Source-text validity does not prevent semantic errors. This new synthetic
-set was labeled before extraction, authored with implementation knowledge, and
-is now observed. Current checks: 234 tests and Ruff pass.
-
-## Review proposed items
-
-`POST /review` accepts the transcript, submitted proposals and one confirm/reject
-decision per proposal. Optional complete replacements can correct action, owner
-and deadline while preserving source evidence. The response retains originals
-and separate confirmed copies, or rejection records. Nothing is stored and no
-model is called. This is a caller decision, not authenticated semantic proof.
-See [review contract and complete example](docs/REVIEW.md).
-
-## Optional saved sessions
-
-Set `ACTIONGRAPH_DB_PATH` to an absolute SQLite file path in an existing writable
-directory and restart to enable saved rules sessions. Storage is disabled when
-unset; existing extract/review routes remain stateless. POST /sessions creates
-a server-generated proposal snapshot; GET /sessions/{id} retrieves it; PUT
-/sessions/{id}/review saves revision-checked decisions; DELETE removes the session
-and latest review. Stale changes return 409. No authentication or full review
-history is provided. See [storage setup and policy](docs/STORAGE.md).
-
-Swagger now declares existing application errors: experimental extraction
-502/503/504 and saved-session 404/409/422/500/503 where applicable. Validation
-422 may contain a list of request issues; stored-source review errors use a
-string detail. Busy model-slot 503 may include Retry-After. These declarations
-describe existing behavior; they do not change statuses or extraction quality.
-
-Rules v5 adds the bounded adjacent explicit withdrawal policy in docs/RULES.md.
-It requires the same speaker, one preceding supported promise, and a matching
-reference kind. Broader withdrawals remain unsupported. 322 tests and Ruff pass;
-[Observed-case replay](evals/results/REPORT-rules-v5-fa37f4e.md) removes the targeted withdrawal false positive, with all other outputs unchanged. Historical first-run reports are preserved; broader semantic limits remain.
-
-HTTP requests now have a 2 MiB raw-body cap, including streamed bodies. Oversize
-returns 413 before endpoint work; the 12,000-character transcript rule still
-returns 422. [Resource limits and remaining gaps](docs/LIMITS.md).
-
-Ollama generation envelopes are streamed into a bounded 1 MiB buffer. Oversized
-or compressed upstream envelopes fail with 502 through the API; no partial
-items are returned. This is separate from the 2 MiB incoming request cap. See
-[resource policy](docs/LIMITS.md) for scope and remaining duration/output limits.
+Keep secrets, private transcripts, virtual environments, model weights, and local
+databases out of version control. No LinkedIn post is published automatically.
