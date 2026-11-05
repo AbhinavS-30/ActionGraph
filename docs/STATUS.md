@@ -76,8 +76,7 @@ explicitly provisional. Candidate ZIP exactly matches that Git source; extracted
 check and exact candidate CI pass. See verification/CANDIDATE-70cf9d4.md. Next
 perform the final local-release walkthrough and assess stable release readiness.
 Independent human adjudication remains open; no independent-validation claim may
-be made. Public page remains open. A captioned API replay and LinkedIn draft are now
-prepared; no post has been published. Audio,
+be made. Public page remains open. A captioned API replay is prepared; no post has been published. Audio,
 calendar integration, elaborate dashboards and cross-meeting memory stay deferred.
 
 ## Final walkthrough rehearsal
@@ -109,10 +108,20 @@ after restart, blank-input rejection, a known ownerless omission and deletion.
 No model was called. This is rendered response footage, not a browser capture.
 Video decoded successfully at five sample timestamps; representative frames were
 visually inspected. See [media provenance](media/README.md),
-[narration](DEMO_NARRATION.md) and [LinkedIn draft](LINKEDIN_DRAFT.md).
+[narration](DEMO_NARRATION.md). The sharing draft was subsequently removed at
+the user’s request.
 
 Application behavior and rc.1 tag unchanged. Required pytest and Ruff checks pass
 (346 tests). No LinkedIn post or separate public project page exists. Browser
 control is unavailable, so uploading/posting requires the user's browser. Next:
 user review of the video and draft, then upload the MP4 and publish the post.
 Independent adjudication and stable-release readiness remain open.
+
+## README rendering correction — November 5
+
+Removed the LinkedIn draft and its active links at the user's request. Fixed
+the saved-session Mermaid diagram: semicolons in two message labels were
+interpreted as statement separators, causing GitHub's parse error. Labels now
+use plain wording. README relative links and JSON examples checked; 346 tests
+and Ruff pass. GitHub visual rendering has not been rechecked through a browser.
+Next review the linked demo; public page and independent adjudication remain open.

@@ -71,9 +71,9 @@ sequenceDiagram
     API->>DB: Begin write transaction and check revision
     API->>API: Validate complete review against stored source
     API->>DB: Save latest review and increment revision atomically
-    API-->>User: 200: revision 2; originals preserved
+    API-->>User: 200: revision 2 with originals preserved
     User->>API: Repeat update expecting revision 1
-    API-->>User: 409 Conflict; saved state unchanged
+    API-->>User: 409 Conflict with saved state unchanged
 ```
 
 A matching quote establishes **text presence**, not correct interpretation.
@@ -258,7 +258,7 @@ syntax and includes a rehearsed success/failure example.
 **[Watch/download the 2:03 demo](https://raw.githubusercontent.com/AbhinavS-30/ActionGraph/main/docs/media/actiongraph-demo.mp4)** — silent, captioned replay of real local API calls using synthetic data.
 This is a rendered API replay, not a Swagger screen recording.
 [Execution evidence and video details](docs/media/README.md) ·
-[Optional narration](docs/DEMO_NARRATION.md) · [LinkedIn draft](docs/LINKEDIN_DRAFT.md).
+[Optional narration](docs/DEMO_NARRATION.md).
 The [recording storyboard](docs/RECORDING.md) also supports a future browser recording.
 
 | Location | Contents |
