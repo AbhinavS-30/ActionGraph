@@ -1,6 +1,8 @@
 # Local demo recording storyboard
 
-Prepared November 5, 2026. No video has been recorded or published yet.
+Prepared November 5, 2026. A [captioned recorded API replay](media/actiongraph-demo.mp4) is now available.
+It is silent and rendered from real API responses; it is not a browser screen
+recording. The following storyboard remains available for a future Swagger capture.
 Position the project as a local release candidate with explicit review, measured
 limitations and reproducible engineering. Do not call it production-ready or
 claim broad extraction accuracy. The public repository can accompany the video.

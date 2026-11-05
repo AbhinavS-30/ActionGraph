@@ -1,0 +1,16 @@
+{
+  "audio_tracks" : 0,
+  "decoded_frames_at_seconds" : [
+    3,
+    32,
+    56,
+    96,
+    119
+  ],
+  "duration_seconds" : 123,
+  "file_bytes" : 5935464,
+  "height" : 720,
+  "label" : "Captioned recorded API replay, not a browser screen capture",
+  "video_tracks" : 1,
+  "width" : 1280
+}

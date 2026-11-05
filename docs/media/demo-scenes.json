@@ -1,0 +1,134 @@
+[
+  {
+    "title": "ActionGraph",
+    "subtitle": "From meeting text to reviewable commitments.",
+    "leftTitle": "LOCAL RELEASE CANDIDATE",
+    "left": "Python 3.12 + FastAPI\nRules v5 by default\nOptional local Ollama\nHuman review + SQLite",
+    "rightTitle": "WHAT THIS VIDEO SHOWS",
+    "right": "Actual local HTTP execution\nSynthetic meeting text\nCaptioned result replay\nNo browser screen capture",
+    "caption": "Traceable proposals. Explicit review. Original evidence preserved.",
+    "seconds": 7,
+    "status": ""
+  },
+  {
+    "title": "A workflow built around review",
+    "subtitle": "Extraction is a proposal, not a correctness guarantee.",
+    "leftTitle": "STATELESS PATH",
+    "left": "Transcript\n  → validate input\n  → rules or Ollama\n  → check source evidence\n  → proposed items\n  → human review",
+    "rightTitle": "SAVED RULES SESSIONS",
+    "right": "POST /sessions\n  → server-generated proposals\n  → stable IDs + revision 1\nPUT /sessions/{id}/review\n  → check expected revision\n  → atomic save in SQLite",
+    "caption": "Model failures remain failures. There is no silent rules fallback.",
+    "seconds": 10,
+    "status": ""
+  },
+  {
+    "title": "1. Create a saved session",
+    "subtitle": "One explicit promise becomes a proposal requiring review.",
+    "leftTitle": "REQUEST: POST /sessions",
+    "left": "Transcript value:\n\nMaya: I will review the report tomorrow.",
+    "rightTitle": "SELECTED RESPONSE FIELDS",
+    "right": "{\n  \"revision\": 1,\n  \"engine\": \"rules\",\n  \"rules_version\": \"5\",\n  \"persisted\": true\n}",
+    "caption": "The server generated and saved the proposal. Storage was explicitly enabled.",
+    "seconds": 10,
+    "status": "201 CREATED"
+  },
+  {
+    "title": "2. Inspect the source",
+    "subtitle": "The deadline stays “tomorrow”; no calendar date is invented.",
+    "leftTitle": "EXACT EVIDENCE",
+    "left": "Maya: I will review the report tomorrow.\n\nOwner: Maya\nDeadline: tomorrow",
+    "rightTitle": "PROPOSED ITEM",
+    "right": "{\n  \"action\": \"Review the report\",\n  \"owner\": \"Maya\",\n  \"deadline\": \"tomorrow\",\n  \"evidence\": \"Maya: I will review the report tomorrow.\",\n  \"review_status\": \"needs_review\"\n}",
+    "caption": "An exact quote proves presence. It does not prove task interpretation.",
+    "seconds": 12,
+    "status": "NEEDS REVIEW"
+  },
+  {
+    "title": "3. Resolve an accepted request",
+    "subtitle": "The request names the work; the next line accepts it.",
+    "leftTitle": "TRANSCRIPT",
+    "left": "Omar: Maya, could you export\nthe attendance list by Friday?\n\nMaya: Yes, I will export it.",
+    "rightTitle": "SELECTED RESPONSE FIELDS",
+    "right": "{\n  \"action\": \"Export the attendance list\",\n  \"owner\": \"Maya\",\n  \"deadline\": \"Friday\",\n  \"review_status\": \"needs_review\"\n}",
+    "caption": "Evidence in the full response includes both original lines.",
+    "seconds": 11,
+    "status": "200 OK"
+  },
+  {
+    "title": "4. Confirm without rewriting history",
+    "subtitle": "Original proposal and reviewed copy remain separate.",
+    "leftTitle": "REQUEST",
+    "left": "PUT /sessions/{id}/review\n\n{\n  \"expected_revision\": 1,\n  \"decisions\": [{\n    \"proposal_index\": 0,\n    \"decision\": \"confirm\"\n  }]\n}",
+    "rightTitle": "SELECTED SAVED REVIEW FIELDS",
+    "right": "{\n  \"revision\": 2,\n  \"original_status\": \"needs_review\",\n  \"reviewed_status\": \"confirmed\",\n  \"persisted\": true\n}",
+    "caption": "Confirmed records the caller’s decision, not completion of the task.",
+    "seconds": 12,
+    "status": "200 OK"
+  },
+  {
+    "title": "5. Protect newer decisions",
+    "subtitle": "Repeating revision 1 cannot overwrite saved revision 2.",
+    "leftTitle": "REPEATED REQUEST",
+    "left": "PUT /sessions/{id}/review\n\nexpected_revision: 1\n\nSaved revision: 2",
+    "rightTitle": "ACTUAL ERROR RESPONSE",
+    "right": "{\n  \"detail\": \"Session revision changed. Reload before reviewing or deleting.\"\n}",
+    "caption": "A write transaction checks revision and saves the whole batch atomically.",
+    "seconds": 10,
+    "status": "409 CONFLICT"
+  },
+  {
+    "title": "6. Restart, then retrieve",
+    "subtitle": "A new Uvicorn process reads the same disposable SQLite database.",
+    "leftTitle": "EXECUTED SEQUENCE",
+    "left": "Stop local API process\nRestart with the same DB\nGET /sessions/{id}",
+    "rightTitle": "VERIFIED AFTER RESTART",
+    "right": "HTTP 200\nrevision: 2\noriginal: needs_review\nreviewed: confirmed\npersisted: true\n\nFull response unchanged",
+    "caption": "The script compared the complete saved response before and after restart.",
+    "seconds": 10,
+    "status": "PERSISTED"
+  },
+  {
+    "title": "7. Reject invalid input",
+    "subtitle": "Whitespace is not a meeting transcript.",
+    "leftTitle": "REQUEST",
+    "left": "POST /sessions\n\n{\"transcript\": \"   \"}",
+    "rightTitle": "SELECTED ERROR FIELDS",
+    "right": "{\n  \"type\": \"value_error\",\n  \"field\": \"transcript\",\n  \"message\": \"Value error, Transcript must not be blank.\"\n}",
+    "caption": "Other boundaries include a 2 MiB request cap and 1 MiB model-envelope cap.",
+    "seconds": 9,
+    "status": "422 INVALID INPUT"
+  },
+  {
+    "title": "8. Show a real limitation",
+    "subtitle": "Ownerless agreed work is outside the current rules grammar.",
+    "leftTitle": "TRANSCRIPT",
+    "left": "Decision: The access roster\nwill be updated. No owner or\ndate was assigned.",
+    "rightTitle": "SELECTED ACTUAL RESPONSE FIELDS",
+    "right": "{\n  \"items\": [],\n  \"engine\": \"rules\"\n}",
+    "caption": "This is a missed task. Empty output does not prove there is no work.",
+    "seconds": 12,
+    "status": "KNOWN OMISSION"
+  },
+  {
+    "title": "9. Keep evaluation claims honest",
+    "subtitle": "Passing tests and exact quotes do not establish semantic accuracy.",
+    "leftTitle": "RECORDED QUALITY EVIDENCE",
+    "left": "First frozen-v4 validation\n14 cases / 11 labeled tasks\n\n6 correct · 1 extra · 5 missed\n\nProvisional Codex review",
+    "rightTitle": "TARGETED V5 REPLAY",
+    "right": "Same now-observed cases\n\n6 correct · 0 extra · 5 missed\n\nFive misses remain.\nNot independent validation.",
+    "caption": "346 tests and CI verify implementation behavior; broader quality is not established.",
+    "seconds": 12,
+    "status": ""
+  },
+  {
+    "title": "ActionGraph · v0.1.0-rc.1",
+    "subtitle": "Local engineering portfolio release candidate.",
+    "leftTitle": "WHAT IS IMPLEMENTED",
+    "left": "Source evidence + strict schemas\nConfirm / correct / reject\nSQLite restart persistence\nRevision-safe atomic updates\nExplicit failure handling",
+    "rightTitle": "EXPLORE THE PROJECT",
+    "right": "github.com/AbhinavS-30/ActionGraph\n\nSource · setup · architecture\nTests · raw evaluation artifacts\nKnown scope and limitations",
+    "caption": "No production or general meeting-accuracy claim. Recorded API replay.",
+    "seconds": 8,
+    "status": ""
+  }
+]

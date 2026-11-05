@@ -1,0 +1,220 @@
+{
+  "source_commit": "91c25906eaaa8f365b9fed94c845625f980d1bc0",
+  "recording_type": "Captioned replay of actual local API executions, not a browser screen capture",
+  "model_called": false,
+  "steps": [
+    {
+      "name": "create",
+      "method": "POST",
+      "path": "/sessions",
+      "status": 201,
+      "body": {
+        "id": "8e57417a-9b84-4be4-982a-afea1dc07eaf",
+        "transcript": "Maya: I will review the report tomorrow.",
+        "engine": "rules",
+        "rules_version": "5",
+        "schema_version": 1,
+        "created_at": "2026-11-05T18:21:16.520296+00:00",
+        "updated_at": "2026-11-05T18:21:16.520296+00:00",
+        "revision": 1,
+        "proposals": [
+          {
+            "id": "75fdb4b4-c289-4471-ba53-64284f571ec2",
+            "proposal_index": 0,
+            "item": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "needs_review"
+            }
+          }
+        ],
+        "latest_review": null,
+        "persisted": true
+      }
+    },
+    {
+      "name": "accepted_request",
+      "method": "POST",
+      "path": "/extract",
+      "status": 200,
+      "body": {
+        "items": [
+          {
+            "action": "Export the attendance list",
+            "owner": "Maya",
+            "deadline": "Friday",
+            "evidence": "Omar: Maya, could you export the attendance list by Friday?\nMaya: Yes, I will export it.",
+            "review_status": "needs_review"
+          }
+        ],
+        "engine": "rules",
+        "limitations": [
+          "Rules mode supports bounded one- or two-task first-person promises per speaker-labelled line. Explicit same-speaker matching-task cancellations and bounded adjacent withdrawals are applied. Only adjacent named requests with explicit matching-verb acceptance are supported. Ownerless work, broader cross-line interpretation and unsupported phrasing may be missed. Empty output does not prove no commitments exist."
+        ]
+      }
+    },
+    {
+      "name": "confirm",
+      "method": "PUT",
+      "path": "/sessions/8e57417a-9b84-4be4-982a-afea1dc07eaf/review",
+      "status": 200,
+      "body": {
+        "id": "8e57417a-9b84-4be4-982a-afea1dc07eaf",
+        "transcript": "Maya: I will review the report tomorrow.",
+        "engine": "rules",
+        "rules_version": "5",
+        "schema_version": 1,
+        "created_at": "2026-11-05T18:21:16.520296+00:00",
+        "updated_at": "2026-11-05T18:21:16.523581+00:00",
+        "revision": 2,
+        "proposals": [
+          {
+            "id": "75fdb4b4-c289-4471-ba53-64284f571ec2",
+            "proposal_index": 0,
+            "item": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "needs_review"
+            }
+          }
+        ],
+        "latest_review": [
+          {
+            "proposal_index": 0,
+            "decision": "confirm",
+            "original": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "needs_review"
+            },
+            "reviewed": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "confirmed"
+            }
+          }
+        ],
+        "persisted": true
+      }
+    },
+    {
+      "name": "stale_review",
+      "method": "PUT",
+      "path": "/sessions/8e57417a-9b84-4be4-982a-afea1dc07eaf/review",
+      "status": 409,
+      "body": {
+        "detail": "Session revision changed. Reload before reviewing or deleting."
+      }
+    },
+    {
+      "name": "get_after_restart",
+      "method": "GET",
+      "path": "/sessions/8e57417a-9b84-4be4-982a-afea1dc07eaf",
+      "status": 200,
+      "body": {
+        "id": "8e57417a-9b84-4be4-982a-afea1dc07eaf",
+        "transcript": "Maya: I will review the report tomorrow.",
+        "engine": "rules",
+        "rules_version": "5",
+        "schema_version": 1,
+        "created_at": "2026-11-05T18:21:16.520296+00:00",
+        "updated_at": "2026-11-05T18:21:16.523581+00:00",
+        "revision": 2,
+        "proposals": [
+          {
+            "id": "75fdb4b4-c289-4471-ba53-64284f571ec2",
+            "proposal_index": 0,
+            "item": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "needs_review"
+            }
+          }
+        ],
+        "latest_review": [
+          {
+            "proposal_index": 0,
+            "decision": "confirm",
+            "original": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "needs_review"
+            },
+            "reviewed": {
+              "action": "Review the report",
+              "owner": "Maya",
+              "deadline": "tomorrow",
+              "evidence": "Maya: I will review the report tomorrow.",
+              "review_status": "confirmed"
+            }
+          }
+        ],
+        "persisted": true
+      }
+    },
+    {
+      "name": "blank_rejected",
+      "method": "POST",
+      "path": "/sessions",
+      "status": 422,
+      "body": {
+        "detail": [
+          {
+            "type": "value_error",
+            "loc": [
+              "body",
+              "transcript"
+            ],
+            "msg": "Value error, Transcript must not be blank.",
+            "input": "   ",
+            "ctx": {
+              "error": {}
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "known_miss",
+      "method": "POST",
+      "path": "/extract",
+      "status": 200,
+      "body": {
+        "items": [],
+        "engine": "rules",
+        "limitations": [
+          "Rules mode supports bounded one- or two-task first-person promises per speaker-labelled line. Explicit same-speaker matching-task cancellations and bounded adjacent withdrawals are applied. Only adjacent named requests with explicit matching-verb acceptance are supported. Ownerless work, broader cross-line interpretation and unsupported phrasing may be missed. Empty output does not prove no commitments exist."
+        ]
+      }
+    },
+    {
+      "name": "delete",
+      "method": "DELETE",
+      "path": "/sessions/8e57417a-9b84-4be4-982a-afea1dc07eaf?expected_revision=2",
+      "status": 204,
+      "body": null
+    },
+    {
+      "name": "get_deleted",
+      "method": "GET",
+      "path": "/sessions/8e57417a-9b84-4be4-982a-afea1dc07eaf",
+      "status": 404,
+      "body": {
+        "detail": "Saved session not found."
+      }
+    }
+  ],
+  "cleanup": "Both temporary Uvicorn processes stopped; temporary SQLite directory removed."
+}

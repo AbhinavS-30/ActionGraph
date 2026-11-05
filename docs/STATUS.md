@@ -43,7 +43,8 @@ conflict/delete checks and fixed/chunked request-size checks with disposable
 servers/databases. User screenshots verify the saved-session Swagger workflow,
 including restart persistence and validation errors: [SWAGGER_CHECK.md](SWAGGER_CHECK.md).
 Later OpenAPI/resource changes were checked by tests/protocol, not a new browser
-recording. Automated browser access remains unavailable. No video is recorded.
+recording. Automated browser access remains unavailable. A captioned API replay is now
+available; no direct browser screen recording was made.
 
 ## Evaluation evidence
 
@@ -75,8 +76,8 @@ explicitly provisional. Candidate ZIP exactly matches that Git source; extracted
 check and exact candidate CI pass. See verification/CANDIDATE-70cf9d4.md. Next
 perform the final local-release walkthrough and assess stable release readiness.
 Independent human adjudication remains open; no independent-validation claim may
-be made. Public page and recorded demo remain deferred until product readiness,
-followed by a LinkedIn draft; no post will be published automatically. Audio,
+be made. Public page remains open. A captioned API replay and LinkedIn draft are now
+prepared; no post has been published. Audio,
 calendar integration, elaborate dashboards and cross-meeting memory stay deferred.
 
 ## Final walkthrough rehearsal
@@ -98,3 +99,20 @@ results and explicit limitations. RECORDING.md supplies a 2–3 minute storyboar
 with actual request bodies and a known omission to show. No video, page or
 LinkedIn post created/published. App behavior and fixed rc.1 tag unchanged.
 Next record and review the local demo, then prepare the LinkedIn draft.
+
+## Captioned demo and sharing package — November 5
+
+Created a 123-second, 1280×720 H.264 silent captioned API replay using real
+loopback HTTP calls and disposable SQLite storage. Captured creation, accepted
+request extraction, confirmation, stale revision rejection, identical retrieval
+after restart, blank-input rejection, a known ownerless omission and deletion.
+No model was called. This is rendered response footage, not a browser capture.
+Video decoded successfully at five sample timestamps; representative frames were
+visually inspected. See [media provenance](media/README.md),
+[narration](DEMO_NARRATION.md) and [LinkedIn draft](LINKEDIN_DRAFT.md).
+
+Application behavior and rc.1 tag unchanged. Required pytest and Ruff checks pass
+(346 tests). No LinkedIn post or separate public project page exists. Browser
+control is unavailable, so uploading/posting requires the user's browser. Next:
+user review of the video and draft, then upload the MP4 and publish the post.
+Independent adjudication and stable-release readiness remain open.

@@ -31,3 +31,9 @@ November 5: user requested portfolio README refresh and plans to record before
 LinkedIn sharing. README and RECORDING.md now support that sequence. App/tag
 unchanged; no recording, public page or post exists yet. Next local recording
 and review, then draft LinkedIn text with measured limits disclosed.
+
+November 5 presentation update: a 2:03 captioned replay of real local API calls,
+execution trace, optional narration and LinkedIn draft are prepared. README links
+the MP4. This is not a browser recording; no post or separate project page has
+been published. Next user review and manual LinkedIn upload because browser
+control is unavailable. Application scope and candidate tag remain unchanged.

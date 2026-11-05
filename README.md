@@ -14,8 +14,8 @@ latest reviewed results, with revision checks to prevent stale updates.
 **Status:** verified local release candidate. Rules v5 is the default;
 local Ollama `llama3.2:3b` is explicitly experimental. This is an engineering
 portfolio project with measured limitations, not a production service or a claim
-of general meeting-understanding accuracy. The public demo video and project page
-have not been published.
+of general meeting-understanding accuracy. A captioned API replay is available below; a separate public project page
+has not been built.
 
 ## What you can do
 
@@ -251,9 +251,15 @@ Exact policies: [rules](docs/RULES.md) · [review](docs/REVIEW.md) ·
 ## Demo and project guide
 
 The [mixed-case walkthrough](docs/WALKTHROUGH.md) explains data flow and code
-syntax and includes a rehearsed success/failure example. A video has **not** yet
-been recorded. Follow the [recording storyboard](docs/RECORDING.md) for a concise
-local demo before sharing the project on LinkedIn.
+syntax and includes a rehearsed success/failure example.
+
+[![ActionGraph demo preview](docs/media/demo-poster.png)](docs/media/actiongraph-demo.mp4)
+
+**[Watch/download the 2:03 demo](https://raw.githubusercontent.com/AbhinavS-30/ActionGraph/main/docs/media/actiongraph-demo.mp4)** — silent, captioned replay of real local API calls using synthetic data.
+This is a rendered API replay, not a Swagger screen recording.
+[Execution evidence and video details](docs/media/README.md) ·
+[Optional narration](docs/DEMO_NARRATION.md) · [LinkedIn draft](docs/LINKEDIN_DRAFT.md).
+The [recording storyboard](docs/RECORDING.md) also supports a future browser recording.
 
 | Location | Contents |
 | --- | --- |
